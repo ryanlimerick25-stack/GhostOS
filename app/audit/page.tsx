@@ -607,12 +607,12 @@ export default function AuditPage() {
           {/* Form */}
           <div className="form-card">
             <div className="form-grid-3">
-              <Field label="Followers" value={followers} onChange={setFollowers} numeric />
-              <Field label="Avg Views" value={avgViews} onChange={setAvgViews} numeric />
+              <NumberField label="Followers" value={followers} onChange={setFollowers} placeholder="e.g. 50,000" />
+              <NumberField label="Avg Views" value={avgViews} onChange={setAvgViews} placeholder="e.g. 40,000" />
               <Field label="Engagement %" value={engagementRate} onChange={setEngagementRate} numeric />
             </div>
             <div className="form-grid-2">
-              <Field label="Niche" value={niche} onChange={setNiche} />
+              <NicheSelect label="Niche" value={niche} onChange={setNiche} />
               <Field label="Audience Geo" value={audienceGeo} onChange={setAudienceGeo} />
             </div>
             <button className="run-btn" onClick={runAudit} disabled={loading}>
@@ -785,16 +785,17 @@ export default function AuditPage() {
   );
 }
 
-function Field({
-  label,
-  value,
-  onChange,
-  numeric,
-}: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  numeric?: boolean;
+const NICHES = [
+  "Beauty & Skincare","Fashion & Style","Streetwear","Fitness & Gym",
+  "Health & Wellness","Food & Cooking","Travel & Lifestyle","Gaming",
+  "Anime & Pop Culture","Music & Dance","Comedy & Entertainment",
+  "Tech & Gadgets","Finance & Money","Sports","Pets & Animals",
+  "Parenting & Family","Art & Design","Photography","Mindfulness & Spirituality",
+  "Education & Study","Cars & Automotive","Home & Interior","DIY & Crafts",
+];
+
+function Field({ label, value, onChange, numeric }: {
+  label: string; value: string; onChange: (v: string) => void; numeric?: boolean;
 }) {
   return (
     <div className="field">
@@ -805,6 +806,49 @@ function Field({
           onChange={(e) => onChange(e.target.value)}
           inputMode={numeric ? "numeric" : "text"}
         />
+      </label>
+    </div>
+  );
+}
+
+function NumberField({ label, value, onChange, placeholder }: {
+  label: string; value: string; onChange: (v: string) => void; placeholder?: string;
+}) {
+  const display = value ? Number(value.replace(/,/g, "")).toLocaleString() : "";
+  return (
+    <div className="field">
+      <label>
+        <span className="field-label">{label}</span>
+        <input
+          value={display}
+          inputMode="numeric"
+          placeholder={placeholder}
+          onChange={(e) => {
+            const raw = e.target.value.replace(/,/g, "");
+            if (/^\d*$/.test(raw)) onChange(raw);
+          }}
+          className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100 outline-none focus:border-zinc-600 w-full"
+        />
+      </label>
+    </div>
+  );
+}
+
+function NicheSelect({ label, value, onChange }: {
+  label: string; value: string; onChange: (v: string) => void;
+}) {
+  return (
+    <div className="field">
+      <label>
+        <span className="field-label">{label}</span>
+        <select
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          style={{width:"100%",background:"#080808",border:"1px solid #1e1e1e",borderRadius:"10px",padding:"10px 14px",fontSize:"14px",color: value ? "#e8e6e1" : "#3a3a3a",fontFamily:"inherit",outline:"none",cursor:"pointer",appearance:"none"}}
+        >
+          <option value="" disabled>Select your niche...</option>
+          {NICHES.map((n) => <option key={n} value={n} style={{background:"#111",color:"#fff"}}>{n}</option>)}
+        </select>
       </label>
     </div>
   );
