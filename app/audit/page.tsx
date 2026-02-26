@@ -128,11 +128,12 @@ function ParticleCanvas() {
 }
 
 export default function AuditPage() {
-  const [followers, setFollowers] = useState("30000");
-  const [avgViews, setAvgViews] = useState("45000");
-  const [engagementRate, setEngagementRate] = useState("6.5");
-  const [niche, setNiche] = useState("streetwear + lifestyle");
-  const [audienceGeo, setAudienceGeo] = useState("US (California), some UK");
+  const [followers, setFollowers] = useState("");
+  const [avgViews, setAvgViews] = useState("");
+  const [engagementRate, setEngagementRate] = useState("");
+  const [niche, setNiche] = useState("");
+  const [audienceGeo, setAudienceGeo] = useState("");
+  const [tiktokHandle, setTiktokHandle] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -153,6 +154,7 @@ export default function AuditPage() {
           engagementRate: Number(engagementRate),
           niche,
           audienceGeo,
+          tiktokHandle,
         }),
       });
 
@@ -269,6 +271,12 @@ export default function AuditPage() {
           .form-grid-3, .form-grid-2 { grid-template-columns: 1fr; }
         }
 
+        .form-grid-1 {
+          display: grid;
+          grid-template-columns: 1fr;
+          margin-top: 16px;
+        }
+
         .field label {
           display: block;
         }
@@ -296,6 +304,7 @@ export default function AuditPage() {
           transition: border-color 0.2s;
         }
 
+        .field input::placeholder { color: #2e2e2e; }
         .field input:focus {
           border-color: #3d3d3d;
         }
@@ -710,13 +719,17 @@ export default function AuditPage() {
           {/* Form */}
           <div className="form-card">
             <div className="form-grid-3">
-              <Field label="Followers" value={followers} onChange={setFollowers} numeric />
-              <Field label="Avg Views" value={avgViews} onChange={setAvgViews} numeric />
-              <Field label="Engagement %" value={engagementRate} onChange={setEngagementRate} numeric />
+              <Field label="Followers" value={followers} onChange={setFollowers} numeric placeholder="e.g. 50000" />
+              <Field label="Avg Views" value={avgViews} onChange={setAvgViews} numeric placeholder="e.g. 40000" />
+              <Field label="Engagement %" value={engagementRate} onChange={setEngagementRate} numeric placeholder="e.g. 6.5" />
             </div>
             <div className="form-grid-2">
-              <Field label="Niche" value={niche} onChange={setNiche} />
-              <Field label="Audience Geo" value={audienceGeo} onChange={setAudienceGeo} />
+              <Field label="Niche" value={niche} onChange={setNiche} placeholder="e.g. streetwear + lifestyle" />
+              <Field label="Audience Geo" value={audienceGeo} onChange={setAudienceGeo} placeholder="e.g. US, some UK" />
+            </div>
+
+            <div className="form-grid-1">
+              <Field label="TikTok Handle (optional)" value={tiktokHandle} onChange={setTiktokHandle} placeholder="@yourhandle" />
             </div>
             <button className="run-btn" onClick={runAudit} disabled={loading}>
               {loading ? <span className="loading-dots">Analyzing your profile</span> : "Run Audit →"}
@@ -888,17 +901,7 @@ export default function AuditPage() {
   );
 }
 
-function Field({
-  label,
-  value,
-  onChange,
-  numeric,
-}: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  numeric?: boolean;
-}) {
+function Field({ label, value, onChange, numeric, placeholder }: { label: string; value: string; onChange: (v: string) => void; numeric?: boolean; placeholder?: string; }) {
   return (
     <div className="field">
       <label>
@@ -907,6 +910,7 @@ function Field({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           inputMode={numeric ? "numeric" : "text"}
+          placeholder={placeholder}
         />
       </label>
     </div>
