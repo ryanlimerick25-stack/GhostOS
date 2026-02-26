@@ -127,7 +127,7 @@ export default function AuditPage() {
         .subtitle {
           margin-top: 12px;
           font-size: 14px;
-          color: #555;
+          color: #999;
           font-weight: 300;
           letter-spacing: 0.01em;
         }
@@ -176,7 +176,7 @@ export default function AuditPage() {
           font-size: 10px;
           letter-spacing: 0.15em;
           text-transform: uppercase;
-          color: #4a4a4a;
+          color: #666;
           margin-bottom: 8px;
           display: block;
         }
@@ -588,7 +588,7 @@ export default function AuditPage() {
           font-size: 10px;
           letter-spacing: 0.15em;
           text-transform: uppercase;
-          color: #2a2a2a;
+          color: #444;
         }
       `}</style>
 
