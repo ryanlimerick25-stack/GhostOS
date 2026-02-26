@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 
 type AuditResult = {
   readiness_score: number;
@@ -25,115 +25,12 @@ type AuditResult = {
   };
 };
 
-function ParticleCanvas() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const cv = canvas;
-    const ctx = cv.getContext("2d");
-    if (!ctx) return;
-    const c: CanvasRenderingContext2D = ctx;
-
-    let animId: number;
-    const particles: {
-      x: number; y: number; vx: number; vy: number;
-      size: number; opacity: number; pulse: number; pulseSpeed: number;
-    }[] = [];
-
-    const resize = () => {
-      cv.width = window.innerWidth;
-      cv.height = window.innerHeight;
-    };
-    resize();
-    window.addEventListener("resize", resize);
-
-    for (let i = 0; i < 80; i++) {
-      particles.push({
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3,
-        size: Math.random() * 20 + 4,
-        opacity: Math.random() * 0.7 + 0.15,
-        pulse: Math.random() * Math.PI * 2,
-        pulseSpeed: Math.random() * 0.01 + 0.005,
-      });
-    }
-
-    function drawConnections() {
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 120) {
-            const alpha = (1 - dist / 120) * 0.06;
-            c.beginPath();
-            c.moveTo(particles[i].x, particles[i].y);
-            c.lineTo(particles[j].x, particles[j].y);
-            c.strokeStyle = `rgba(255, 220, 150, ${alpha})`;
-            c.lineWidth = 0.5;
-            c.stroke();
-          }
-        }
-      }
-    }
-
-    function animate() {
-      c.clearRect(0, 0, cv.width, cv.height);
-      drawConnections();
-      particles.forEach((p) => {
-        p.pulse += p.pulseSpeed;
-        const op = p.opacity * (0.7 + 0.3 * Math.sin(p.pulse));
-        c.beginPath();
-        c.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        c.fillStyle = `rgba(255, 220, 150, ${op})`;
-        c.fill();
-        const grad = c.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 8);
-        grad.addColorStop(0, `rgba(255, 220, 150, ${op * 0.25})`);
-        grad.addColorStop(1, "transparent");
-        c.beginPath();
-        c.arc(p.x, p.y, p.size * 8, 0, Math.PI * 2);
-        c.fillStyle = grad;
-        c.fill();
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < 0) p.x = cv.width;
-        if (p.x > cv.width) p.x = 0;
-        if (p.y < 0) p.y = cv.height;
-        if (p.y > cv.height) p.y = 0;
-      });
-      animId = requestAnimationFrame(animate);
-    }
-
-    animate();
-    return () => {
-      cancelAnimationFrame(animId);
-      window.removeEventListener("resize", resize);
-    };
-  }, []);
-
-  return (
-    <canvas
-      ref={canvasRef}
-      style={{
-        position: "fixed", top: 0, left: 0,
-        width: "100%", height: "100%",
-        pointerEvents: "none", zIndex: 0,
-      }}
-    />
-  );
-}
-
 export default function AuditPage() {
-  const [followers, setFollowers] = useState("");
-  const [avgViews, setAvgViews] = useState("");
-  const [engagementRate, setEngagementRate] = useState("");
-  const [niche, setNiche] = useState("");
-  const [audienceGeo, setAudienceGeo] = useState("");
-  const [tiktokHandle, setTiktokHandle] = useState("");
+  const [followers, setFollowers] = useState("30000");
+  const [avgViews, setAvgViews] = useState("45000");
+  const [engagementRate, setEngagementRate] = useState("6.5");
+  const [niche, setNiche] = useState("streetwear + lifestyle");
+  const [audienceGeo, setAudienceGeo] = useState("US (California), some UK");
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -154,7 +51,6 @@ export default function AuditPage() {
           engagementRate: Number(engagementRate),
           niche,
           audienceGeo,
-          tiktokHandle,
         }),
       });
 
@@ -180,7 +76,7 @@ export default function AuditPage() {
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-          background: #06060e;
+          background: #080808;
           color: #e8e6e1;
           font-family: 'Geist', sans-serif;
           min-height: 100vh;
@@ -188,7 +84,7 @@ export default function AuditPage() {
 
         .page {
           min-height: 100vh;
-          background: rgba(8,8,8,0.92);
+          background: #080808;
           background-image:
             radial-gradient(ellipse 80% 50% at 50% -10%, rgba(120, 90, 255, 0.08), transparent),
             radial-gradient(ellipse 60% 40% at 80% 100%, rgba(255, 180, 50, 0.04), transparent);
@@ -271,12 +167,6 @@ export default function AuditPage() {
           .form-grid-3, .form-grid-2 { grid-template-columns: 1fr; }
         }
 
-        .form-grid-1 {
-          display: grid;
-          grid-template-columns: 1fr;
-          margin-top: 16px;
-        }
-
         .field label {
           display: block;
         }
@@ -293,7 +183,7 @@ export default function AuditPage() {
 
         .field input {
           width: 100%;
-          background: #06060e;
+          background: #080808;
           border: 1px solid #1e1e1e;
           border-radius: 10px;
           padding: 10px 14px;
@@ -304,7 +194,6 @@ export default function AuditPage() {
           transition: border-color 0.2s;
         }
 
-        .field input::placeholder { color: #2e2e2e; }
         .field input:focus {
           border-color: #3d3d3d;
         }
@@ -457,7 +346,7 @@ export default function AuditPage() {
         }
 
         .deal-card {
-          background: #06060e;
+          background: #080808;
           border: 1px solid #1a1a1a;
           border-radius: 14px;
           padding: 16px 18px;
@@ -501,7 +390,7 @@ export default function AuditPage() {
           font-size: 9px;
           letter-spacing: 0.2em;
           text-transform: uppercase;
-          color: #888;
+          color: #4a4a4a;
           margin-bottom: 16px;
         }
 
@@ -543,7 +432,7 @@ export default function AuditPage() {
           align-items: flex-start;
           gap: 12px;
           font-size: 14px;
-          color: #ccc;
+          color: #888;
           line-height: 1.5;
         }
 
@@ -568,7 +457,7 @@ export default function AuditPage() {
           align-items: flex-start;
           gap: 12px;
           font-size: 14px;
-          color: #ddd;
+          color: #aaa;
           line-height: 1.5;
         }
 
@@ -593,7 +482,7 @@ export default function AuditPage() {
         }
 
         .action-card {
-          background: #06060e;
+          background: #080808;
           border: 1px solid #1a1a1a;
           border-radius: 14px;
           padding: 18px;
@@ -620,7 +509,7 @@ export default function AuditPage() {
         }
 
         .rate-item {
-          background: #06060e;
+          background: #080808;
           border: 1px solid #1a1a1a;
           border-radius: 14px;
           padding: 18px 20px;
@@ -628,7 +517,7 @@ export default function AuditPage() {
 
         .rate-item-label {
           font-size: 11px;
-          color: #888;
+          color: #444;
           margin-bottom: 6px;
           font-family: 'DM Mono', monospace;
           letter-spacing: 0.05em;
@@ -637,7 +526,7 @@ export default function AuditPage() {
         .rate-item-value {
           font-family: 'DM Serif Display', serif;
           font-size: 26px;
-          color: #f5f3ef;
+          color: #e8e6e1;
           letter-spacing: -0.02em;
         }
 
@@ -648,7 +537,7 @@ export default function AuditPage() {
 
         /* Media kit positioning */
         .positioning-box {
-          background: #06060e;
+          background: #080808;
           border: 1px solid #1e1e1e;
           border-left: 2px solid #c9b8ff;
           border-radius: 0 12px 12px 0;
@@ -661,7 +550,7 @@ export default function AuditPage() {
 
         /* Outreach templates */
         .template-block {
-          background: #06060e;
+          background: #080808;
           border: 1px solid #1a1a1a;
           border-radius: 14px;
           padding: 20px 24px;
@@ -672,13 +561,13 @@ export default function AuditPage() {
           font-size: 9px;
           letter-spacing: 0.2em;
           text-transform: uppercase;
-          color: #888;
+          color: #4a4a4a;
           margin-bottom: 14px;
         }
 
         .template-text {
           font-size: 13px;
-          color: #bbb;
+          color: #777;
           line-height: 1.75;
           white-space: pre-wrap;
           font-family: 'Geist', sans-serif;
@@ -703,15 +592,14 @@ export default function AuditPage() {
         }
       `}</style>
 
-      <ParticleCanvas />
-      <div className="page" style={{position:"relative",zIndex:1,background:"transparent"}}>
+      <div className="page">
         <div className="container">
 
           {/* Header */}
           <div className="header">
-            <div className="eyebrow">GhostOS</div>
+            <div className="eyebrow">Creator Revenue OS</div>
             <h1 className="title">
-              GhostOS<br /><em>Brand Deal Readiness Audit</em>
+              Brand Deal<br /><em>Readiness Audit</em>
             </h1>
             <p className="subtitle">For TikTok creators (20k–200k) trying to land their first deal.</p>
           </div>
@@ -719,17 +607,13 @@ export default function AuditPage() {
           {/* Form */}
           <div className="form-card">
             <div className="form-grid-3">
-              <Field label="Followers" value={followers} onChange={setFollowers} numeric placeholder="e.g. 50000" />
-              <Field label="Avg Views" value={avgViews} onChange={setAvgViews} numeric placeholder="e.g. 40000" />
-              <Field label="Engagement %" value={engagementRate} onChange={setEngagementRate} numeric placeholder="e.g. 6.5" />
+              <Field label="Followers" value={followers} onChange={setFollowers} numeric />
+              <Field label="Avg Views" value={avgViews} onChange={setAvgViews} numeric />
+              <Field label="Engagement %" value={engagementRate} onChange={setEngagementRate} numeric />
             </div>
             <div className="form-grid-2">
-              <Field label="Niche" value={niche} onChange={setNiche} placeholder="e.g. streetwear + lifestyle" />
-              <Field label="Audience Geo" value={audienceGeo} onChange={setAudienceGeo} placeholder="e.g. US, some UK" />
-            </div>
-
-            <div className="form-grid-1">
-              <Field label="TikTok Handle (optional)" value={tiktokHandle} onChange={setTiktokHandle} placeholder="@yourhandle" />
+              <Field label="Niche" value={niche} onChange={setNiche} />
+              <Field label="Audience Geo" value={audienceGeo} onChange={setAudienceGeo} />
             </div>
             <button className="run-btn" onClick={runAudit} disabled={loading}>
               {loading ? <span className="loading-dots">Analyzing your profile</span> : "Run Audit →"}
@@ -745,7 +629,7 @@ export default function AuditPage() {
               <div className="score-hero">
                 <div style={{ flex: 1 }}>
                   <div className="score-label">Readiness Score</div>
-                  <div className="score-title">GhostOS Readiness</div>
+                  <div className="score-title">Brand Deal Readiness</div>
                   <div className="score-desc">How close you are to landing your first deal</div>
                   <div className="score-bar-wrap" style={{ marginTop: 20 }}>
                     <div
@@ -894,14 +778,24 @@ export default function AuditPage() {
             </div>
           )}
 
-          <div className="footer-badge">GhostOS · Powered by AI</div>
+          <div className="footer-badge">Creator Revenue OS · Powered by AI</div>
         </div>
       </div>
     </>
   );
 }
 
-function Field({ label, value, onChange, numeric, placeholder }: { label: string; value: string; onChange: (v: string) => void; numeric?: boolean; placeholder?: string; }) {
+function Field({
+  label,
+  value,
+  onChange,
+  numeric,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  numeric?: boolean;
+}) {
   return (
     <div className="field">
       <label>
@@ -910,7 +804,6 @@ function Field({ label, value, onChange, numeric, placeholder }: { label: string
           value={value}
           onChange={(e) => onChange(e.target.value)}
           inputMode={numeric ? "numeric" : "text"}
-          placeholder={placeholder}
         />
       </label>
     </div>
