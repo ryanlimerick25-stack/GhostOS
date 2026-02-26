@@ -501,7 +501,7 @@ export default function AuditPage() {
           font-size: 9px;
           letter-spacing: 0.2em;
           text-transform: uppercase;
-          color: #4a4a4a;
+          color: #888;
           margin-bottom: 16px;
         }
 
@@ -543,7 +543,7 @@ export default function AuditPage() {
           align-items: flex-start;
           gap: 12px;
           font-size: 14px;
-          color: #888;
+          color: #ccc;
           line-height: 1.5;
         }
 
@@ -568,7 +568,7 @@ export default function AuditPage() {
           align-items: flex-start;
           gap: 12px;
           font-size: 14px;
-          color: #aaa;
+          color: #ddd;
           line-height: 1.5;
         }
 
@@ -628,7 +628,7 @@ export default function AuditPage() {
 
         .rate-item-label {
           font-size: 11px;
-          color: #444;
+          color: #888;
           margin-bottom: 6px;
           font-family: 'DM Mono', monospace;
           letter-spacing: 0.05em;
@@ -637,7 +637,7 @@ export default function AuditPage() {
         .rate-item-value {
           font-family: 'DM Serif Display', serif;
           font-size: 26px;
-          color: #e8e6e1;
+          color: #f5f3ef;
           letter-spacing: -0.02em;
         }
 
@@ -672,13 +672,13 @@ export default function AuditPage() {
           font-size: 9px;
           letter-spacing: 0.2em;
           text-transform: uppercase;
-          color: #4a4a4a;
+          color: #888;
           margin-bottom: 14px;
         }
 
         .template-text {
           font-size: 13px;
-          color: #777;
+          color: #bbb;
           line-height: 1.75;
           white-space: pre-wrap;
           font-family: 'Geist', sans-serif;
