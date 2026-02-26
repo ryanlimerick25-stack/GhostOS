@@ -31,8 +31,10 @@ function ParticleCanvas() {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext("2d");
+    const cv = canvas;
+    const ctx = cv.getContext("2d");
     if (!ctx) return;
+    const c: CanvasRenderingContext2D = ctx;
 
     let animId: number;
     const particles: {
@@ -41,8 +43,8 @@ function ParticleCanvas() {
     }[] = [];
 
     const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      cv.width = window.innerWidth;
+      cv.height = window.innerHeight;
     };
     resize();
     window.addEventListener("resize", resize);
@@ -68,40 +70,40 @@ function ParticleCanvas() {
           const dist = Math.sqrt(dx * dx + dy * dy);
           if (dist < 120) {
             const alpha = (1 - dist / 120) * 0.06;
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(255, 220, 150, ${alpha})`;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
+            c.beginPath();
+            c.moveTo(particles[i].x, particles[i].y);
+            c.lineTo(particles[j].x, particles[j].y);
+            c.strokeStyle = `rgba(255, 220, 150, ${alpha})`;
+            c.lineWidth = 0.5;
+            c.stroke();
           }
         }
       }
     }
 
     function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      c.clearRect(0, 0, cv.width, cv.height);
       drawConnections();
       particles.forEach((p) => {
         p.pulse += p.pulseSpeed;
         const op = p.opacity * (0.7 + 0.3 * Math.sin(p.pulse));
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 220, 150, ${op})`;
-        ctx.fill();
-        const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 8);
+        c.beginPath();
+        c.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        c.fillStyle = `rgba(255, 220, 150, ${op})`;
+        c.fill();
+        const grad = c.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 8);
         grad.addColorStop(0, `rgba(255, 220, 150, ${op * 0.25})`);
         grad.addColorStop(1, "transparent");
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size * 8, 0, Math.PI * 2);
-        ctx.fillStyle = grad;
-        ctx.fill();
+        c.beginPath();
+        c.arc(p.x, p.y, p.size * 8, 0, Math.PI * 2);
+        c.fillStyle = grad;
+        c.fill();
         p.x += p.vx;
         p.y += p.vy;
-        if (p.x < 0) p.x = canvas.width;
-        if (p.x > canvas.width) p.x = 0;
-        if (p.y < 0) p.y = canvas.height;
-        if (p.y > canvas.height) p.y = 0;
+        if (p.x < 0) p.x = cv.width;
+        if (p.x > cv.width) p.x = 0;
+        if (p.y < 0) p.y = cv.height;
+        if (p.y > cv.height) p.y = 0;
       });
       animId = requestAnimationFrame(animate);
     }
@@ -819,11 +821,11 @@ export default function AuditPage() {
               )}
 
               {/* Pitch bullets */}
-              {result.media_kit_brand_pitch_bullets?.length > 0 && (
+              {(result.media_kit_brand_pitch_bullets?.length ?? 0) > 0 && (
                 <div className="section-block">
                   <div className="section-eyebrow">Media Kit Pitch Bullets</div>
                   <ul className="bullet-list">
-                    {result.media_kit_brand_pitch_bullets.map((b, i) => <li key={i}>{b}</li>)}
+                    {result.media_kit_brand_pitch_bullets?.map((b, i) => <li key={i}>{b}</li>)}
                   </ul>
                 </div>
               )}
