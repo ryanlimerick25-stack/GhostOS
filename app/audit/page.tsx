@@ -592,7 +592,17 @@ export default function AuditPage() {
         }
       `}</style>
 
-      <div className="page">
+      <nav style={{position:"fixed",top:0,left:0,right:0,zIndex:100,display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 40px",height:"64px",background:"rgba(8,8,8,0.85)",backdropFilter:"blur(20px)",borderBottom:"1px solid rgba(255,255,255,0.05)"}}>
+        <a href="/" style={{fontFamily:"'DM Serif Display',serif",fontSize:"18px",fontWeight:700,color:"rgba(255,255,255,0.9)",display:"flex",alignItems:"center",gap:"8px",textDecoration:"none"}}>
+          <div style={{width:"7px",height:"7px",borderRadius:"50%",background:"#a78bfa",boxShadow:"0 0 10px #a78bfa"}} />
+          GhostOS
+        </a>
+        <div style={{display:"flex",gap:"8px"}}>
+          <a href="/dashboard" style={{padding:"8px 18px",borderRadius:"99px",fontSize:"13px",fontWeight:500,background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.08)",color:"rgba(255,255,255,0.6)",textDecoration:"none"}}>← Dashboard</a>
+        </div>
+      </nav>
+
+      <div className="page" style={{paddingTop:"80px"}}>
         <div className="container">
 
           {/* Header */}
