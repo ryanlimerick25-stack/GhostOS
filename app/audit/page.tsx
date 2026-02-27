@@ -26,11 +26,11 @@ type AuditResult = {
 };
 
 export default function AuditPage() {
-  const [followers, setFollowers] = useState("30000");
-  const [avgViews, setAvgViews] = useState("45000");
-  const [engagementRate, setEngagementRate] = useState("6.5");
-  const [niche, setNiche] = useState("streetwear + lifestyle");
-  const [audienceGeo, setAudienceGeo] = useState("US (California), some UK");
+  const [followers, setFollowers] = useState("");
+  const [avgViews, setAvgViews] = useState("");
+  const [engagementRate, setEngagementRate] = useState("");
+  const [niche, setNiche] = useState("");
+  const [audienceGeo, setAudienceGeo] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
