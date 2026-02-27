@@ -53,6 +53,9 @@ export default function SignUpPage() {
     if (!lastName.trim()) { setError("Last name is required."); return; }
     if (!email.trim()) { setError("Email is required."); return; }
     if (!password.trim()) { setError("Password is required."); return; }
+    if (password.length < 10) { setError("Password must be at least 10 characters."); return; }
+    if (!/[0-9]/.test(password)) { setError("Password must contain at least one number."); return; }
+    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) { setError("Password must contain at least one special character (!@#$%^&* etc)."); return; }
     setLoading(true); setError("");
     try {
       await signUp.create({ firstName, lastName, emailAddress: email, password });
@@ -144,11 +147,11 @@ export default function SignUpPage() {
               <form onSubmit={handleSignUp}>
                 <div className="field-group">
                   <div className="field-row">
-                    <div className="field"><label className="field-label">First Name</label><input className="field-input" value={firstName} onChange={e => setFirstName(e.target.value)} placeholder="Ryan" required /></div>
-                    <div className="field"><label className="field-label">Last Name</label><input className="field-input" value={lastName} onChange={e => setLastName(e.target.value)} placeholder="Limerick" required /></div>
+                    <div className="field"><label className="field-label">First Name</label><input className="field-input" value={firstName} onChange={e => setFirstName(e.target.value)} placeholder="John" required /></div>
+                    <div className="field"><label className="field-label">Last Name</label><input className="field-input" value={lastName} onChange={e => setLastName(e.target.value)} placeholder="Doe" required /></div>
                   </div>
                   <div className="field"><label className="field-label">Email</label><input className="field-input" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" required /></div>
-                  <div className="field"><label className="field-label">Password</label><input className="field-input" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Min. 8 characters" required /></div>
+                  <div className="field"><label className="field-label">Password</label><input className="field-input" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Min. 10 chars, 1 number, 1 special" required /></div>
                 </div>
                 {error && <div className="error-box">{error}</div>}
                 <button className="submit-btn" type="submit" disabled={loading}>{loading ? "Creating account..." : "Create Account →"}</button>
