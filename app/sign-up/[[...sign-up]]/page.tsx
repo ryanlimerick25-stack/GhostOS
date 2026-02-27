@@ -73,7 +73,7 @@ export default function SignUpPage() {
     setLoading(true); setError("");
     try {
       const result = await signUp.attemptEmailAddressVerification({ code });
-      if (result.status === "complete") router.push("/audit");
+      if (result.status === "complete") router.push("/dashboard");
     } catch (e: unknown) {
       const err = e as { errors?: { message: string }[] };
       setError(err.errors?.[0]?.message || "Invalid code.");
@@ -82,12 +82,12 @@ export default function SignUpPage() {
 
   async function handleGoogle() {
     if (!isLoaded) return;
-    await signUp.authenticateWithRedirect({ strategy: "oauth_google", redirectUrl: "/sso-callback", redirectUrlComplete: "/audit" });
+    await signUp.authenticateWithRedirect({ strategy: "oauth_google", redirectUrl: "/sso-callback", redirectUrlComplete: "/dashboard" });
   }
 
   async function handleApple() {
     if (!isLoaded) return;
-    await signUp.authenticateWithRedirect({ strategy: "oauth_apple", redirectUrl: "/sso-callback", redirectUrlComplete: "/audit" });
+    await signUp.authenticateWithRedirect({ strategy: "oauth_apple", redirectUrl: "/sso-callback", redirectUrlComplete: "/dashboard" });
   }
 
   return (
