@@ -165,8 +165,8 @@ export default function LandingPage() {
         <div className="nav-links">
           <button className="nav-link" onClick={() => document.getElementById('features')?.scrollIntoView({behavior:'smooth'})}>Features</button>
           <button className="nav-link" onClick={() => document.getElementById('testimonials')?.scrollIntoView({behavior:'smooth'})}>Reviews</button>
-          <a className="nav-btn nav-ghost" href="/audit">Log in</a>
-          <a className="nav-btn nav-primary" href="/audit">Get Started</a>
+          <a className="nav-btn nav-ghost" href="/sign-in">Log in</a>
+          <a className="nav-btn nav-primary" href="/sign-up">Get Started</a>
         </div>
       </nav>
 
@@ -177,7 +177,7 @@ export default function LandingPage() {
           <p className="hero-sub">The audit tool built for TikTok creators.</p>
           <p className="hero-desc">You have the audience. You have the influence.<br /><strong>Now find out exactly what brands should pay you</strong> — and how to make them say yes.</p>
           <div className="hero-ctas">
-            <a className="btn-primary" href="/audit">Run Your Free Audit →</a>
+            <a className="btn-primary" href="/sign-up">Run Your Free Audit →</a>
             <button className="btn-secondary" onClick={() => document.getElementById('features')?.scrollIntoView({behavior:'smooth'})}>See How It Works</button>
           </div>
           <p className="hero-note">Free to use · No credit card required · Results in 30 seconds</p>
@@ -245,8 +245,8 @@ export default function LandingPage() {
             <h2 className="cta-title">Ready to find out<br />what you're worth?</h2>
             <p className="cta-desc">Run your free audit in 30 seconds. No signup required to get started.</p>
             <div className="cta-btns">
-              <a className="btn-primary" href="/audit">Run Free Audit →</a>
-              <a className="btn-secondary" href="/audit">Create Account</a>
+              <a className="btn-primary" href="/sign-up">Run Free Audit →</a>
+              <a className="btn-secondary" href="/sign-up">Create Account</a>
             </div>
           </div>
         </div>
