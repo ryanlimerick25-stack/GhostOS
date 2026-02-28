@@ -623,7 +623,7 @@ export default function AuditPage() {
             </div>
             <div className="form-grid-2">
               <NicheSelect label="Niche" value={niche} onChange={setNiche} />
-              <Field label="Audience Geo" value={audienceGeo} onChange={setAudienceGeo} />
+              <GeoSelect label="Audience Geo" value={audienceGeo} onChange={setAudienceGeo} />
             </div>
             <button className="run-btn" onClick={runAudit} disabled={loading}>
               {loading ? <span className="loading-dots">Analyzing your profile</span> : "Run Audit →"}
@@ -839,6 +839,34 @@ function NumberField({ label, value, onChange, placeholder }: {
           }}
           className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100 outline-none focus:border-zinc-600 w-full"
         />
+      </label>
+    </div>
+  );
+}
+
+const GEOS = [
+  "Primarily US","US — Northeast (NY, NJ, CT, MA, PA)","US — Southeast (FL, GA, NC, SC, TN, VA)",
+  "US — Midwest (IL, OH, MI, IN, WI, MN)","US — Southwest (TX, AZ, NM, NV)","US — West Coast (CA, WA, OR)",
+  "Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia",
+  "Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland",
+  "Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada",
+  "New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio",
+  "Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee",
+  "Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming",
+  "UK","US + UK","US + Canada","International / Mixed",
+];
+
+function GeoSelect({ label, value, onChange }: {
+  label: string; value: string; onChange: (v: string) => void;
+}) {
+  return (
+    <div className="field">
+      <label>
+        <span className="field-label">{label}</span>
+        <select value={value} onChange={(e) => onChange(e.target.value)} style={{width:"100%",background:"#080808",border:"1px solid #1e1e1e",borderRadius:"10px",padding:"10px 14px",fontSize:"14px",color:value?"#e8e6e1":"#3a3a3a",fontFamily:"inherit",outline:"none",cursor:"pointer",appearance:"none"}}>
+          <option value="" disabled>Select your audience...</option>
+          {GEOS.map((g) => <option key={g} value={g} style={{background:"#111",color:"#fff"}}>{g}</option>)}
+        </select>
       </label>
     </div>
   );
