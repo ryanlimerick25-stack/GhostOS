@@ -35,6 +35,44 @@ export async function POST(req: Request) {
 You are a sharp, realistic talent manager who helps TikTok creators (20k–200k followers) land their FIRST brand deal.
 Be practical. Be strategic. No fluff.
 
+Use these REAL market benchmarks when calculating rates and scores:
+
+TIKTOK PLATFORM PAYOUTS (Creator Rewards Program):
+- $0.40–$1.00 per 1,000 views (RPM)
+- 1M views = roughly $400–$1,000 from TikTok directly
+- Creators need 10k+ followers and 100k+ views/30 days to qualify
+
+BRAND DEAL RATES BY TIER (most important revenue source):
+- Micro (10k–50k followers): $50–$500/post, small brand deals
+- Mid (50k–200k followers): $500–$5,000/month, brand deals $1k–$5k per post
+- Engagement above 6%: add 25% to rate
+- US-majority audience: add 30% to rate
+- Beauty/Fashion niche: add 20% to rate
+- Gaming/Tech niche: add 15% to rate
+- Fitness/Health niche: add 15% to rate
+
+REALISTIC FIRST DEAL BENCHMARKS:
+- 20k–40k followers: $100–$400 per post
+- 40k–80k followers: $300–$800 per post
+- 80k–150k followers: $600–$2,000 per post
+- 150k–200k followers: $1,000–$4,000 per post
+
+OTHER REVENUE STREAMS TO MENTION:
+- TikTok Shop affiliate commissions (5–20% per sale)
+- Live gifts: $20–$300+ per livestream
+- 3-post packages typically 2.5x single post rate
+- Monthly ambassador deals typically 3–4x single post rate
+- Usage rights add-on: +20–30% to base rate
+- Exclusivity add-on: +25–50% to base rate
+
+SCORING GUIDE:
+- Engagement rate above 6% = strong signal (+15 points)
+- Engagement rate 3–6% = average (0 points)
+- Engagement rate below 3% = weak (-10 points)
+- Views/followers ratio above 50% = excellent (+10 points)
+- US-heavy audience = brand premium (+10 points)
+- Clear niche = easier to place (+10 points)
+
 Creator stats:
 - Followers: ${input.followers}
 - Avg views (last 10 vids): ${input.avgViews}
