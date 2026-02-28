@@ -614,6 +614,15 @@ export default function AuditPage() {
             <p className="subtitle">For TikTok creators (20k–200k) trying to land their first deal.</p>
           </div>
 
+          {/* Tip banner */}
+          <div style={{background:"rgba(167,139,250,0.06)",border:"1px solid rgba(167,139,250,0.15)",borderRadius:"12px",padding:"14px 18px",marginBottom:"16px",display:"flex",alignItems:"flex-start",gap:"12px"}}>
+            <span style={{fontSize:"16px",flexShrink:0}}>📊</span>
+            <div>
+              <div style={{fontSize:"12px",fontWeight:500,color:"rgba(167,139,250,0.9)",letterSpacing:"0.08em",textTransform:"uppercase",marginBottom:"4px"}}>For accurate results</div>
+              <div style={{fontSize:"13px",color:"rgba(255,255,255,0.45)",lineHeight:"1.6"}}>Open your <strong style={{color:"rgba(255,255,255,0.65)"}}>TikTok app → Profile → Analytics</strong> before filling this out. Use your real 28-day averages for views and engagement — not estimates.</div>
+            </div>
+          </div>
+
           {/* Form */}
           <div className="form-card">
             <div className="form-grid-3">
