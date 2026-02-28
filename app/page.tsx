@@ -173,7 +173,7 @@ export default function LandingPage() {
       <section className="hero">
         <div className="hero-inner">
           <div className="hero-badge"><div className="badge-dot" /><span className="badge-text">AI-Powered Brand Deal Intelligence</span></div>
-          <h1 className="hero-title">Know your worth.<br /><em>Before they lowball you.</em></h1>
+          <h1 className="hero-title">Get paid what you're<br /><em>actually worth.</em></h1>
           <p className="hero-sub">The audit tool built for TikTok creators.</p>
           <p className="hero-desc">You have the audience. You have the influence.<br /><strong>Now find out exactly what brands should pay you</strong> — and how to make them say yes.</p>
           <div className="hero-ctas">
