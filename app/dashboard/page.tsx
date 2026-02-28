@@ -22,6 +22,8 @@ export default function Dashboard() {
   const { signOut } = useClerk();
   const router = useRouter();
   const [audits, setAudits] = useState<Audit[]>([]);
+  const [isPro, setIsPro] = useState(false);
+  const [upgrading, setUpgrading] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -31,6 +33,20 @@ export default function Dashboard() {
       .then(r => r.json())
       .then(d => { setAudits(d.audits || []); setLoading(false); });
   }, [isLoaded, user]);
+
+  async function handleUpgrade() {
+    setUpgrading(true);
+    const res = await fetch("/api/stripe/checkout", { method: "POST" });
+    const data = await res.json();
+    if (data.url) window.location.href = data.url;
+    else setUpgrading(false);
+  }
+
+  async function handlePortal() {
+    const res = await fetch("/api/stripe/portal", { method: "POST" });
+    const data = await res.json();
+    if (data.url) window.location.href = data.url;
+  }
 
   function scoreColor(s: number) {
     if (s >= 75) return "#4ade80";
@@ -119,6 +135,29 @@ export default function Dashboard() {
           </h1>
           <p className="welcome-sub">Track your brand deal readiness over time.</p>
         </div>
+
+        {!isPro && (
+          <div style={{background:"linear-gradient(135deg,rgba(167,139,250,0.1),rgba(129,140,248,0.1))",border:"1px solid rgba(167,139,250,0.2)",borderRadius:"20px",padding:"24px 28px",marginBottom:"24px",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:"16px"}}>
+            <div>
+              <div style={{fontSize:"11px",fontWeight:500,letterSpacing:"0.12em",textTransform:"uppercase",color:"#a78bfa",marginBottom:"6px"}}>Upgrade to Pro</div>
+              <div style={{fontSize:"16px",fontWeight:500,color:"rgba(255,255,255,0.9)",marginBottom:"4px"}}>Unlimited audits + full history</div>
+              <div style={{fontSize:"13px",color:"rgba(255,255,255,0.35)"}}>Free plan = 3 audits. Pro = unlimited for $36/month.</div>
+            </div>
+            <button onClick={handleUpgrade} disabled={upgrading} style={{padding:"12px 28px",borderRadius:"12px",background:"linear-gradient(135deg,#a78bfa,#818cf8)",color:"#fff",fontSize:"14px",fontWeight:600,border:"none",cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",opacity:upgrading?0.6:1}}>
+              {upgrading ? "Loading..." : "Upgrade to Pro →"}
+            </button>
+          </div>
+        )}
+
+        {isPro && (
+          <div style={{background:"rgba(74,222,128,0.05)",border:"1px solid rgba(74,222,128,0.15)",borderRadius:"20px",padding:"16px 24px",marginBottom:"24px",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:"12px"}}>
+            <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
+              <div style={{width:"8px",height:"8px",borderRadius:"50%",background:"#4ade80",boxShadow:"0 0 8px #4ade80"}} />
+              <span style={{fontSize:"14px",color:"rgba(255,255,255,0.7)"}}>GhostOS Pro — Active</span>
+            </div>
+            <button onClick={handlePortal} style={{fontSize:"12px",color:"rgba(255,255,255,0.3)",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>Manage subscription →</button>
+          </div>
+        )}
 
         <div className="stats-row">
           <div className="stat-card">
