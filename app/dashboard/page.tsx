@@ -29,9 +29,14 @@ export default function Dashboard() {
   useEffect(() => {
     if (!isLoaded) return;
     if (!user) { router.push("/sign-in"); return; }
-    fetch("/api/audits")
-      .then(r => r.json())
-      .then(d => { setAudits(d.audits || []); setLoading(false); });
+    Promise.all([
+      fetch("/api/audits").then(r => r.json()),
+      fetch("/api/user").then(r => r.json()),
+    ]).then(([auditData, userData]) => {
+      setAudits(auditData.audits || []);
+      setIsPro(userData.is_pro || false);
+      setLoading(false);
+    });
   }, [isLoaded, user]);
 
   async function handleUpgrade() {
