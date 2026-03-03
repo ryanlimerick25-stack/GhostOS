@@ -685,6 +685,34 @@ export default function AuditPage() {
             <button className="run-btn" onClick={runAudit} disabled={loading}>
               {loading ? <span className="loading-dots">{loadingMessages[loadingMessageIndex]}</span> : "Run Audit →"}
             </button>
+            
+            {/* Debug test button */}
+            <button 
+              onClick={() => {
+                console.log("Test button clicked");
+                fetch("/api/audit", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    followers: 50000,
+                    avgViews: 40000,
+                    engagementRate: 5,
+                    niche: "Beauty & Skincare",
+                    audienceGeo: "Primarily US",
+                  }),
+                }).then(r => {
+                  console.log("Test response:", r.status, r.ok);
+                  return r.json();
+                }).then(data => {
+                  console.log("Test data:", data);
+                }).catch(e => {
+                  console.error("Test error:", e);
+                });
+              }}
+              style={{marginTop: "10px", background: "#333", color: "white", border: "none", padding: "5px 10px", borderRadius: "5px", cursor: "pointer"}}
+            >
+              Debug Test API
+            </button>
             {error && <div className="error-box">{error}</div>}
           </div>
 
