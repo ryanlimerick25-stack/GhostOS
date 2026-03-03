@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type AuditResult = {
   readiness_score: number;
@@ -33,10 +33,23 @@ export default function AuditPage() {
   const [audienceGeo, setAudienceGeo] = useState("");
 
   const [loading, setLoading] = useState(false);
+  const [freeAuditsUsed, setFreeAuditsUsed] = useState(0);
+
+  useEffect(() => {
+    const used = parseInt(localStorage.getItem("free_audits_used") || "0");
+    setFreeAuditsUsed(used);
+  }, []);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<AuditResult | null>(null);
 
   async function runAudit() {
+    // Check free audit limit for non-logged-in users
+    const used = parseInt(localStorage.getItem("free_audits_used") || "0");
+    if (used >= 3) {
+      setError("You've used your 3 free audits. Sign up for GhostOS Pro to run unlimited audits.");
+      return;
+    }
+
     setLoading(true);
     setError(null);
     setResult(null);
@@ -57,6 +70,9 @@ export default function AuditPage() {
       const json = await res.json();
       if (!res.ok) throw new Error(json?.error || "Request failed");
       setResult(json.data);
+      const newCount = parseInt(localStorage.getItem("free_audits_used") || "0") + 1;
+      localStorage.setItem("free_audits_used", String(newCount));
+      setFreeAuditsUsed(newCount);
     } catch (e: any) {
       setError(e.message || "Something went wrong");
     } finally {
