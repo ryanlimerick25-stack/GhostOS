@@ -64,13 +64,18 @@ export default function AuditPage() {
   const [result, setResult] = useState<AuditResult | null>(null);
 
   async function runAudit() {
+    console.log("runAudit called");
+    
     // Check free audit limit for non-logged-in users
     const used = parseInt(localStorage.getItem("free_audits_used") || "0");
+    console.log("Free audits used:", used);
+    
     if (used >= 3) {
       setError("You've used your 3 free audits. Sign up for GhostOS Pro to run unlimited audits.");
       return;
     }
 
+    console.log("Starting audit request...");
     setLoading(true);
     setError(null);
     setResult(null);
@@ -88,13 +93,19 @@ export default function AuditPage() {
         }),
       });
 
+      console.log("Response status:", res.status);
+      console.log("Response ok:", res.ok);
+
       const json = await res.json();
+      console.log("Response data:", json);
+      
       if (!res.ok) throw new Error(json?.error || "Request failed");
       setResult(json.data);
       const newCount = parseInt(localStorage.getItem("free_audits_used") || "0") + 1;
       localStorage.setItem("free_audits_used", String(newCount));
       setFreeAuditsUsed(newCount);
     } catch (e: any) {
+      console.error("Audit error:", e);
       setError(e.message || "Something went wrong");
     } finally {
       setLoading(false);
