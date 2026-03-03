@@ -644,7 +644,7 @@ export default function AuditPage() {
 
           {/* Header */}
           <div className="header">
-            <div className="eyebrow">Creator Revenue OS</div>
+            <div className="eyebrow">GhostOS</div>
             <h1 className="title">
               Brand Deal<br /><em>Readiness Audit</em>
             </h1>
@@ -834,7 +834,7 @@ export default function AuditPage() {
             </div>
           )}
 
-          <div className="footer-badge">Creator Revenue OS · Powered by AI</div>
+          <div className="footer-badge">GhostOS · Powered by AI</div>
         </div>
       </div>
     </>
