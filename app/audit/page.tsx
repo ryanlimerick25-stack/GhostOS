@@ -70,7 +70,8 @@ export default function AuditPage() {
     const used = parseInt(localStorage.getItem("free_audits_used") || "0");
     console.log("Free audits used:", used);
     
-    if (used >= 3) {
+    // TEMPORARILY BYPASS LIMIT FOR TESTING
+    if (false && used >= 3) {
       setError("You've used your 3 free audits. Sign up for GhostOS Pro to run unlimited audits.");
       return;
     }
@@ -712,6 +713,18 @@ export default function AuditPage() {
               style={{marginTop: "10px", background: "#333", color: "white", border: "none", padding: "5px 10px", borderRadius: "5px", cursor: "pointer"}}
             >
               Debug Test API
+            </button>
+            
+            {/* Reset counter button */}
+            <button 
+              onClick={() => {
+                localStorage.setItem("free_audits_used", "0");
+                setFreeAuditsUsed(0);
+                console.log("Free audit counter reset");
+              }}
+              style={{marginTop: "10px", background: "#666", color: "white", border: "none", padding: "5px 10px", borderRadius: "5px", cursor: "pointer", marginLeft: "5px"}}
+            >
+              Reset Counter
             </button>
             {error && <div className="error-box">{error}</div>}
           </div>
