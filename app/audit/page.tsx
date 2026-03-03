@@ -34,11 +34,32 @@ export default function AuditPage() {
 
   const [loading, setLoading] = useState(false);
   const [freeAuditsUsed, setFreeAuditsUsed] = useState(0);
+  const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
+
+  const loadingMessages = [
+    "Analyzing your profile",
+    "Scanning your content",
+    "Checking brand compatibility", 
+    "Calculating deal potential",
+    "Generating your audit"
+  ];
 
   useEffect(() => {
     const used = parseInt(localStorage.getItem("free_audits_used") || "0");
     setFreeAuditsUsed(used);
   }, []);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (loading) {
+      interval = setInterval(() => {
+        setLoadingMessageIndex((prev) => (prev + 1) % loadingMessages.length);
+      }, 2500);
+    } else {
+      setLoadingMessageIndex(0);
+    }
+    return () => clearInterval(interval);
+  }, [loading, loadingMessages]);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<AuditResult | null>(null);
 
@@ -651,7 +672,7 @@ export default function AuditPage() {
               <GeoSelect label="Audience Geo" value={audienceGeo} onChange={setAudienceGeo} />
             </div>
             <button className="run-btn" onClick={runAudit} disabled={loading}>
-              {loading ? <span className="loading-dots">Analyzing your profile</span> : "Run Audit →"}
+              {loading ? <span className="loading-dots">{loadingMessages[loadingMessageIndex]}</span> : "Run Audit →"}
             </button>
             {error && <div className="error-box">{error}</div>}
           </div>

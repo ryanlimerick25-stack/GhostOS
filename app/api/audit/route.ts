@@ -20,7 +20,9 @@ type AuditInput = {
 
 export async function POST(req: Request) {
   try {
-    const { userId } = await auth();
+    // Make auth optional - allow free audits without login
+    const authResult = await auth().catch(() => ({ userId: null }));
+    const userId = authResult?.userId;
     const key = process.env.OPENAI_API_KEY;
     if (!key) return Response.json({ error: "OPENAI_API_KEY missing" }, { status: 500 });
 
@@ -42,28 +44,48 @@ TIKTOK PLATFORM PAYOUTS (Creator Rewards Program):
 - 1M views = roughly $400–$1,000 from TikTok directly
 - Creators need 10k+ followers and 100k+ views/30 days to qualify
 
-BRAND DEAL RATES BY TIER (most important revenue source):
-- Micro (10k–50k followers): $50–$500/post, small brand deals
-- Mid (50k–200k followers): $500–$5,000/month, brand deals $1k–$5k per post
-- Engagement above 6%: add 25% to rate
-- US-majority audience: add 30% to rate
-- Beauty/Fashion niche: add 20% to rate
-- Gaming/Tech niche: add 15% to rate
-- Fitness/Health niche: add 15% to rate
+BRAND DEAL RATES BY TIER (sourced from 2025-2026 market data):
+- 20k–50k followers: $100–$500 per post (median $250)
+- 50k–100k followers: $300–$1,200 per post (median $600)
+- 100k–150k followers: $800–$4,000 per post (median $2,000)
+- 150k–200k followers: $1,500–$6,000 per post (median $3,000)
 
-REALISTIC FIRST DEAL BENCHMARKS:
-- 20k–40k followers: $100–$400 per post
-- 40k–80k followers: $300–$800 per post
-- 80k–150k followers: $600–$2,000 per post
-- 150k–200k followers: $1,000–$4,000 per post
+NICHE MULTIPLIERS (apply to base rate):
+- Finance & Money: 3-4x multiplier (highest advertiser spend, $2,000-10,000 CLV)
+- Tech & Gadgets: 2-3x multiplier
+- Beauty & Skincare: 2-2.5x multiplier (strongest purchase driver)
+- Fashion & Style: 1.8-2x multiplier
+- Fitness & Health: 1.5-2x multiplier
+- Food & Cooking: 1.3-1.5x multiplier
+- Gaming: 1.3-1.5x multiplier
+- Education: 1.5-2x multiplier
+- Travel & Lifestyle: 1.2-1.5x multiplier
+- Music & Dance: 0.8-1x multiplier (lower brand ROI, harder to monetize)
+- Comedy & Entertainment: 0.8-1x multiplier
+- All other niches: 1x multiplier (use base rate)
 
-OTHER REVENUE STREAMS TO MENTION:
-- TikTok Shop affiliate commissions (5–20% per sale)
-- Live gifts: $20–$300+ per livestream
-- 3-post packages typically 2.5x single post rate
-- Monthly ambassador deals typically 3–4x single post rate
-- Usage rights add-on: +20–30% to base rate
-- Exclusivity add-on: +25–50% to base rate
+ENGAGEMENT MULTIPLIERS:
+- 10%+ engagement: multiply rate by 1.5
+- 6-10% engagement: multiply rate by 1.25
+- 3-6% engagement: multiply rate by 1.0
+- Below 3% engagement: multiply rate by 0.7
+
+AUDIENCE MULTIPLIERS:
+- US-majority audience: multiply rate by 1.3
+- US + UK mixed: multiply rate by 1.2
+- International/mixed: multiply rate by 0.8
+
+PACKAGE PRICING:
+- 3-post package: 2.5x single post rate
+- Monthly ambassador: 3.5x single post rate
+- Usage rights add-on (30-90 days): +25% to base rate
+- Extended usage rights (6+ months): +50-100% to base rate
+- Exclusivity add-on: +25-50% to base rate
+
+OTHER REVENUE STREAMS:
+- TikTok Shop affiliate commissions: 5-20% per sale
+- TikTok Creator Rewards: $0.40-$1.00 per 1,000 views
+- Live gifts: $20-$300+ per livestream
 
 SCORING GUIDE:
 - Engagement rate above 6% = strong signal (+15 points)
