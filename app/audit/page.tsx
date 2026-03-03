@@ -25,6 +25,14 @@ type AuditResult = {
   };
 };
 
+const loadingMessages = [
+  "Analyzing your profile",
+  "Scanning your content",
+  "Checking brand compatibility", 
+  "Calculating deal potential",
+  "Generating your audit"
+];
+
 export default function AuditPage() {
   const [followers, setFollowers] = useState("");
   const [avgViews, setAvgViews] = useState("");
@@ -35,14 +43,6 @@ export default function AuditPage() {
   const [loading, setLoading] = useState(false);
   const [freeAuditsUsed, setFreeAuditsUsed] = useState(0);
   const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
-
-  const loadingMessages = [
-    "Analyzing your profile",
-    "Scanning your content",
-    "Checking brand compatibility", 
-    "Calculating deal potential",
-    "Generating your audit"
-  ];
 
   useEffect(() => {
     const used = parseInt(localStorage.getItem("free_audits_used") || "0");
@@ -59,7 +59,7 @@ export default function AuditPage() {
       setLoadingMessageIndex(0);
     }
     return () => clearInterval(interval);
-  }, [loading, loadingMessages]);
+  }, [loading]);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<AuditResult | null>(null);
 
