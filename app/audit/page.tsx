@@ -704,6 +704,7 @@ export default function AuditPage() {
             {/* Debug test button */}
             <button 
               onClick={() => {
+                alert("JavaScript is working!");
                 console.log("Test button clicked");
                 fetch("/api/audit", {
                   method: "POST",
@@ -720,8 +721,10 @@ export default function AuditPage() {
                   return r.json();
                 }).then(data => {
                   console.log("Test data:", data);
+                  alert("API response: " + JSON.stringify(data).substring(0, 100) + "...");
                 }).catch(e => {
                   console.error("Test error:", e);
+                  alert("Error: " + e.message);
                 });
               }}
               style={{marginTop: "10px", background: "#333", color: "white", border: "none", padding: "5px 10px", borderRadius: "5px", cursor: "pointer"}}
