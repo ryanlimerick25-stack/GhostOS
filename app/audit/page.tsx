@@ -64,28 +64,19 @@ export default function AuditPage() {
   const [result, setResult] = useState<AuditResult | null>(null);
 
   async function runAudit() {
-    console.log("runAudit called");
-    
     // Check free audit limit for non-logged-in users
     const used = parseInt(localStorage.getItem("free_audits_used") || "0");
-    console.log("Free audits used:", used);
     
-    // TEMPORARILY BYPASS LIMIT FOR TESTING
-    if (false && used >= 3) {
-      console.log("Audit limit reached, showing error");
+    if (used >= 3) {
       setError("You've used your 3 free audits. Sign up for GhostOS Pro to run unlimited audits.");
       return;
     }
 
-    console.log("Starting audit request...");
-    console.log("Form data:", { followers, avgViews, engagementRate, niche, audienceGeo });
-    
     setLoading(true);
     setError(null);
     setResult(null);
 
     try {
-      console.log("Making fetch request to /api/audit");
       const res = await fetch("/api/audit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -98,31 +89,15 @@ export default function AuditPage() {
         }),
       });
 
-      console.log("Response received:", {
-        status: res.status,
-        ok: res.ok,
-        statusText: res.statusText,
-        headers: Object.fromEntries(res.headers.entries())
-      });
-
       const json = await res.json();
-      console.log("Response data:", json);
-      
-      if (!res.ok) {
-        console.log("Response not OK, throwing error");
-        throw new Error(json?.error || "Request failed");
-      }
-      
-      console.log("Audit successful, setting result");
+      if (!res.ok) throw new Error(json?.error || "Request failed");
       setResult(json.data);
       const newCount = parseInt(localStorage.getItem("free_audits_used") || "0") + 1;
       localStorage.setItem("free_audits_used", String(newCount));
       setFreeAuditsUsed(newCount);
     } catch (e: any) {
-      console.error("Audit error:", e);
       setError(e.message || "Something went wrong");
     } finally {
-      console.log("Audit request finished, setting loading to false");
       setLoading(false);
     }
   }
@@ -699,49 +674,6 @@ export default function AuditPage() {
             </div>
             <button className="run-btn" onClick={runAudit} disabled={loading}>
               {loading ? <span className="loading-dots">{loadingMessages[loadingMessageIndex]}</span> : "Run Audit →"}
-            </button>
-            
-            {/* Debug test button */}
-            <button 
-              onClick={() => {
-                alert("JavaScript is working!");
-                console.log("Test button clicked");
-                fetch("/api/audit", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({
-                    followers: 50000,
-                    avgViews: 40000,
-                    engagementRate: 5,
-                    niche: "Beauty & Skincare",
-                    audienceGeo: "Primarily US",
-                  }),
-                }).then(r => {
-                  console.log("Test response:", r.status, r.ok);
-                  return r.json();
-                }).then(data => {
-                  console.log("Test data:", data);
-                  alert("API response: " + JSON.stringify(data).substring(0, 100) + "...");
-                }).catch(e => {
-                  console.error("Test error:", e);
-                  alert("Error: " + e.message);
-                });
-              }}
-              style={{marginTop: "10px", background: "#333", color: "white", border: "none", padding: "5px 10px", borderRadius: "5px", cursor: "pointer"}}
-            >
-              Debug Test API
-            </button>
-            
-            {/* Reset counter button */}
-            <button 
-              onClick={() => {
-                localStorage.setItem("free_audits_used", "0");
-                setFreeAuditsUsed(0);
-                console.log("Free audit counter reset");
-              }}
-              style={{marginTop: "10px", background: "#666", color: "white", border: "none", padding: "5px 10px", borderRadius: "5px", cursor: "pointer", marginLeft: "5px"}}
-            >
-              Reset Counter
             </button>
             {error && <div className="error-box">{error}</div>}
           </div>
