@@ -72,16 +72,20 @@ export default function AuditPage() {
     
     // TEMPORARILY BYPASS LIMIT FOR TESTING
     if (false && used >= 3) {
+      console.log("Audit limit reached, showing error");
       setError("You've used your 3 free audits. Sign up for GhostOS Pro to run unlimited audits.");
       return;
     }
 
     console.log("Starting audit request...");
+    console.log("Form data:", { followers, avgViews, engagementRate, niche, audienceGeo });
+    
     setLoading(true);
     setError(null);
     setResult(null);
 
     try {
+      console.log("Making fetch request to /api/audit");
       const res = await fetch("/api/audit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -94,13 +98,22 @@ export default function AuditPage() {
         }),
       });
 
-      console.log("Response status:", res.status);
-      console.log("Response ok:", res.ok);
+      console.log("Response received:", {
+        status: res.status,
+        ok: res.ok,
+        statusText: res.statusText,
+        headers: Object.fromEntries(res.headers.entries())
+      });
 
       const json = await res.json();
       console.log("Response data:", json);
       
-      if (!res.ok) throw new Error(json?.error || "Request failed");
+      if (!res.ok) {
+        console.log("Response not OK, throwing error");
+        throw new Error(json?.error || "Request failed");
+      }
+      
+      console.log("Audit successful, setting result");
       setResult(json.data);
       const newCount = parseInt(localStorage.getItem("free_audits_used") || "0") + 1;
       localStorage.setItem("free_audits_used", String(newCount));
@@ -109,6 +122,7 @@ export default function AuditPage() {
       console.error("Audit error:", e);
       setError(e.message || "Something went wrong");
     } finally {
+      console.log("Audit request finished, setting loading to false");
       setLoading(false);
     }
   }
