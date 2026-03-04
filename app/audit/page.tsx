@@ -66,18 +66,28 @@ export default function AuditPage() {
   const [result, setResult] = useState<AuditResult | null>(null);
 
   async function runAudit() {
+    // Debug: Log user status
+    console.log("User object:", user);
+    console.log("User metadata:", user?.publicMetadata);
+    console.log("Is user loaded:", isLoaded);
+    
     // Check if user is logged in and has Pro status
     const isProUser = user?.publicMetadata?.is_pro === true;
     const isLoggedIn = !!user;
     
+    console.log("Pro status check:", { isProUser, isLoggedIn });
+    
     // Check free audit limit for non-logged-in users OR non-Pro users
     const used = parseInt(localStorage.getItem("free_audits_used") || "0");
+    console.log("Free audits used:", used);
     
     if (!isLoggedIn || (!isProUser && used >= 3)) {
+      console.log("Blocking audit - reason:", !isLoggedIn ? "not logged in" : "not pro and limit reached");
       setError("You've used your 3 free audits. Sign up for GhostOS Pro to run unlimited audits.");
       return;
     }
 
+    console.log("Proceeding with audit...");
     setLoading(true);
     setError(null);
     setResult(null);
@@ -104,8 +114,10 @@ export default function AuditPage() {
         const newCount = used + 1;
         localStorage.setItem("free_audits_used", String(newCount));
         setFreeAuditsUsed(newCount);
+        console.log("Free audit counter incremented to:", newCount);
       }
     } catch (e: any) {
+      console.error("Audit error:", e);
       setError(e.message || "Something went wrong");
     } finally {
       setLoading(false);
