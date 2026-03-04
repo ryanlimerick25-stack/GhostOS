@@ -36,15 +36,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <ClerkProvider 
-      signInUrl="/sign-in"
-      signUpUrl="/sign-up"
-      afterSignInUrl="/dashboard"
-      afterSignUpUrl="/audit"
-    >
+    // <ClerkProvider>
       <html lang="en">
         <body>{children}</body>
       </html>
-    </ClerkProvider>
+    // </ClerkProvider>
   )
 }
