@@ -81,9 +81,12 @@ export default function AuditPage() {
     const used = parseInt(localStorage.getItem("free_audits_used") || "0");
     console.log("Free audits used:", used);
     
-    if (!isLoggedIn || (!isProUser && used >= 3)) {
-      console.log("Blocking audit - reason:", !isLoggedIn ? "not logged in" : "not pro and limit reached");
-      setError("You've used your 3 free audits. Sign up for GhostOS Pro to run unlimited audits.");
+    if (isLoggedIn && isProUser) {
+      // Pro user - unlimited access
+      console.log("Pro user - bypassing limit");
+    } else if (used >= 3) {
+      console.log("Blocking audit - free limit reached");
+      setError("You've used your 3 free audits. Upgrade to GhostOS Pro for unlimited audits.");
       return;
     }
 
