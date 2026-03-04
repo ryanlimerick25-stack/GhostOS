@@ -29,7 +29,7 @@ type AuditResult = {
 const loadingMessages = [
   "Analyzing your profile",
   "Scanning your content",
-  "Checking brand compatibility", 
+  "Checking brand compatibility",
   "Calculating deal potential",
   "Generating your audit"
 ];
@@ -41,10 +41,11 @@ export default function AuditPage() {
   const [engagementRate, setEngagementRate] = useState("");
   const [niche, setNiche] = useState("");
   const [audienceGeo, setAudienceGeo] = useState("");
-
   const [loading, setLoading] = useState(false);
   const [freeAuditsUsed, setFreeAuditsUsed] = useState(0);
   const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
+  const [error, setError] = useState<string | null>(null);
+  const [result, setResult] = useState<AuditResult | null>(null);
 
   useEffect(() => {
     const used = parseInt(localStorage.getItem("free_audits_used") || "0");
@@ -62,35 +63,32 @@ export default function AuditPage() {
     }
     return () => clearInterval(interval);
   }, [loading]);
-  const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<AuditResult | null>(null);
 
   async function runAudit() {
-    // Debug: Log user status
-    console.log("User object:", user);
-    console.log("User metadata:", user?.publicMetadata);
-    console.log("Is user loaded:", isLoaded);
-    
-    // Check if user is logged in and has Pro status
     const isProUser = user?.publicMetadata?.is_pro === true;
     const isLoggedIn = !!user;
-    
-    console.log("Pro status check:", { isProUser, isLoggedIn });
-    
-    // Check free audit limit for non-logged-in users OR non-Pro users
-    const used = parseInt(localStorage.getItem("free_audits_used") || "0");
-    console.log("Free audits used:", used);
-    
-    if (isLoggedIn && isProUser) {
-      // Pro user - unlimited access
-      console.log("Pro user - bypassing limit");
-    } else if (used >= 3) {
-      console.log("Blocking audit - free limit reached");
-      setError("You've used your 3 free audits. Upgrade to GhostOS Pro for unlimited audits.");
-      return;
+
+    // Pro users bypass everything
+    if (isProUser) {
+      // proceed
+    } else if (isLoggedIn) {
+      // Logged-in free user: check their real audit count from the server
+      const res = await fetch("/api/audits");
+      const json = await res.json();
+      const serverCount = json?.count ?? 0;
+      if (serverCount >= 3) {
+        setError("You've used your 3 free audits. Upgrade to GhostOS Pro for unlimited audits.");
+        return;
+      }
+    } else {
+      // Not logged in: use localStorage
+      const used = parseInt(localStorage.getItem("free_audits_used") || "0");
+      if (used >= 3) {
+        setError("You've used your 3 free audits. Sign up or upgrade to GhostOS Pro for unlimited audits.");
+        return;
+      }
     }
 
-    console.log("Proceeding with audit...");
     setLoading(true);
     setError(null);
     setResult(null);
@@ -111,16 +109,15 @@ export default function AuditPage() {
       const json = await res.json();
       if (!res.ok) throw new Error(json?.error || "Request failed");
       setResult(json.data);
-      
-      // Only increment free audit counter for non-Pro users
-      if (!isProUser) {
+
+      // Only increment localStorage for non-logged-in users
+      if (!isLoggedIn) {
+        const used = parseInt(localStorage.getItem("free_audits_used") || "0");
         const newCount = used + 1;
         localStorage.setItem("free_audits_used", String(newCount));
         setFreeAuditsUsed(newCount);
-        console.log("Free audit counter incremented to:", newCount);
       }
     } catch (e: any) {
-      console.error("Audit error:", e);
       setError(e.message || "Something went wrong");
     } finally {
       setLoading(false);
@@ -134,8 +131,6 @@ export default function AuditPage() {
   return (
     <>
       <style>{`
-        
-
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
@@ -159,10 +154,7 @@ export default function AuditPage() {
           padding: 60px 24px 100px;
         }
 
-        /* Header */
-        .header {
-          margin-bottom: 56px;
-        }
+        .header { margin-bottom: 56px; }
 
         .eyebrow {
           font-family: 'DM Mono', monospace;
@@ -182,10 +174,7 @@ export default function AuditPage() {
           letter-spacing: -0.02em;
         }
 
-        .title em {
-          font-style: italic;
-          color: #c9b8ff;
-        }
+        .title em { font-style: italic; color: #c9b8ff; }
 
         .subtitle {
           margin-top: 12px;
@@ -195,7 +184,6 @@ export default function AuditPage() {
           letter-spacing: 0.01em;
         }
 
-        /* Form card */
         .form-card {
           background: #0f0f0f;
           border: 1px solid #1e1e1e;
@@ -213,26 +201,14 @@ export default function AuditPage() {
           background: linear-gradient(90deg, transparent, rgba(201, 184, 255, 0.3), transparent);
         }
 
-        .form-grid-3 {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 16px;
-        }
-
-        .form-grid-2 {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 16px;
-          margin-top: 16px;
-        }
+        .form-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        .form-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 16px; }
 
         @media (max-width: 600px) {
           .form-grid-3, .form-grid-2 { grid-template-columns: 1fr; }
         }
 
-        .field label {
-          display: block;
-        }
+        .field label { display: block; }
 
         .field-label {
           font-family: 'DM Mono', monospace;
@@ -257,9 +233,7 @@ export default function AuditPage() {
           transition: border-color 0.2s;
         }
 
-        .field input:focus {
-          border-color: #3d3d3d;
-        }
+        .field input:focus { border-color: #3d3d3d; }
 
         .run-btn {
           margin-top: 24px;
@@ -285,10 +259,7 @@ export default function AuditPage() {
           box-shadow: 0 8px 30px rgba(201, 184, 255, 0.2);
         }
 
-        .run-btn:disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
-        }
+        .run-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
         .loading-dots::after {
           content: '';
@@ -312,18 +283,13 @@ export default function AuditPage() {
           color: #fca5a5;
         }
 
-        /* Results */
-        .results {
-          margin-top: 40px;
-          animation: fadeUp 0.4s ease;
-        }
+        .results { margin-top: 40px; animation: fadeUp 0.4s ease; }
 
         @keyframes fadeUp {
           from { opacity: 0; transform: translateY(16px); }
           to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Score hero */
         .score-hero {
           background: #0f0f0f;
           border: 1px solid #1e1e1e;
@@ -361,11 +327,7 @@ export default function AuditPage() {
           color: #f0ede8;
         }
 
-        .score-desc {
-          margin-top: 6px;
-          font-size: 13px;
-          color: #444;
-        }
+        .score-desc { margin-top: 6px; font-size: 13px; color: #444; }
 
         .score-number {
           font-family: 'DM Serif Display', serif;
@@ -376,12 +338,8 @@ export default function AuditPage() {
           flex-shrink: 0;
         }
 
-        .score-denom {
-          font-size: 28px;
-          color: #333;
-        }
+        .score-denom { font-size: 28px; color: #333; }
 
-        /* Score bar */
         .score-bar-wrap {
           margin-top: 24px;
           height: 3px;
@@ -390,23 +348,11 @@ export default function AuditPage() {
           overflow: hidden;
         }
 
-        .score-bar-fill {
-          height: 100%;
-          border-radius: 99px;
-          transition: width 1s ease;
-        }
+        .score-bar-fill { height: 100%; border-radius: 99px; transition: width 1s ease; }
 
-        /* Deal range */
-        .deal-range {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 12px;
-          margin-top: 16px;
-        }
+        .deal-range { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
 
-        @media (max-width: 500px) {
-          .deal-range { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 500px) { .deal-range { grid-template-columns: 1fr; } }
 
         .deal-card {
           background: #080808;
@@ -431,15 +377,10 @@ export default function AuditPage() {
           letter-spacing: -0.02em;
         }
 
-        .deal-card.target {
-          border-color: rgba(201, 184, 255, 0.2);
-          background: rgba(201, 184, 255, 0.03);
-        }
-
+        .deal-card.target { border-color: rgba(201, 184, 255, 0.2); background: rgba(201, 184, 255, 0.03); }
         .deal-card.target .deal-card-label { color: #7a6fa8; }
         .deal-card.target .deal-card-value { color: #c9b8ff; }
 
-        /* Section blocks */
         .section-block {
           margin-top: 24px;
           background: #0f0f0f;
@@ -457,20 +398,7 @@ export default function AuditPage() {
           margin-bottom: 16px;
         }
 
-        .section-title {
-          font-family: 'DM Serif Display', serif;
-          font-size: 20px;
-          font-weight: 400;
-          color: #f0ede8;
-          margin-bottom: 20px;
-        }
-
-        /* Tag pills */
-        .tags {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 8px;
-        }
+        .tags { display: flex; flex-wrap: wrap; gap: 8px; }
 
         .tag {
           background: #141414;
@@ -482,13 +410,7 @@ export default function AuditPage() {
           font-weight: 400;
         }
 
-        /* Bullet list */
-        .bullet-list {
-          list-style: none;
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-        }
+        .bullet-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
 
         .bullet-list li {
           display: flex;
@@ -507,13 +429,7 @@ export default function AuditPage() {
           font-family: 'DM Mono', monospace;
         }
 
-        /* Gap list (highlighted) */
-        .gap-list {
-          list-style: none;
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-        }
+        .gap-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
 
         .gap-list li {
           display: flex;
@@ -533,16 +449,9 @@ export default function AuditPage() {
           margin-top: 6px;
         }
 
-        /* Actions grid */
-        .actions-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 12px;
-        }
+        .actions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 
-        @media (max-width: 600px) {
-          .actions-grid { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 600px) { .actions-grid { grid-template-columns: 1fr; } }
 
         .action-card {
           background: #080808;
@@ -560,16 +469,9 @@ export default function AuditPage() {
           margin-bottom: 14px;
         }
 
-        /* Rate card grid */
-        .rate-grid {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 12px;
-        }
+        .rate-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
 
-        @media (max-width: 500px) {
-          .rate-grid { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 500px) { .rate-grid { grid-template-columns: 1fr; } }
 
         .rate-item {
           background: #080808;
@@ -593,12 +495,8 @@ export default function AuditPage() {
           letter-spacing: -0.02em;
         }
 
-        .rate-item.addon .rate-item-value {
-          color: #4ade80;
-          font-size: 22px;
-        }
+        .rate-item.addon .rate-item-value { color: #4ade80; font-size: 22px; }
 
-        /* Media kit positioning */
         .positioning-box {
           background: #080808;
           border: 1px solid #1e1e1e;
@@ -611,7 +509,6 @@ export default function AuditPage() {
           font-style: italic;
         }
 
-        /* Outreach templates */
         .template-block {
           background: #080808;
           border: 1px solid #1a1a1a;
@@ -636,14 +533,6 @@ export default function AuditPage() {
           font-family: 'Geist', sans-serif;
         }
 
-        /* Divider */
-        .divider {
-          height: 1px;
-          background: #141414;
-          margin: 0;
-        }
-
-        /* Footer badge */
         .footer-badge {
           margin-top: 60px;
           text-align: center;
@@ -667,17 +556,12 @@ export default function AuditPage() {
 
       <div className="page" style={{paddingTop:"80px"}}>
         <div className="container">
-
-          {/* Header */}
           <div className="header">
             <div className="eyebrow">GhostOS</div>
-            <h1 className="title">
-              Brand Deal<br /><em>Readiness Audit</em>
-            </h1>
+            <h1 className="title">Brand Deal<br /><em>Readiness Audit</em></h1>
             <p className="subtitle">For TikTok creators (20k–200k) trying to land their first deal.</p>
           </div>
 
-          {/* Tip banner */}
           <div style={{background:"rgba(167,139,250,0.06)",border:"1px solid rgba(167,139,250,0.15)",borderRadius:"12px",padding:"14px 18px",marginBottom:"16px",display:"flex",alignItems:"flex-start",gap:"12px"}}>
             <span style={{fontSize:"16px",flexShrink:0}}>📊</span>
             <div>
@@ -686,7 +570,6 @@ export default function AuditPage() {
             </div>
           </div>
 
-          {/* Form */}
           <div className="form-card">
             <div className="form-grid-3">
               <NumberField label="Followers" value={followers} onChange={setFollowers} placeholder="e.g. 50,000" />
@@ -703,21 +586,15 @@ export default function AuditPage() {
             {error && <div className="error-box">{error}</div>}
           </div>
 
-          {/* Results */}
           {result && (
             <div className="results">
-
-              {/* Score hero */}
               <div className="score-hero">
                 <div style={{ flex: 1 }}>
                   <div className="score-label">Readiness Score</div>
                   <div className="score-title">Brand Deal Readiness</div>
                   <div className="score-desc">How close you are to landing your first deal</div>
                   <div className="score-bar-wrap" style={{ marginTop: 20 }}>
-                    <div
-                      className="score-bar-fill"
-                      style={{ width: `${score}%`, background: scoreColor }}
-                    />
+                    <div className="score-bar-fill" style={{ width: `${score}%`, background: scoreColor }} />
                   </div>
                 </div>
                 <div className="score-number" style={{ color: scoreColor }}>
@@ -725,7 +602,6 @@ export default function AuditPage() {
                 </div>
               </div>
 
-              {/* Deal range */}
               <div className="section-block">
                 <div className="section-eyebrow">Estimated First Deal</div>
                 <div className="deal-range">
@@ -744,7 +620,6 @@ export default function AuditPage() {
                 </div>
               </div>
 
-              {/* Brand categories */}
               <div className="section-block">
                 <div className="section-eyebrow">Best-Fit Brand Categories</div>
                 <div className="tags">
@@ -754,7 +629,6 @@ export default function AuditPage() {
                 </div>
               </div>
 
-              {/* Why brands pay */}
               <div className="section-block">
                 <div className="section-eyebrow">Why Brands Would Pay You</div>
                 <ul className="bullet-list">
@@ -762,7 +636,6 @@ export default function AuditPage() {
                 </ul>
               </div>
 
-              {/* Gaps */}
               <div className="section-block">
                 <div className="section-eyebrow">Top Gaps — Next 14 Days</div>
                 <ul className="gap-list">
@@ -772,7 +645,6 @@ export default function AuditPage() {
                 </ul>
               </div>
 
-              {/* Next actions */}
               <div className="section-block">
                 <div className="section-eyebrow">Action Plan</div>
                 <div className="actions-grid">
@@ -791,7 +663,6 @@ export default function AuditPage() {
                 </div>
               </div>
 
-              {/* Media kit positioning */}
               {result.media_kit_positioning && (
                 <div className="section-block">
                   <div className="section-eyebrow">Media Kit Positioning</div>
@@ -799,7 +670,6 @@ export default function AuditPage() {
                 </div>
               )}
 
-              {/* Pitch bullets */}
               {(result.media_kit_brand_pitch_bullets?.length ?? 0) > 0 && (
                 <div className="section-block">
                   <div className="section-eyebrow">Media Kit Pitch Bullets</div>
@@ -809,7 +679,6 @@ export default function AuditPage() {
                 </div>
               )}
 
-              {/* Rate card */}
               {result.rate_card_usd && (
                 <div className="section-block">
                   <div className="section-eyebrow">Rate Card (USD)</div>
@@ -838,7 +707,6 @@ export default function AuditPage() {
                 </div>
               )}
 
-              {/* Outreach templates */}
               {result.cold_outreach_templates && (
                 <div className="section-block">
                   <div className="section-eyebrow">Cold Outreach Templates</div>
@@ -856,7 +724,6 @@ export default function AuditPage() {
                   </div>
                 </div>
               )}
-
             </div>
           )}
 
@@ -883,11 +750,7 @@ function Field({ label, value, onChange, numeric }: {
     <div className="field">
       <label>
         <span className="field-label">{label}</span>
-        <input
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          inputMode={numeric ? "numeric" : "text"}
-        />
+        <input value={value} onChange={(e) => onChange(e.target.value)} inputMode={numeric ? "numeric" : "text"} />
       </label>
     </div>
   );
@@ -909,7 +772,6 @@ function NumberField({ label, value, onChange, placeholder }: {
             const raw = e.target.value.replace(/,/g, "");
             if (/^\d*$/.test(raw)) onChange(raw);
           }}
-          className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100 outline-none focus:border-zinc-600 w-full"
         />
       </label>
     </div>
@@ -951,11 +813,7 @@ function NicheSelect({ label, value, onChange }: {
     <div className="field">
       <label>
         <span className="field-label">{label}</span>
-        <select
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          style={{width:"100%",background:"#080808",border:"1px solid #1e1e1e",borderRadius:"10px",padding:"10px 14px",fontSize:"14px",color: value ? "#e8e6e1" : "#3a3a3a",fontFamily:"inherit",outline:"none",cursor:"pointer",appearance:"none"}}
-        >
+        <select value={value} onChange={(e) => onChange(e.target.value)} style={{width:"100%",background:"#080808",border:"1px solid #1e1e1e",borderRadius:"10px",padding:"10px 14px",fontSize:"14px",color:value?"#e8e6e1":"#3a3a3a",fontFamily:"inherit",outline:"none",cursor:"pointer",appearance:"none"}}>
           <option value="" disabled>Select your niche...</option>
           {NICHES.map((n) => <option key={n} value={n} style={{background:"#111",color:"#fff"}}>{n}</option>)}
         </select>

@@ -8,14 +8,13 @@ const supabase = createClient(
 
 export async function GET() {
   const { userId } = await auth();
-  if (!userId) return Response.json({ error: "Unauthorized" }, { status: 401 });
+  if (!userId) return Response.json({ audits: [], count: 0 });
 
-  const { data, error } = await supabase
+  const { data, count } = await supabase
     .from("audits")
-    .select("*")
+    .select("*", { count: "exact" })
     .eq("user_id", userId)
     .order("created_at", { ascending: false });
 
-  if (error) return Response.json({ error: error.message }, { status: 500 });
-  return Response.json({ audits: data });
+  return Response.json({ audits: data || [], count: count || 0 });
 }
