@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useUser } from "@clerk/nextjs";
 
 type AuditResult = {
   readiness_score: number;
@@ -34,6 +35,7 @@ const loadingMessages = [
 ];
 
 export default function AuditPage() {
+  const { user, isLoaded } = useUser();
   const [followers, setFollowers] = useState("");
   const [avgViews, setAvgViews] = useState("");
   const [engagementRate, setEngagementRate] = useState("");
@@ -64,10 +66,14 @@ export default function AuditPage() {
   const [result, setResult] = useState<AuditResult | null>(null);
 
   async function runAudit() {
-    // Check free audit limit for non-logged-in users
+    // Check if user is logged in and has Pro status
+    const isProUser = user?.publicMetadata?.is_pro === true;
+    const isLoggedIn = !!user;
+    
+    // Check free audit limit for non-logged-in users OR non-Pro users
     const used = parseInt(localStorage.getItem("free_audits_used") || "0");
     
-    if (used >= 3) {
+    if (!isLoggedIn || (!isProUser && used >= 3)) {
       setError("You've used your 3 free audits. Sign up for GhostOS Pro to run unlimited audits.");
       return;
     }
@@ -92,9 +98,13 @@ export default function AuditPage() {
       const json = await res.json();
       if (!res.ok) throw new Error(json?.error || "Request failed");
       setResult(json.data);
-      const newCount = parseInt(localStorage.getItem("free_audits_used") || "0") + 1;
-      localStorage.setItem("free_audits_used", String(newCount));
-      setFreeAuditsUsed(newCount);
+      
+      // Only increment free audit counter for non-Pro users
+      if (!isProUser) {
+        const newCount = used + 1;
+        localStorage.setItem("free_audits_used", String(newCount));
+        setFreeAuditsUsed(newCount);
+      }
     } catch (e: any) {
       setError(e.message || "Something went wrong");
     } finally {
