@@ -74,7 +74,7 @@ export default function LandingPage() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap');
+        
         :root {
           --bg: #04040a; --glass: rgba(255,255,255,0.032); --glass-b: rgba(255,255,255,0.07);
           --accent: #a78bfa; --accent2: #818cf8; --gold: #f5c842;

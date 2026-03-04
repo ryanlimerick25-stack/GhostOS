@@ -134,7 +134,7 @@ export default function AuditPage() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Geist:wght@300;400;500;600&display=swap');
+        
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
