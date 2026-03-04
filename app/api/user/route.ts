@@ -1,20 +1,12 @@
-import { auth } from "@clerk/nextjs/server";
-import { createClient } from "@supabase/supabase-js";
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!
-);
+import { auth, clerkClient } from "@clerk/nextjs/server";
 
 export async function GET() {
   const { userId } = await auth();
   if (!userId) return Response.json({ is_pro: false });
 
-  const { data } = await supabase
-    .from("users")
-    .select("is_pro, stripe_customer_id")
-    .eq("user_id", userId)
-    .single();
+  const clerk = await clerkClient();
+  const user = await clerk.users.getUser(userId);
+  const is_pro = user.publicMetadata?.is_pro === true;
 
-  return Response.json({ is_pro: data?.is_pro || false });
+  return Response.json({ is_pro });
 }
