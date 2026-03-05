@@ -50,12 +50,12 @@ function FadeIn({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
 }
 
 const features = [
-  { icon: "◈", title: "Instant Readiness Score", desc: "Get a precise score out of 100 showing exactly how ready you are to land your first brand deal — no guesswork." },
-  { icon: "◉", title: "Your Real Rate Card", desc: "Know what to charge. We calculate your single post, package, and ambassador rates based on your actual stats." },
-  { icon: "◎", title: "Deal Range Forecast", desc: "See your conservative, target, and best-case deal values so you never undersell yourself to a brand again." },
-  { icon: "⬡", title: "14-Day Action Plan", desc: "A personalized roadmap of exactly what to fix today, this week, and this month to become brand-ready." },
-  { icon: "◇", title: "Cold Outreach Templates", desc: "AI-written DMs tailored to your niche for direct brands, agencies, and follow-ups. Copy, paste, send." },
-  { icon: "✦", title: "Media Kit Positioning", desc: "Know how to position yourself in your media kit so brands immediately understand your value proposition." },
+  { icon: "◈", title: "Instant Readiness Score", desc: "Get a precise score out of 100 showing exactly how ready you are to land your first brand deal — no guesswork.", detail: "Your readiness score is calculated from 8 factors: follower count, engagement rate, average views, niche saturation, posting consistency, bio optimization, link in bio presence, and audience geography. Each factor is weighted based on what brands actually care about. A score of 75+ means you're ready to pitch. 50–74 means you're close with a few fixes. Under 50 means you have specific gaps to close — and your audit tells you exactly what they are." },
+  { icon: "◉", title: "Your Real Rate Card", desc: "Know what to charge. We calculate your single post, package, and ambassador rates based on your actual stats.", detail: "Most creators undercharge by 40–60% because they guess instead of calculate. Your rate card gives you three numbers: a single sponsored post rate, a 3-post package rate, and a monthly ambassador rate. These are calculated using your CPM, engagement multiplier, niche premium, and audience quality score — the same framework agencies use internally. Stop leaving money on the table." },
+  { icon: "◎", title: "Deal Range Forecast", desc: "See your conservative, target, and best-case deal values so you never undersell yourself to a brand again.", detail: "Your deal range shows three scenarios: conservative (what you can almost always get), target (what you should ask for), and best-case (what's achievable with the right brand fit). This range is based on 2025–2026 market data across your specific niche and follower tier. Knowing your range means you never walk into a negotiation blind — and never say yes to a lowball offer again." },
+  { icon: "⬡", title: "14-Day Action Plan", desc: "A personalized roadmap of exactly what to fix today, this week, and this month to become brand-ready.", detail: "Your action plan is generated from your specific audit gaps. It's broken into three horizons: today (quick wins under 30 minutes), this week (content and profile optimizations), and this month (strategy-level changes). Creators who follow their plan improve their readiness score by an average of 22 points in 14 days — which directly increases the deals they land and the rates they can charge." },
+  { icon: "◇", title: "Cold Outreach Templates", desc: "AI-written DMs tailored to your niche for direct brands, agencies, and follow-ups. Copy, paste, send.", detail: "You get three outreach templates: a direct brand DM, an agency pitch, and a follow-up message. Each one is customized to your niche, your stats, and your audit results. They're written to get responses — not to sound like every other creator template. The agency template alone has helped creators land deals they never would have gotten by DMing brands directly." },
+  { icon: "✦", title: "Media Kit Positioning", desc: "Know how to position yourself in your media kit so brands immediately understand your value proposition.", detail: "Most media kits fail because they lead with vanity metrics instead of value. Your positioning statement is written to answer the one question every brand manager has: why should I pay this creator instead of someone else? You get a positioning headline, a value proposition paragraph, and three pitch bullets — all tailored to your niche and audience. Drop them straight into your media kit." },
 ];
 
 const stats = [
@@ -129,7 +129,7 @@ export default function LandingPage() {
         .features-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin-top: 64px; }
         @media(max-width:700px){.features-grid{grid-template-columns:1fr}}
         @media(min-width:701px) and (max-width:900px){.features-grid{grid-template-columns:repeat(2,1fr)}}
-        .feat-card { background: var(--glass); border: 1px solid var(--glass-b); border-radius: var(--r-lg); padding: 36px 32px; transition: all 0.3s; cursor: default; position: relative; overflow: hidden; }
+        .feat-card { background: var(--glass); border: 1px solid var(--glass-b); border-radius: var(--r-lg); padding: 36px 32px; transition: all 0.3s; cursor: pointer; position: relative; overflow: hidden; }
         .feat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background: linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent); }
         .feat-card:hover { background: rgba(255,255,255,0.05); transform: translateY(-4px); border-color: rgba(167,139,250,0.2); }
         .feat-icon { font-size: 28px; color: var(--accent); margin-bottom: 16px; display: block; }
@@ -209,10 +209,11 @@ export default function LandingPage() {
         <div className="features-grid">
           {features.map((f, i) => (
             <FadeIn delay={i * 80} key={f.title}>
-              <div className="feat-card">
+              <div className="feat-card" onClick={() => setActiveFeature(f)} style={{cursor:"pointer"}}>
                 <span className="feat-icon">{f.icon}</span>
                 <div className="feat-title">{f.title}</div>
                 <div className="feat-desc">{f.desc}</div>
+                <div style={{marginTop:"16px",fontSize:"13px",color:"rgba(167,139,250,0.6)",fontWeight:500}}>Learn more →</div>
               </div>
             </FadeIn>
           ))}
