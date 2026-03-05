@@ -102,10 +102,10 @@ export default function LandingPage() {
         .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--glass); border: 1px solid var(--glass-b); border-radius: 99px; padding: 6px 18px 6px 12px; margin-bottom: 32px; backdrop-filter: blur(12px); }
         .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 8px var(--gold); }
         .badge-text { font-size: 14px; font-weight: 500; letter-spacing: 0.08em; color: var(--text2); }
-        .hero-title { font-family: 'Playfair Display', serif; font-size: clamp(56px,9vw,110px); font-weight: 700; line-height: 1.0; letter-spacing: -0.03em; color: var(--text1); margin-bottom: 12px; }
+        .hero-title { font-family: 'Playfair Display', serif; font-size: clamp(72px,11vw,140px); font-weight: 700; line-height: 1.0; letter-spacing: -0.03em; color: var(--text1); margin-bottom: 12px; }
         .hero-title em { font-style: italic; color: var(--accent); }
-        .hero-sub { font-family: 'Playfair Display', serif; font-size: clamp(20px,2.5vw,32px); font-weight: 400; font-style: italic; color: var(--text2); margin-bottom: 20px; }
-        .hero-desc { font-size: 20px; font-weight: 300; color: var(--text3); line-height: 1.7; max-width: 520px; margin: 0 auto 44px; }
+        .hero-sub { font-family: 'Playfair Display', serif; font-size: clamp(24px,3vw,40px); font-weight: 400; font-style: italic; color: var(--text2); margin-bottom: 20px; }
+        .hero-desc { font-size: 22px; font-weight: 300; color: var(--text3); line-height: 1.7; max-width: 780px; margin: 0 auto 44px; }
         .hero-desc strong { color: var(--text2); font-weight: 400; }
         .hero-ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
         .btn-primary { padding: 18px 40px; border-radius: 14px; background: linear-gradient(135deg,var(--accent),var(--accent2)); color: #fff; font-size: 15px; font-weight: 600; border: none; cursor: pointer; text-decoration: none; transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1); display: inline-flex; align-items: center; gap: 8px; font-family: 'DM Sans', sans-serif; }
@@ -121,9 +121,9 @@ export default function LandingPage() {
         .stat-label { font-size: 16px; font-weight: 400; color: var(--text3); letter-spacing: 0.04em; }
         .section { position: relative; z-index: 1; padding: 120px 80px; max-width: 1400px; margin: 0 auto; }
         .section-label { font-size: 13px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; display: block; }
-        .section-title { font-family: 'Playfair Display', serif; font-size: clamp(40px,5vw,68px); font-weight: 600; line-height: 1.1; letter-spacing: -0.02em; color: var(--text1); margin-bottom: 16px; }
+        .section-title { font-family: 'Playfair Display', serif; font-size: clamp(48px,6vw,88px); font-weight: 600; line-height: 1.1; letter-spacing: -0.02em; color: var(--text1); margin-bottom: 16px; }
         .section-title em { font-style: italic; color: var(--text2); }
-        .section-desc { font-size: 20px; font-weight: 300; color: var(--text3); line-height: 1.7; max-width: 500px; }
+        .section-desc { font-size: 22px; font-weight: 300; color: var(--text3); line-height: 1.7; max-width: 800px; }
         .features-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-top: 56px; }
         @media(max-width:700px){.features-grid{grid-template-columns:1fr}}
         @media(min-width:701px) and (max-width:900px){.features-grid{grid-template-columns:repeat(2,1fr)}}
@@ -146,8 +146,8 @@ export default function LandingPage() {
         .cta-card { background: var(--glass); border: 1px solid var(--glass-b); border-radius: 32px; padding: 64px 48px; position: relative; overflow: hidden; backdrop-filter: blur(24px); }
         .cta-card::before { content:''; position:absolute; inset:0; background: linear-gradient(135deg,rgba(167,139,250,0.06) 0%,transparent 60%); pointer-events:none; }
         .cta-card::after { content:''; position:absolute; top:0; left:0; right:0; height:1px; background: linear-gradient(90deg,transparent,rgba(167,139,250,0.4),transparent); }
-        .cta-title { font-family: 'Playfair Display', serif; font-size: clamp(36px,5vw,58px); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; color: var(--text1); margin-bottom: 12px; }
-        .cta-desc { font-size: 18px; font-weight: 300; color: var(--text2); line-height: 1.6; margin-bottom: 36px; }
+        .cta-title { font-family: 'Playfair Display', serif; font-size: clamp(48px,6vw,80px); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; color: var(--text1); margin-bottom: 12px; }
+        .cta-desc { font-size: 22px; font-weight: 300; color: var(--text2); line-height: 1.6; margin-bottom: 36px; max-width: 600px; margin-left: auto; margin-right: auto; }
         .cta-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
         footer { position: relative; z-index: 1; border-top: 1px solid rgba(255,255,255,0.05); padding: 32px 40px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
         .footer-logo { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--text2); display: flex; align-items: center; gap: 7px; }
