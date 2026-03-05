@@ -165,6 +165,7 @@ export default function LandingPage() {
         <div className="nav-links">
           <button className="nav-link" onClick={() => document.getElementById('features')?.scrollIntoView({behavior:'smooth'})}>Features</button>
           <button className="nav-link" onClick={() => document.getElementById('testimonials')?.scrollIntoView({behavior:'smooth'})}>Reviews</button>
+          <a className="nav-link" href="/pricing" style={{textDecoration:"none"}}>Pricing</a>
           <a className="nav-btn nav-ghost" href="/sign-in">Log in</a>
           <a className="nav-btn nav-primary" href="/sign-up">Get Started</a>
         </div>
