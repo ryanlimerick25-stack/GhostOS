@@ -207,12 +207,12 @@ export default function LandingPage() {
           <p className="section-desc">One audit. Six tools. A complete picture of your brand deal potential and a clear path to get there.</p>
         </FadeIn>
         <div className="features-grid">
-          {features.map((f, i) => (
-            <FadeIn delay={i * 80} key={f.title}>
-              <div className="feat-card" onClick={() => setActiveFeature(f)} style={{cursor:"pointer"}}>
-                <span className="feat-icon">{f.icon}</span>
-                <div className="feat-title">{f.title}</div>
-                <div className="feat-desc">{f.desc}</div>
+          {features.map((feat, i) => (
+            <FadeIn delay={i * 80} key={feat.title}>
+              <div className="feat-card" onClick={() => setActiveFeature(feat)} style={{cursor:"pointer"}}>
+                <span className="feat-icon">{feat.icon}</span>
+                <div className="feat-title">{feat.title}</div>
+                <div className="feat-desc">{feat.desc}</div>
                 <div style={{marginTop:"16px",fontSize:"13px",color:"rgba(167,139,250,0.6)",fontWeight:500}}>Learn more →</div>
               </div>
             </FadeIn>
