@@ -268,14 +268,14 @@ export default function LandingPage() {
       {/* Feature modal */}
       {activeFeature && (
         <div onClick={() => setActiveFeature(null)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.7)",backdropFilter:"blur(12px)",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",padding:"24px"}}>
-          <div onClick={e => e.stopPropagation()} style={{background:"#0d0d14",border:"1px solid rgba(167,139,250,0.2)",borderRadius:"28px",padding:"52px",maxWidth:"620px",width:"100%",position:"relative"}}>
-            <button onClick={() => setActiveFeature(null)} style={{position:"absolute",top:"20px",right:"24px",background:"none",border:"none",color:"rgba(255,255,255,0.3)",fontSize:"24px",cursor:"pointer",fontFamily:"inherit",lineHeight:1}}>×</button>
-            <div style={{fontSize:"36px",marginBottom:"20px"}}>{activeFeature.icon}</div>
-            <h2 style={{fontFamily:"'Playfair Display',serif",fontSize:"32px",fontWeight:700,color:"rgba(255,255,255,0.93)",marginBottom:"12px",letterSpacing:"-0.02em"}}>{activeFeature.title}</h2>
-            <p style={{fontSize:"17px",color:"rgba(167,139,250,0.8)",marginBottom:"24px",fontWeight:300,lineHeight:1.6}}>{activeFeature.desc}</p>
-            <div style={{height:"1px",background:"rgba(255,255,255,0.06)",marginBottom:"24px"}} />
-            <p style={{fontSize:"16px",color:"rgba(255,255,255,0.5)",lineHeight:1.8}}>{activeFeature.detail}</p>
-            <a href="/audit" style={{display:"inline-flex",alignItems:"center",gap:"8px",marginTop:"36px",padding:"14px 32px",borderRadius:"12px",background:"linear-gradient(135deg,#a78bfa,#818cf8)",color:"#fff",fontSize:"15px",fontWeight:600,textDecoration:"none",fontFamily:"inherit"}}>Try it free →</a>
+          <div onClick={e => e.stopPropagation()} style={{background:"#0d0d14",border:"1px solid rgba(167,139,250,0.2)",borderRadius:"32px",padding:"72px 80px",maxWidth:"860px",width:"100%",position:"relative"}}>
+            <button onClick={() => setActiveFeature(null)} style={{position:"absolute",top:"24px",right:"32px",background:"none",border:"none",color:"rgba(255,255,255,0.4)",fontSize:"40px",cursor:"pointer",fontFamily:"inherit",lineHeight:1}}>×</button>
+            <div style={{fontSize:"48px",marginBottom:"24px"}}>{activeFeature.icon}</div>
+            <h2 style={{fontFamily:"'Playfair Display',serif",fontSize:"44px",fontWeight:700,color:"rgba(255,255,255,0.93)",marginBottom:"16px",letterSpacing:"-0.02em"}}>{activeFeature.title}</h2>
+            <p style={{fontSize:"22px",color:"rgba(167,139,250,0.8)",marginBottom:"32px",fontWeight:300,lineHeight:1.6}}>{activeFeature.desc}</p>
+            <div style={{height:"1px",background:"rgba(255,255,255,0.06)",marginBottom:"32px"}} />
+            <p style={{fontSize:"20px",color:"rgba(255,255,255,0.55)",lineHeight:1.9}}>{activeFeature.detail}</p>
+            <a href="/audit" style={{display:"inline-flex",alignItems:"center",gap:"10px",marginTop:"48px",padding:"18px 44px",borderRadius:"14px",background:"linear-gradient(135deg,#a78bfa,#818cf8)",color:"#fff",fontSize:"18px",fontWeight:600,textDecoration:"none",fontFamily:"inherit"}}>Try it free →</a>
           </div>
         </div>
       )}
