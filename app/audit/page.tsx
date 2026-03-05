@@ -550,6 +550,7 @@ export default function AuditPage() {
           GhostOS
         </a>
         <div style={{display:"flex",gap:"8px"}}>
+          <a href="/pricing" style={{padding:"8px 18px",borderRadius:"99px",fontSize:"13px",fontWeight:500,color:"rgba(255,255,255,0.4)",textDecoration:"none"}}>Pricing</a>
           <a href="/dashboard" style={{padding:"8px 18px",borderRadius:"99px",fontSize:"13px",fontWeight:500,background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.08)",color:"rgba(255,255,255,0.6)",textDecoration:"none"}}>← Dashboard</a>
         </div>
       </nav>

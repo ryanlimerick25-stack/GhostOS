@@ -153,6 +153,7 @@ export default function Dashboard() {
         <a className="nav-logo" href="/"><div className="nav-dot" />GhostOS</a>
         <div className="nav-right">
           <span className="nav-user">Hi, {user?.firstName || "Creator"}</span>
+          <a href="/pricing" style={{padding:"8px 18px",borderRadius:"99px",fontSize:"13px",fontWeight:500,color:"rgba(255,255,255,0.4)",textDecoration:"none"}}>Pricing</a>
           <a className="nav-btn nav-audit" href="/audit">New Audit →</a>
           <button className="nav-btn nav-signout" onClick={() => signOut(() => router.push("/"))}>Sign out</button>
         </div>
