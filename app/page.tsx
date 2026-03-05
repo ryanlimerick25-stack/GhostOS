@@ -84,14 +84,14 @@ export default function LandingPage() {
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
         body { background: var(--bg); color: var(--text1); font-family: 'DM Sans', sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
-        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 80px; height: 64px; background: rgba(4,4,10,0.75); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .nav-logo { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--text1); letter-spacing: -0.02em; display: flex; align-items: center; gap: 8px; text-decoration: none; }
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 8vw; height: 80px; background: rgba(4,4,10,0.75); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .nav-logo { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: var(--text1); letter-spacing: -0.02em; display: flex; align-items: center; gap: 8px; text-decoration: none; }
         .nav-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); animation: pulse 2s ease infinite; flex-shrink: 0; }
         @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
         .nav-links { display: flex; align-items: center; gap: 6px; }
-        .nav-link { padding: 8px 16px; border-radius: 99px; font-size: 15px; font-weight: 400; color: var(--text2); cursor: pointer; background: none; border: none; font-family: 'DM Sans', sans-serif; transition: color 0.2s; }
+        .nav-link { padding: 10px 20px; border-radius: 99px; font-size: 16px; font-weight: 400; color: var(--text2); cursor: pointer; background: none; border: none; font-family: 'DM Sans', sans-serif; transition: color 0.2s; }
         .nav-link:hover { color: var(--text1); }
-        .nav-btn { padding: 9px 20px; border-radius: 99px; font-size: 15px; font-weight: 500; cursor: pointer; transition: all 0.2s; text-decoration: none; font-family: 'DM Sans', sans-serif; display: inline-block; }
+        .nav-btn { padding: 12px 26px; border-radius: 99px; font-size: 16px; font-weight: 500; cursor: pointer; transition: all 0.2s; text-decoration: none; font-family: 'DM Sans', sans-serif; display: inline-block; }
         .nav-ghost { background: var(--glass); border: 1px solid var(--glass-b); color: var(--text1); }
         .nav-ghost:hover { background: rgba(255,255,255,0.07); }
         .nav-primary { background: linear-gradient(135deg,var(--accent),var(--accent2)); border: none; color: #fff; margin-left: 4px; }
