@@ -89,9 +89,9 @@ export default function LandingPage() {
         .nav-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); animation: pulse 2s ease infinite; flex-shrink: 0; }
         @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
         .nav-links { display: flex; align-items: center; gap: 6px; }
-        .nav-link { padding: 12px 24px; border-radius: 99px; font-size: 22px; font-weight: 400; color: var(--text2); cursor: pointer; background: none; border: none; font-family: 'DM Sans', sans-serif; transition: color 0.2s; }
+        .nav-link { padding: 14px 28px; border-radius: 99px; font-size: 26px; font-weight: 400; color: var(--text2); cursor: pointer; background: none; border: none; font-family: 'DM Sans', sans-serif; transition: color 0.2s; }
         .nav-link:hover { color: var(--text1); }
-        .nav-btn { padding: 14px 32px; border-radius: 99px; font-size: 22px; font-weight: 500; cursor: pointer; transition: all 0.2s; text-decoration: none; font-family: 'DM Sans', sans-serif; display: inline-block; }
+        .nav-btn { padding: 16px 36px; border-radius: 99px; font-size: 26px; font-weight: 500; cursor: pointer; transition: all 0.2s; text-decoration: none; font-family: 'DM Sans', sans-serif; display: inline-block; }
         .nav-ghost { background: var(--glass); border: 1px solid var(--glass-b); color: var(--text1); }
         .nav-ghost:hover { background: rgba(255,255,255,0.07); }
         .nav-primary { background: linear-gradient(135deg,var(--accent),var(--accent2)); border: none; color: #fff; margin-left: 4px; }
