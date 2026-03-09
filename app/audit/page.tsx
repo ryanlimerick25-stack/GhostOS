@@ -46,6 +46,7 @@ export default function AuditPage() {
   const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<AuditResult | null>(null);
+  const [fromCache, setFromCache] = useState(false);
 
   useEffect(() => {
     const used = parseInt(localStorage.getItem("free_audits_used") || "0");
@@ -68,11 +69,9 @@ export default function AuditPage() {
     const isProUser = user?.publicMetadata?.is_pro === true;
     const isLoggedIn = !!user;
 
-    // Pro users bypass everything
     if (isProUser) {
       // proceed
     } else if (isLoggedIn) {
-      // Logged-in free user: check their real audit count from the server
       const res = await fetch("/api/audits");
       const json = await res.json();
       const serverCount = json?.count ?? 0;
@@ -81,7 +80,6 @@ export default function AuditPage() {
         return;
       }
     } else {
-      // Not logged in: use localStorage
       const used = parseInt(localStorage.getItem("free_audits_used") || "0");
       if (used >= 3) {
         setError("You've used your 3 free audits. Sign up or upgrade to GhostOS Pro for unlimited audits.");
@@ -92,6 +90,7 @@ export default function AuditPage() {
     setLoading(true);
     setError(null);
     setResult(null);
+    setFromCache(false);
 
     try {
       const res = await fetch("/api/audit", {
@@ -109,8 +108,8 @@ export default function AuditPage() {
       const json = await res.json();
       if (!res.ok) throw new Error(json?.error || "Request failed");
       setResult(json.data);
+      setFromCache(json.cached === true);
 
-      // Only increment localStorage for non-logged-in users
       if (!isLoggedIn) {
         const used = parseInt(localStorage.getItem("free_audits_used") || "0");
         const newCount = used + 1;
@@ -125,423 +124,81 @@ export default function AuditPage() {
   }
 
   const score = result?.readiness_score ?? 0;
-  const scoreColor =
-    score >= 75 ? "#4ade80" : score >= 50 ? "#facc15" : "#f87171";
+  const scoreColor = score >= 75 ? "#4ade80" : score >= 50 ? "#facc15" : "#f87171";
 
   return (
     <>
       <style>{`
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-          background: #080808;
-          color: #e8e6e1;
-          font-family: 'Geist', sans-serif;
-          min-height: 100vh;
-        }
-
-        .page {
-          min-height: 100vh;
-          background: #080808;
-          background-image:
-            radial-gradient(ellipse 80% 50% at 50% -10%, rgba(120, 90, 255, 0.08), transparent),
-            radial-gradient(ellipse 60% 40% at 80% 100%, rgba(255, 180, 50, 0.04), transparent);
-        }
-
-        .container {
-          max-width: 780px;
-          margin: 0 auto;
-          padding: 60px 24px 100px;
-        }
-
+        body { background: #080808; color: #e8e6e1; font-family: 'Geist', sans-serif; min-height: 100vh; }
+        .page { min-height: 100vh; background: #080808; background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(120, 90, 255, 0.08), transparent), radial-gradient(ellipse 60% 40% at 80% 100%, rgba(255, 180, 50, 0.04), transparent); }
+        .container { max-width: 780px; margin: 0 auto; padding: 60px 24px 100px; }
         .header { margin-bottom: 56px; }
-
-        .eyebrow {
-          font-family: 'DM Mono', monospace;
-          font-size: 10px;
-          letter-spacing: 0.2em;
-          text-transform: uppercase;
-          color: #6b6b6b;
-          margin-bottom: 12px;
-        }
-
-        .title {
-          font-family: 'DM Serif Display', serif;
-          font-size: clamp(32px, 5vw, 48px);
-          font-weight: 400;
-          line-height: 1.1;
-          color: #f0ede8;
-          letter-spacing: -0.02em;
-        }
-
+        .eyebrow { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #6b6b6b; margin-bottom: 12px; }
+        .title { font-family: 'DM Serif Display', serif; font-size: clamp(32px, 5vw, 48px); font-weight: 400; line-height: 1.1; color: #f0ede8; letter-spacing: -0.02em; }
         .title em { font-style: italic; color: #c9b8ff; }
-
-        .subtitle {
-          margin-top: 12px;
-          font-size: 14px;
-          color: #999;
-          font-weight: 300;
-          letter-spacing: 0.01em;
-        }
-
-        .form-card {
-          background: #0f0f0f;
-          border: 1px solid #1e1e1e;
-          border-radius: 20px;
-          padding: 32px;
-          position: relative;
-          overflow: hidden;
-        }
-
-        .form-card::before {
-          content: '';
-          position: absolute;
-          top: 0; left: 0; right: 0;
-          height: 1px;
-          background: linear-gradient(90deg, transparent, rgba(201, 184, 255, 0.3), transparent);
-        }
-
+        .subtitle { margin-top: 12px; font-size: 14px; color: #999; font-weight: 300; letter-spacing: 0.01em; }
+        .form-card { background: #0f0f0f; border: 1px solid #1e1e1e; border-radius: 20px; padding: 32px; position: relative; overflow: hidden; }
+        .form-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(201, 184, 255, 0.3), transparent); }
         .form-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
         .form-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 16px; }
-
-        @media (max-width: 600px) {
-          .form-grid-3, .form-grid-2 { grid-template-columns: 1fr; }
-        }
-
+        @media (max-width: 600px) { .form-grid-3, .form-grid-2 { grid-template-columns: 1fr; } }
         .field label { display: block; }
-
-        .field-label {
-          font-family: 'DM Mono', monospace;
-          font-size: 10px;
-          letter-spacing: 0.15em;
-          text-transform: uppercase;
-          color: #666;
-          margin-bottom: 8px;
-          display: block;
-        }
-
-        .field input {
-          width: 100%;
-          background: #080808;
-          border: 1px solid #1e1e1e;
-          border-radius: 10px;
-          padding: 10px 14px;
-          font-size: 14px;
-          color: #e8e6e1;
-          font-family: 'Geist', sans-serif;
-          outline: none;
-          transition: border-color 0.2s;
-        }
-
+        .field-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: #666; margin-bottom: 8px; display: block; }
+        .field input { width: 100%; background: #080808; border: 1px solid #1e1e1e; border-radius: 10px; padding: 10px 14px; font-size: 14px; color: #e8e6e1; font-family: 'Geist', sans-serif; outline: none; transition: border-color 0.2s; }
         .field input:focus { border-color: #3d3d3d; }
-
-        .run-btn {
-          margin-top: 24px;
-          width: 100%;
-          padding: 14px;
-          background: #c9b8ff;
-          color: #0a0814;
-          border: none;
-          border-radius: 12px;
-          font-family: 'Geist', sans-serif;
-          font-size: 14px;
-          font-weight: 600;
-          letter-spacing: 0.03em;
-          cursor: pointer;
-          transition: all 0.2s;
-          position: relative;
-          overflow: hidden;
-        }
-
-        .run-btn:hover:not(:disabled) {
-          background: #ddd0ff;
-          transform: translateY(-1px);
-          box-shadow: 0 8px 30px rgba(201, 184, 255, 0.2);
-        }
-
+        .run-btn { margin-top: 24px; width: 100%; padding: 14px; background: #c9b8ff; color: #0a0814; border: none; border-radius: 12px; font-family: 'Geist', sans-serif; font-size: 14px; font-weight: 600; letter-spacing: 0.03em; cursor: pointer; transition: all 0.2s; }
+        .run-btn:hover:not(:disabled) { background: #ddd0ff; transform: translateY(-1px); box-shadow: 0 8px 30px rgba(201, 184, 255, 0.2); }
         .run-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-        .loading-dots::after {
-          content: '';
-          animation: dots 1.2s steps(4, end) infinite;
-        }
-
-        @keyframes dots {
-          0%, 20% { content: ''; }
-          40% { content: '.'; }
-          60% { content: '..'; }
-          80%, 100% { content: '...'; }
-        }
-
-        .error-box {
-          margin-top: 16px;
-          padding: 12px 16px;
-          background: rgba(239, 68, 68, 0.06);
-          border: 1px solid rgba(239, 68, 68, 0.2);
-          border-radius: 10px;
-          font-size: 13px;
-          color: #fca5a5;
-        }
-
+        .loading-dots::after { content: ''; animation: dots 1.2s steps(4, end) infinite; }
+        @keyframes dots { 0%, 20% { content: ''; } 40% { content: '.'; } 60% { content: '..'; } 80%, 100% { content: '...'; } }
+        .error-box { margin-top: 16px; padding: 12px 16px; background: rgba(239, 68, 68, 0.06); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 10px; font-size: 13px; color: #fca5a5; }
+        .cache-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(74, 222, 128, 0.06); border: 1px solid rgba(74, 222, 128, 0.2); border-radius: 99px; padding: 5px 12px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #4ade80; margin-bottom: 20px; }
+        .cache-badge-dot { width: 5px; height: 5px; border-radius: 50%; background: #4ade80; }
         .results { margin-top: 40px; animation: fadeUp 0.4s ease; }
-
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(16px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-
-        .score-hero {
-          background: #0f0f0f;
-          border: 1px solid #1e1e1e;
-          border-radius: 20px;
-          padding: 36px 32px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 24px;
-          position: relative;
-          overflow: hidden;
-        }
-
-        .score-hero::before {
-          content: '';
-          position: absolute;
-          top: 0; left: 0; right: 0;
-          height: 1px;
-          background: linear-gradient(90deg, transparent, rgba(201, 184, 255, 0.2), transparent);
-        }
-
-        .score-label {
-          font-family: 'DM Mono', monospace;
-          font-size: 10px;
-          letter-spacing: 0.2em;
-          text-transform: uppercase;
-          color: #4a4a4a;
-          margin-bottom: 8px;
-        }
-
-        .score-title {
-          font-family: 'DM Serif Display', serif;
-          font-size: 22px;
-          font-weight: 400;
-          color: #f0ede8;
-        }
-
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        .score-hero { background: #0f0f0f; border: 1px solid #1e1e1e; border-radius: 20px; padding: 36px 32px; display: flex; align-items: center; justify-content: space-between; gap: 24px; position: relative; overflow: hidden; }
+        .score-hero::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(201, 184, 255, 0.2), transparent); }
+        .score-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #4a4a4a; margin-bottom: 8px; }
+        .score-title { font-family: 'DM Serif Display', serif; font-size: 22px; font-weight: 400; color: #f0ede8; }
         .score-desc { margin-top: 6px; font-size: 13px; color: #444; }
-
-        .score-number {
-          font-family: 'DM Serif Display', serif;
-          font-size: 72px;
-          font-weight: 400;
-          line-height: 1;
-          letter-spacing: -0.03em;
-          flex-shrink: 0;
-        }
-
+        .score-number { font-family: 'DM Serif Display', serif; font-size: 72px; font-weight: 400; line-height: 1; letter-spacing: -0.03em; flex-shrink: 0; }
         .score-denom { font-size: 28px; color: #333; }
-
-        .score-bar-wrap {
-          margin-top: 24px;
-          height: 3px;
-          background: #1a1a1a;
-          border-radius: 99px;
-          overflow: hidden;
-        }
-
+        .score-bar-wrap { margin-top: 24px; height: 3px; background: #1a1a1a; border-radius: 99px; overflow: hidden; }
         .score-bar-fill { height: 100%; border-radius: 99px; transition: width 1s ease; }
-
         .deal-range { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
-
         @media (max-width: 500px) { .deal-range { grid-template-columns: 1fr; } }
-
-        .deal-card {
-          background: #080808;
-          border: 1px solid #1a1a1a;
-          border-radius: 14px;
-          padding: 16px 18px;
-        }
-
-        .deal-card-label {
-          font-family: 'DM Mono', monospace;
-          font-size: 9px;
-          letter-spacing: 0.2em;
-          text-transform: uppercase;
-          color: #3a3a3a;
-          margin-bottom: 6px;
-        }
-
-        .deal-card-value {
-          font-family: 'DM Serif Display', serif;
-          font-size: 28px;
-          color: #e8e6e1;
-          letter-spacing: -0.02em;
-        }
-
+        .deal-card { background: #080808; border: 1px solid #1a1a1a; border-radius: 14px; padding: 16px 18px; }
+        .deal-card-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: #3a3a3a; margin-bottom: 6px; }
+        .deal-card-value { font-family: 'DM Serif Display', serif; font-size: 28px; color: #e8e6e1; letter-spacing: -0.02em; }
         .deal-card.target { border-color: rgba(201, 184, 255, 0.2); background: rgba(201, 184, 255, 0.03); }
         .deal-card.target .deal-card-label { color: #7a6fa8; }
         .deal-card.target .deal-card-value { color: #c9b8ff; }
-
-        .section-block {
-          margin-top: 24px;
-          background: #0f0f0f;
-          border: 1px solid #1e1e1e;
-          border-radius: 20px;
-          padding: 28px 32px;
-        }
-
-        .section-eyebrow {
-          font-family: 'DM Mono', monospace;
-          font-size: 9px;
-          letter-spacing: 0.2em;
-          text-transform: uppercase;
-          color: #4a4a4a;
-          margin-bottom: 16px;
-        }
-
+        .section-block { margin-top: 24px; background: #0f0f0f; border: 1px solid #1e1e1e; border-radius: 20px; padding: 28px 32px; }
+        .section-eyebrow { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: #4a4a4a; margin-bottom: 16px; }
         .tags { display: flex; flex-wrap: wrap; gap: 8px; }
-
-        .tag {
-          background: #141414;
-          border: 1px solid #232323;
-          border-radius: 99px;
-          padding: 6px 14px;
-          font-size: 12px;
-          color: #888;
-          font-weight: 400;
-        }
-
+        .tag { background: #141414; border: 1px solid #232323; border-radius: 99px; padding: 6px 14px; font-size: 12px; color: #888; }
         .bullet-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-
-        .bullet-list li {
-          display: flex;
-          align-items: flex-start;
-          gap: 12px;
-          font-size: 14px;
-          color: #888;
-          line-height: 1.5;
-        }
-
-        .bullet-list li::before {
-          content: '—';
-          color: #2e2e2e;
-          flex-shrink: 0;
-          margin-top: 1px;
-          font-family: 'DM Mono', monospace;
-        }
-
+        .bullet-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 14px; color: #888; line-height: 1.5; }
+        .bullet-list li::before { content: '—'; color: #2e2e2e; flex-shrink: 0; margin-top: 1px; font-family: 'DM Mono', monospace; }
         .gap-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-
-        .gap-list li {
-          display: flex;
-          align-items: flex-start;
-          gap: 12px;
-          font-size: 14px;
-          color: #aaa;
-          line-height: 1.5;
-        }
-
-        .gap-dot {
-          width: 6px;
-          height: 6px;
-          border-radius: 50%;
-          background: #f87171;
-          flex-shrink: 0;
-          margin-top: 6px;
-        }
-
+        .gap-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 14px; color: #aaa; line-height: 1.5; }
+        .gap-dot { width: 6px; height: 6px; border-radius: 50%; background: #f87171; flex-shrink: 0; margin-top: 6px; }
         .actions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-
         @media (max-width: 600px) { .actions-grid { grid-template-columns: 1fr; } }
-
-        .action-card {
-          background: #080808;
-          border: 1px solid #1a1a1a;
-          border-radius: 14px;
-          padding: 18px;
-        }
-
-        .action-card-title {
-          font-family: 'DM Mono', monospace;
-          font-size: 9px;
-          letter-spacing: 0.2em;
-          text-transform: uppercase;
-          color: #c9b8ff;
-          margin-bottom: 14px;
-        }
-
+        .action-card { background: #080808; border: 1px solid #1a1a1a; border-radius: 14px; padding: 18px; }
+        .action-card-title { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: #c9b8ff; margin-bottom: 14px; }
         .rate-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-
         @media (max-width: 500px) { .rate-grid { grid-template-columns: 1fr; } }
-
-        .rate-item {
-          background: #080808;
-          border: 1px solid #1a1a1a;
-          border-radius: 14px;
-          padding: 18px 20px;
-        }
-
-        .rate-item-label {
-          font-size: 11px;
-          color: #444;
-          margin-bottom: 6px;
-          font-family: 'DM Mono', monospace;
-          letter-spacing: 0.05em;
-        }
-
-        .rate-item-value {
-          font-family: 'DM Serif Display', serif;
-          font-size: 26px;
-          color: #e8e6e1;
-          letter-spacing: -0.02em;
-        }
-
+        .rate-item { background: #080808; border: 1px solid #1a1a1a; border-radius: 14px; padding: 18px 20px; }
+        .rate-item-label { font-size: 11px; color: #444; margin-bottom: 6px; font-family: 'DM Mono', monospace; letter-spacing: 0.05em; }
+        .rate-item-value { font-family: 'DM Serif Display', serif; font-size: 26px; color: #e8e6e1; letter-spacing: -0.02em; }
         .rate-item.addon .rate-item-value { color: #4ade80; font-size: 22px; }
-
-        .positioning-box {
-          background: #080808;
-          border: 1px solid #1e1e1e;
-          border-left: 2px solid #c9b8ff;
-          border-radius: 0 12px 12px 0;
-          padding: 20px 24px;
-          font-size: 14px;
-          color: #aaa;
-          line-height: 1.7;
-          font-style: italic;
-        }
-
-        .template-block {
-          background: #080808;
-          border: 1px solid #1a1a1a;
-          border-radius: 14px;
-          padding: 20px 24px;
-        }
-
-        .template-label {
-          font-family: 'DM Mono', monospace;
-          font-size: 9px;
-          letter-spacing: 0.2em;
-          text-transform: uppercase;
-          color: #4a4a4a;
-          margin-bottom: 14px;
-        }
-
-        .template-text {
-          font-size: 13px;
-          color: #777;
-          line-height: 1.75;
-          white-space: pre-wrap;
-          font-family: 'Geist', sans-serif;
-        }
-
-        .footer-badge {
-          margin-top: 60px;
-          text-align: center;
-          font-family: 'DM Mono', monospace;
-          font-size: 10px;
-          letter-spacing: 0.15em;
-          text-transform: uppercase;
-          color: #444;
-        }
+        .positioning-box { background: #080808; border: 1px solid #1e1e1e; border-left: 2px solid #c9b8ff; border-radius: 0 12px 12px 0; padding: 20px 24px; font-size: 14px; color: #aaa; line-height: 1.7; font-style: italic; }
+        .template-block { background: #080808; border: 1px solid #1a1a1a; border-radius: 14px; padding: 20px 24px; }
+        .template-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: #4a4a4a; margin-bottom: 14px; }
+        .template-text { font-size: 13px; color: #777; line-height: 1.75; white-space: pre-wrap; font-family: 'Geist', sans-serif; }
+        .footer-badge { margin-top: 60px; text-align: center; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: #444; }
       `}</style>
 
       <nav style={{position:"fixed",top:0,left:0,right:0,zIndex:100,display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 40px",height:"64px",background:"rgba(8,8,8,0.85)",backdropFilter:"blur(20px)",borderBottom:"1px solid rgba(255,255,255,0.05)"}}>
@@ -589,6 +246,12 @@ export default function AuditPage() {
 
           {result && (
             <div className="results">
+              {fromCache && (
+                <div className="cache-badge">
+                  <div className="cache-badge-dot" />
+                  Instant result · Retrieved from cache
+                </div>
+              )}
               <div className="score-hero">
                 <div style={{ flex: 1 }}>
                   <div className="score-label">Readiness Score</div>
@@ -602,132 +265,60 @@ export default function AuditPage() {
                   {score}<span className="score-denom">/100</span>
                 </div>
               </div>
-
               <div className="section-block">
                 <div className="section-eyebrow">Estimated First Deal</div>
                 <div className="deal-range">
-                  <div className="deal-card">
-                    <div className="deal-card-label">Conservative</div>
-                    <div className="deal-card-value">${result.estimated_first_deal_range_usd.low}</div>
-                  </div>
-                  <div className="deal-card target">
-                    <div className="deal-card-label">Target</div>
-                    <div className="deal-card-value">${result.estimated_first_deal_range_usd.target}</div>
-                  </div>
-                  <div className="deal-card">
-                    <div className="deal-card-label">Best case</div>
-                    <div className="deal-card-value">${result.estimated_first_deal_range_usd.high}</div>
-                  </div>
+                  <div className="deal-card"><div className="deal-card-label">Conservative</div><div className="deal-card-value">${result.estimated_first_deal_range_usd.low}</div></div>
+                  <div className="deal-card target"><div className="deal-card-label">Target</div><div className="deal-card-value">${result.estimated_first_deal_range_usd.target}</div></div>
+                  <div className="deal-card"><div className="deal-card-label">Best case</div><div className="deal-card-value">${result.estimated_first_deal_range_usd.high}</div></div>
                 </div>
               </div>
-
               <div className="section-block">
                 <div className="section-eyebrow">Best-Fit Brand Categories</div>
-                <div className="tags">
-                  {result.best_fit_brand_categories.map((c, i) => (
-                    <span className="tag" key={i}>{c}</span>
-                  ))}
-                </div>
+                <div className="tags">{result.best_fit_brand_categories.map((c, i) => <span className="tag" key={i}>{c}</span>)}</div>
               </div>
-
               <div className="section-block">
                 <div className="section-eyebrow">Why Brands Would Pay You</div>
-                <ul className="bullet-list">
-                  {result.why_brands_would_pay.map((x, i) => <li key={i}>{x}</li>)}
-                </ul>
+                <ul className="bullet-list">{result.why_brands_would_pay.map((x, i) => <li key={i}>{x}</li>)}</ul>
               </div>
-
               <div className="section-block">
                 <div className="section-eyebrow">Top Gaps — Next 14 Days</div>
-                <ul className="gap-list">
-                  {result.top_gaps_to_fix_next_14_days.map((x, i) => (
-                    <li key={i}><span className="gap-dot" />{x}</li>
-                  ))}
-                </ul>
+                <ul className="gap-list">{result.top_gaps_to_fix_next_14_days.map((x, i) => <li key={i}><span className="gap-dot" />{x}</li>)}</ul>
               </div>
-
               <div className="section-block">
                 <div className="section-eyebrow">Action Plan</div>
                 <div className="actions-grid">
-                  {[
-                    { title: "Today", items: result.next_actions.today },
-                    { title: "This Week", items: result.next_actions.this_week },
-                    { title: "This Month", items: result.next_actions.this_month },
-                  ].map(({ title, items }) => (
-                    <div className="action-card" key={title}>
-                      <div className="action-card-title">{title}</div>
-                      <ul className="bullet-list">
-                        {items.map((x, i) => <li key={i}>{x}</li>)}
-                      </ul>
-                    </div>
+                  {[{title:"Today",items:result.next_actions.today},{title:"This Week",items:result.next_actions.this_week},{title:"This Month",items:result.next_actions.this_month}].map(({title,items})=>(
+                    <div className="action-card" key={title}><div className="action-card-title">{title}</div><ul className="bullet-list">{items.map((x,i)=><li key={i}>{x}</li>)}</ul></div>
                   ))}
                 </div>
               </div>
-
-              {result.media_kit_positioning && (
-                <div className="section-block">
-                  <div className="section-eyebrow">Media Kit Positioning</div>
-                  <div className="positioning-box">{result.media_kit_positioning}</div>
-                </div>
-              )}
-
-              {(result.media_kit_brand_pitch_bullets?.length ?? 0) > 0 && (
-                <div className="section-block">
-                  <div className="section-eyebrow">Media Kit Pitch Bullets</div>
-                  <ul className="bullet-list">
-                    {result.media_kit_brand_pitch_bullets?.map((b, i) => <li key={i}>{b}</li>)}
-                  </ul>
-                </div>
-              )}
-
+              {result.media_kit_positioning && <div className="section-block"><div className="section-eyebrow">Media Kit Positioning</div><div className="positioning-box">{result.media_kit_positioning}</div></div>}
+              {(result.media_kit_brand_pitch_bullets?.length ?? 0) > 0 && <div className="section-block"><div className="section-eyebrow">Media Kit Pitch Bullets</div><ul className="bullet-list">{result.media_kit_brand_pitch_bullets?.map((b,i)=><li key={i}>{b}</li>)}</ul></div>}
               {result.rate_card_usd && (
                 <div className="section-block">
                   <div className="section-eyebrow">Rate Card (USD)</div>
                   <div className="rate-grid">
-                    <div className="rate-item">
-                      <div className="rate-item-label">Single Post</div>
-                      <div className="rate-item-value">${result.rate_card_usd.single_post}</div>
-                    </div>
-                    <div className="rate-item">
-                      <div className="rate-item-label">3-Post Package</div>
-                      <div className="rate-item-value">${result.rate_card_usd.three_post_package}</div>
-                    </div>
-                    <div className="rate-item">
-                      <div className="rate-item-label">Monthly Ambassador</div>
-                      <div className="rate-item-value">${result.rate_card_usd.monthly_ambassador}</div>
-                    </div>
-                    <div className="rate-item addon">
-                      <div className="rate-item-label">Usage Rights Add-on</div>
-                      <div className="rate-item-value">+${result.rate_card_usd.usage_rights_addon}</div>
-                    </div>
-                    <div className="rate-item addon">
-                      <div className="rate-item-label">Exclusivity Add-on</div>
-                      <div className="rate-item-value">+${result.rate_card_usd.exclusivity_addon}</div>
-                    </div>
+                    <div className="rate-item"><div className="rate-item-label">Single Post</div><div className="rate-item-value">${result.rate_card_usd.single_post}</div></div>
+                    <div className="rate-item"><div className="rate-item-label">3-Post Package</div><div className="rate-item-value">${result.rate_card_usd.three_post_package}</div></div>
+                    <div className="rate-item"><div className="rate-item-label">Monthly Ambassador</div><div className="rate-item-value">${result.rate_card_usd.monthly_ambassador}</div></div>
+                    <div className="rate-item addon"><div className="rate-item-label">Usage Rights Add-on</div><div className="rate-item-value">+${result.rate_card_usd.usage_rights_addon}</div></div>
+                    <div className="rate-item addon"><div className="rate-item-label">Exclusivity Add-on</div><div className="rate-item-value">+${result.rate_card_usd.exclusivity_addon}</div></div>
                   </div>
                 </div>
               )}
-
               {result.cold_outreach_templates && (
                 <div className="section-block">
                   <div className="section-eyebrow">Cold Outreach Templates</div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                    {[
-                      { label: "Direct Brand", text: result.cold_outreach_templates.direct_brand },
-                      { label: "Agency", text: result.cold_outreach_templates.agency },
-                      { label: "Follow-Up", text: result.cold_outreach_templates.follow_up },
-                    ].map(({ label, text }) => (
-                      <div className="template-block" key={label}>
-                        <div className="template-label">{label}</div>
-                        <div className="template-text">{text}</div>
-                      </div>
+                  <div style={{display:"flex",flexDirection:"column",gap:12}}>
+                    {[{label:"Direct Brand",text:result.cold_outreach_templates.direct_brand},{label:"Agency",text:result.cold_outreach_templates.agency},{label:"Follow-Up",text:result.cold_outreach_templates.follow_up}].map(({label,text})=>(
+                      <div className="template-block" key={label}><div className="template-label">{label}</div><div className="template-text">{text}</div></div>
                     ))}
                   </div>
                 </div>
               )}
             </div>
           )}
-
           <div className="footer-badge">GhostOS · Powered by AI</div>
         </div>
       </div>
@@ -735,90 +326,22 @@ export default function AuditPage() {
   );
 }
 
-const NICHES = [
-  "Beauty & Skincare","Fashion & Style","Streetwear","Fitness & Gym",
-  "Health & Wellness","Food & Cooking","Travel & Lifestyle","Gaming",
-  "Anime & Pop Culture","Music & Dance","Comedy & Entertainment",
-  "Tech & Gadgets","Finance & Money","Sports","Pets & Animals",
-  "Parenting & Family","Art & Design","Photography","Mindfulness & Spirituality",
-  "Education & Study","Cars & Automotive","Home & Interior","DIY & Crafts",
-];
+const NICHES = ["Beauty & Skincare","Fashion & Style","Streetwear","Fitness & Gym","Health & Wellness","Food & Cooking","Travel & Lifestyle","Gaming","Anime & Pop Culture","Music & Dance","Comedy & Entertainment","Tech & Gadgets","Finance & Money","Sports","Pets & Animals","Parenting & Family","Art & Design","Photography","Mindfulness & Spirituality","Education & Study","Cars & Automotive","Home & Interior","DIY & Crafts"];
+const GEOS = ["Primarily US","US — Northeast (NY, NJ, CT, MA, PA)","US — Southeast (FL, GA, NC, SC, TN, VA)","US — Midwest (IL, OH, MI, IN, WI, MN)","US — Southwest (TX, AZ, NM, NV)","US — West Coast (CA, WA, OR)","Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming","UK","US + UK","US + Canada","International / Mixed"];
 
-function Field({ label, value, onChange, numeric }: {
-  label: string; value: string; onChange: (v: string) => void; numeric?: boolean;
-}) {
-  return (
-    <div className="field">
-      <label>
-        <span className="field-label">{label}</span>
-        <input value={value} onChange={(e) => onChange(e.target.value)} inputMode={numeric ? "numeric" : "text"} />
-      </label>
-    </div>
-  );
+function Field({label,value,onChange,numeric}:{label:string;value:string;onChange:(v:string)=>void;numeric?:boolean}) {
+  return <div className="field"><label><span className="field-label">{label}</span><input value={value} onChange={(e)=>onChange(e.target.value)} inputMode={numeric?"numeric":"text"} /></label></div>;
 }
 
-function NumberField({ label, value, onChange, placeholder }: {
-  label: string; value: string; onChange: (v: string) => void; placeholder?: string;
-}) {
-  const display = value ? Number(value.replace(/,/g, "")).toLocaleString() : "";
-  return (
-    <div className="field">
-      <label>
-        <span className="field-label">{label}</span>
-        <input
-          value={display}
-          inputMode="numeric"
-          placeholder={placeholder}
-          onChange={(e) => {
-            const raw = e.target.value.replace(/,/g, "");
-            if (/^\d*$/.test(raw)) onChange(raw);
-          }}
-        />
-      </label>
-    </div>
-  );
+function NumberField({label,value,onChange,placeholder}:{label:string;value:string;onChange:(v:string)=>void;placeholder?:string}) {
+  const display = value ? Number(value.replace(/,/g,"")).toLocaleString() : "";
+  return <div className="field"><label><span className="field-label">{label}</span><input value={display} inputMode="numeric" placeholder={placeholder} onChange={(e)=>{const raw=e.target.value.replace(/,/g,"");if(/^\d*$/.test(raw))onChange(raw);}} /></label></div>;
 }
 
-const GEOS = [
-  "Primarily US","US — Northeast (NY, NJ, CT, MA, PA)","US — Southeast (FL, GA, NC, SC, TN, VA)",
-  "US — Midwest (IL, OH, MI, IN, WI, MN)","US — Southwest (TX, AZ, NM, NV)","US — West Coast (CA, WA, OR)",
-  "Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia",
-  "Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland",
-  "Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada",
-  "New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio",
-  "Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee",
-  "Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming",
-  "UK","US + UK","US + Canada","International / Mixed",
-];
-
-function GeoSelect({ label, value, onChange }: {
-  label: string; value: string; onChange: (v: string) => void;
-}) {
-  return (
-    <div className="field">
-      <label>
-        <span className="field-label">{label}</span>
-        <select value={value} onChange={(e) => onChange(e.target.value)} style={{width:"100%",background:"#080808",border:"1px solid #1e1e1e",borderRadius:"10px",padding:"10px 14px",fontSize:"14px",color:value?"#e8e6e1":"#3a3a3a",fontFamily:"inherit",outline:"none",cursor:"pointer",appearance:"none"}}>
-          <option value="" disabled>Select your audience...</option>
-          {GEOS.map((g) => <option key={g} value={g} style={{background:"#111",color:"#fff"}}>{g}</option>)}
-        </select>
-      </label>
-    </div>
-  );
+function GeoSelect({label,value,onChange}:{label:string;value:string;onChange:(v:string)=>void}) {
+  return <div className="field"><label><span className="field-label">{label}</span><select value={value} onChange={(e)=>onChange(e.target.value)} style={{width:"100%",background:"#080808",border:"1px solid #1e1e1e",borderRadius:"10px",padding:"10px 14px",fontSize:"14px",color:value?"#e8e6e1":"#3a3a3a",fontFamily:"inherit",outline:"none",cursor:"pointer",appearance:"none"}}><option value="" disabled>Select your audience...</option>{GEOS.map((g)=><option key={g} value={g} style={{background:"#111",color:"#fff"}}>{g}</option>)}</select></label></div>;
 }
 
-function NicheSelect({ label, value, onChange }: {
-  label: string; value: string; onChange: (v: string) => void;
-}) {
-  return (
-    <div className="field">
-      <label>
-        <span className="field-label">{label}</span>
-        <select value={value} onChange={(e) => onChange(e.target.value)} style={{width:"100%",background:"#080808",border:"1px solid #1e1e1e",borderRadius:"10px",padding:"10px 14px",fontSize:"14px",color:value?"#e8e6e1":"#3a3a3a",fontFamily:"inherit",outline:"none",cursor:"pointer",appearance:"none"}}>
-          <option value="" disabled>Select your niche...</option>
-          {NICHES.map((n) => <option key={n} value={n} style={{background:"#111",color:"#fff"}}>{n}</option>)}
-        </select>
-      </label>
-    </div>
-  );
+function NicheSelect({label,value,onChange}:{label:string;value:string;onChange:(v:string)=>void}) {
+  return <div className="field"><label><span className="field-label">{label}</span><select value={value} onChange={(e)=>onChange(e.target.value)} style={{width:"100%",background:"#080808",border:"1px solid #1e1e1e",borderRadius:"10px",padding:"10px 14px",fontSize:"14px",color:value?"#e8e6e1":"#3a3a3a",fontFamily:"inherit",outline:"none",cursor:"pointer",appearance:"none"}}><option value="" disabled>Select your niche...</option>{NICHES.map((n)=><option key={n} value={n} style={{background:"#111",color:"#fff"}}>{n}</option>)}</select></label></div>;
 }
