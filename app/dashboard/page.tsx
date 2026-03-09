@@ -83,31 +83,31 @@ export default function Dashboard() {
       <style>{`
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #04040a; font-family: 'DM Sans', sans-serif; -webkit-font-smoothing: antialiased; color: rgba(255,255,255,0.9); }
-        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 64px; background: rgba(4,4,10,0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .nav-logo { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: rgba(255,255,255,0.9); display: flex; align-items: center; gap: 8px; text-decoration: none; }
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 8vw; height: 110px; background: rgba(4,4,10,0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .nav-logo { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; color: rgba(255,255,255,0.9); display: flex; align-items: center; gap: 8px; text-decoration: none; }
         .nav-dot { width: 7px; height: 7px; border-radius: 50%; background: #a78bfa; box-shadow: 0 0 10px #a78bfa; animation: pulse 2s ease infinite; flex-shrink: 0; }
         @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
         .nav-right { display: flex; align-items: center; gap: 12px; }
-        .nav-user { font-size: 13px; color: rgba(255,255,255,0.4); }
-        .nav-btn { padding: 8px 18px; border-radius: 99px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; text-decoration: none; display: inline-block; border: none; }
+        .nav-user { font-size: 16px; color: rgba(255,255,255,0.4); }
+        .nav-btn { padding: 14px 32px; border-radius: 99px; font-size: 18px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; text-decoration: none; display: inline-block; border: none; }
         .nav-audit { background: linear-gradient(135deg,#a78bfa,#818cf8); color: #fff; }
         .nav-audit:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(167,139,250,0.3); }
         .nav-signout { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); }
         .nav-signout:hover { color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.08); }
-        .page { max-width: 900px; margin: 0 auto; padding: 96px 24px 60px; }
+        .page { max-width: 1100px; margin: 0 auto; padding: 140px 24px 60px; }
         .welcome { margin-bottom: 36px; }
-        .welcome-label { font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: #a78bfa; margin-bottom: 10px; }
-        .welcome-title { font-family: 'Playfair Display', serif; font-size: clamp(28px,4vw,44px); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; color: rgba(255,255,255,0.93); margin-bottom: 8px; }
+        .welcome-label { font-size: 13px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: #a78bfa; margin-bottom: 10px; }
+        .welcome-title { font-family: 'Playfair Display', serif; font-size: clamp(48px,5vw,72px); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; color: rgba(255,255,255,0.93); margin-bottom: 8px; }
         .welcome-title em { font-style: italic; color: rgba(255,255,255,0.4); }
-        .welcome-sub { font-size: 15px; font-weight: 300; color: rgba(255,255,255,0.3); }
+        .welcome-sub { font-size: 18px; font-weight: 300; color: rgba(255,255,255,0.3); }
         .stats-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 32px; }
         @media(max-width:600px){.stats-row{grid-template-columns:1fr}}
         .stat-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 20px; padding: 24px; position: relative; overflow: hidden; }
         .stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background: linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent); }
-        .stat-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.28); margin-bottom: 10px; }
-        .stat-value { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 700; letter-spacing: -0.02em; color: rgba(255,255,255,0.93); }
-        .stat-sub { font-size: 12px; color: rgba(255,255,255,0.25); margin-top: 4px; }
-        .section-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 600; color: rgba(255,255,255,0.9); margin-bottom: 16px; letter-spacing: -0.01em; }
+        .stat-label { font-size: 13px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.28); margin-bottom: 10px; }
+        .stat-value { font-family: 'Playfair Display', serif; font-size: clamp(40px,4vw,64px); font-weight: 700; letter-spacing: -0.02em; color: rgba(255,255,255,0.93); }
+        .stat-sub { font-size: 14px; color: rgba(255,255,255,0.25); margin-top: 4px; }
+        .section-title { font-family: 'Playfair Display', serif; font-size: clamp(28px,3vw,40px); font-weight: 600; color: rgba(255,255,255,0.9); margin-bottom: 16px; letter-spacing: -0.01em; }
         .empty-state { background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.08); border-radius: 20px; padding: 56px 24px; text-align: center; }
         .empty-icon { font-size: 36px; margin-bottom: 16px; }
         .empty-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; color: rgba(255,255,255,0.6); margin-bottom: 8px; }
@@ -120,10 +120,10 @@ export default function Dashboard() {
         .audit-card-header { padding: 24px 28px; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 24px; cursor: pointer; position: relative; }
         .audit-card-header::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background: linear-gradient(90deg,transparent,rgba(255,255,255,0.07),transparent); }
         .audit-card-header:hover { background: rgba(255,255,255,0.02); }
-        .audit-niche { font-size: 16px; font-weight: 500; color: rgba(255,255,255,0.9); margin-bottom: 6px; }
+        .audit-niche { font-size: 20px; font-weight: 500; color: rgba(255,255,255,0.9); margin-bottom: 6px; }
         .audit-meta { font-size: 12px; color: rgba(255,255,255,0.28); display: flex; gap: 16px; flex-wrap: wrap; }
         .audit-right { text-align: right; }
-        .audit-score { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+        .audit-score { font-family: 'Playfair Display', serif; font-size: clamp(32px,3vw,48px); font-weight: 700; line-height: 1; margin-bottom: 4px; }
         .audit-score-label { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; }
         .audit-deal { font-size: 12px; color: rgba(255,255,255,0.3); margin-top: 6px; }
         .audit-date { font-size: 11px; color: rgba(255,255,255,0.2); margin-top: 2px; }
