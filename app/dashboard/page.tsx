@@ -83,13 +83,13 @@ export default function Dashboard() {
       <style>{`
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #04040a; font-family: 'DM Sans', sans-serif; -webkit-font-smoothing: antialiased; color: rgba(255,255,255,0.9); }
-        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 8vw; height: 110px; background: rgba(4,4,10,0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .nav-logo { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; color: rgba(255,255,255,0.9); display: flex; align-items: center; gap: 8px; text-decoration: none; }
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 var(--pad,8vw); height: clamp(60px,8vw,110px); background: rgba(4,4,10,0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .nav-logo { font-family: 'Playfair Display', serif; font-size: clamp(18px,2.5vw,32px); font-weight: 700; color: rgba(255,255,255,0.9); display: flex; align-items: center; gap: 8px; text-decoration: none; }
         .nav-dot { width: 7px; height: 7px; border-radius: 50%; background: #a78bfa; box-shadow: 0 0 10px #a78bfa; animation: pulse 2s ease infinite; flex-shrink: 0; }
         @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
         .nav-right { display: flex; align-items: center; gap: 12px; }
         .nav-user { font-size: 16px; color: rgba(255,255,255,0.4); }
-        .nav-btn { padding: 14px 32px; border-radius: 99px; font-size: 18px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; text-decoration: none; display: inline-block; border: none; }
+        .nav-btn { padding: clamp(8px,0.8vw,14px) clamp(16px,1.8vw,32px); border-radius: 99px; font-size: clamp(13px,1.3vw,20px); font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; text-decoration: none; display: inline-block; border: none; }
         .nav-audit { background: linear-gradient(135deg,#a78bfa,#818cf8); color: #fff; }
         .nav-audit:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(167,139,250,0.3); }
         .nav-signout { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); }
