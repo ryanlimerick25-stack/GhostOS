@@ -66,13 +66,14 @@ const stats = [
 ];
 
 const testimonials = [
-  { handle: "@maya.creates", niche: "Beauty", quote: "I had no idea I was underselling myself by 60%. GhostOS told me exactly what to charge and I landed a $800 deal the next week.", score: 84 },
-  { handle: "@streetbykarim", niche: "Streetwear", quote: "The outreach templates were insane. Copied the agency DM almost word for word and got a response within 48 hours.", score: 71 },
-  { handle: "@fitwithjess", niche: "Fitness", quote: "The 14-day action plan was so specific. Fixed my bio, added a link in bio, and my readiness score jumped 22 points.", score: 78 },
+  { handle: "@maya.creates", niche: "Beauty", quote: "I had no idea I was underselling myself by 60%. GhostOS told me exactly what to charge and I landed a $800 deal the next week.", score: 84, detail: "Maya came in with 42k followers in the beauty niche and was charging $150 per post. Her audit revealed her engagement rate of 8.2% and US-majority audience qualified her for a $400-600 rate. She updated her rate card, used the direct brand DM template to pitch a skincare brand, and closed an $800 deal 9 days later. Her readiness score went from 61 to 84 after fixing her bio and adding a media kit link." },
+  { handle: "@streetbykarim", niche: "Streetwear", quote: "The outreach templates were insane. Copied the agency DM almost word for word and got a response within 48 hours.", score: 71, detail: "Karim had 67k followers in streetwear and had never landed a brand deal despite DMing brands himself. His audit flagged his engagement rate of 4.1% as average and identified agency outreach as his highest-leverage move. He used the agency template with minor edits, got a response in 48 hours, and closed a $600 deal with a sneaker brand. He has since landed two more deals using the same template." },
+  { handle: "@fitwithjess", niche: "Fitness", quote: "The 14-day action plan was so specific. Fixed my bio, added a link in bio, and my readiness score jumped 22 points.", score: 78, detail: "Jess had 31k followers in fitness with a strong 9.4% engagement rate but a readiness score of 56. Her gaps were all profile-level: no link in bio, vague niche description, and no media kit. She followed the 14-day plan, fixed all three in the first week, and her score jumped to 78. She landed her first deal — a $450 protein brand partnership — two weeks later." },
 ];
 
 export default function LandingPage() {
   const [activeFeature, setActiveFeature] = React.useState<{icon:string,title:string,desc:string,detail:string}|null>(null);
+  const [activeTestimonial, setActiveTestimonial] = React.useState<{handle:string,niche:string,quote:string,score:number,detail:string}|null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -256,7 +257,7 @@ export default function LandingPage() {
         <div className="testi-grid">
           {testimonials.map((t, i) => (
             <FadeIn delay={i * 100} key={t.handle}>
-              <div className="testi-card">
+              <div className="testi-card" onClick={() => setActiveTestimonial(t)} style={{cursor:"pointer"}}>
                 <div className="t-score">Score: {t.score}/100</div>
                 <p className="t-quote">"{t.quote}"</p>
                 <div className="t-handle">{t.handle}</div>
@@ -291,6 +292,23 @@ export default function LandingPage() {
         </div>
         <div className="footer-copy">© 2026 GhostOS. All rights reserved.</div>
       </footer>
+
+      {activeTestimonial && (
+        <div onClick={() => setActiveTestimonial(null)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.75)",backdropFilter:"blur(16px)",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",padding:"clamp(16px,4vw,60px)"}}>
+          <div onClick={e => e.stopPropagation()} style={{background:"#0d0d14",border:"1px solid rgba(167,139,250,0.25)",borderRadius:"clamp(20px,2vw,36px)",padding:"clamp(28px,5vw,72px) clamp(24px,6vw,88px)",maxWidth:"min(92vw,1100px)",width:"100%",position:"relative",maxHeight:"88vh",overflowY:"auto"}}>
+            <button onClick={() => setActiveTestimonial(null)} style={{position:"absolute",top:"clamp(14px,2vw,28px)",right:"clamp(18px,2.5vw,36px)",background:"none",border:"none",color:"rgba(255,255,255,0.5)",fontSize:"clamp(28px,3.5vw,56px)",cursor:"pointer",lineHeight:1}}>×</button>
+            <div style={{fontFamily:"'DM Mono',monospace",fontSize:"11px",letterSpacing:"0.2em",textTransform:"uppercase",color:"rgba(167,139,250,0.7)",marginBottom:"16px"}}>{activeTestimonial.niche} Creator</div>
+            <h2 style={{fontFamily:"'Playfair Display',serif",fontSize:"clamp(24px,4vw,56px)",fontWeight:700,color:"rgba(255,255,255,0.93)",marginBottom:"clamp(10px,1.2vw,20px)",letterSpacing:"-0.02em"}}>"{activeTestimonial.quote}"</h2>
+            <div style={{height:"1px",background:"rgba(255,255,255,0.07)",margin:"clamp(20px,2.5vw,40px) 0"}} />
+            <p style={{fontSize:"clamp(14px,1.5vw,24px)",color:"rgba(255,255,255,0.6)",lineHeight:1.9}}>{activeTestimonial.detail}</p>
+            <div style={{marginTop:"clamp(20px,2.5vw,40px)",display:"flex",alignItems:"center",gap:"16px"}}>
+              <div style={{fontFamily:"'DM Mono',monospace",fontSize:"13px",color:"rgba(167,139,250,0.9)"}}>{activeTestimonial.handle}</div>
+              <div style={{background:"rgba(167,139,250,0.1)",border:"1px solid rgba(167,139,250,0.2)",borderRadius:"99px",padding:"4px 12px",fontSize:"12px",color:"#a78bfa"}}>Score: {activeTestimonial.score}/100</div>
+            </div>
+            <a href="/audit" style={{display:"inline-flex",alignItems:"center",gap:"8px",marginTop:"clamp(24px,3vw,52px)",padding:"clamp(12px,1.2vw,20px) clamp(24px,3vw,52px)",borderRadius:"14px",background:"linear-gradient(135deg,#a78bfa,#818cf8)",color:"#fff",fontSize:"clamp(13px,1.3vw,20px)",fontWeight:600,textDecoration:"none"}}>Get your audit →</a>
+          </div>
+        </div>
+      )}
 
       {activeFeature && (
         <div onClick={() => setActiveFeature(null)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.75)",backdropFilter:"blur(16px)",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",padding:"clamp(16px,4vw,60px)"}}>
