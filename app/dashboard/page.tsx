@@ -88,7 +88,7 @@ export default function Dashboard() {
         .nav-dot { width: 7px; height: 7px; border-radius: 50%; background: #a78bfa; box-shadow: 0 0 10px #a78bfa; animation: pulse 2s ease infinite; flex-shrink: 0; }
         @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
         .nav-right { display: flex; align-items: center; gap: 12px; }
-        .nav-user { font-size: 16px; color: rgba(255,255,255,0.4); }
+        .nav-user { font-size: clamp(13px,1.3vw,20px); color: rgba(255,255,255,0.4); }
         .nav-btn { padding: clamp(8px,0.8vw,14px) clamp(16px,1.8vw,32px); border-radius: 99px; font-size: clamp(13px,1.3vw,20px); font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; text-decoration: none; display: inline-block; border: none; }
         .nav-audit { background: linear-gradient(135deg,#a78bfa,#818cf8); color: #fff; }
         .nav-audit:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(167,139,250,0.3); }
@@ -153,7 +153,7 @@ export default function Dashboard() {
         <a className="nav-logo" href="/"><div className="nav-dot" />GhostOS</a>
         <div className="nav-right">
           <span className="nav-user">Hi, {user?.firstName || "Creator"}</span>
-          <a href="/pricing" style={{padding:"8px 18px",borderRadius:"99px",fontSize:"13px",fontWeight:500,color:"rgba(255,255,255,0.4)",textDecoration:"none"}}>Pricing</a>
+          <a href="/pricing" className="nav-link">Pricing</a>
           <a className="nav-btn nav-audit" href="/audit">New Audit →</a>
           <button className="nav-btn nav-signout" onClick={() => signOut(() => router.push("/"))}>Sign out</button>
         </div>
