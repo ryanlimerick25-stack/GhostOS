@@ -1,6 +1,7 @@
 import OpenAI from "openai";
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { createClient } from "@supabase/supabase-js";
+import { Resend } from "resend";
 
 export const runtime = "nodejs";
 
@@ -8,6 +9,8 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_KEY!
 );
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 type AuditInput = {
   followers: number;
@@ -20,7 +23,6 @@ type AuditInput = {
 
 export async function POST(req: Request) {
   try {
-    // Make auth optional - allow free audits without login
     const authResult = await auth().catch(() => ({ userId: null }));
     const userId = authResult?.userId;
     const key = process.env.OPENAI_API_KEY;
@@ -154,6 +156,80 @@ Rules:
         deal_high: data.estimated_first_deal_range_usd.high,
         result: data,
       });
+
+      // Send post-audit email
+      try {
+        const clerk = await clerkClient();
+        const user = await clerk.users.getUser(userId);
+        const email = user.emailAddresses?.[0]?.emailAddress;
+        const name = user.firstName || "Creator";
+        const score = data.readiness_score;
+        const low = data.estimated_first_deal_range_usd.low;
+        const high = data.estimated_first_deal_range_usd.high;
+        const handle = input.tiktokHandle ? `@${input.tiktokHandle}` : "your account";
+
+        if (email) {
+          await resend.emails.send({
+            from: "GhostOS <onboarding@resend.dev>",
+            to: email,
+            subject: `Your audit is ready — you scored ${score}/100`,
+            html: `<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><style>
+  body { margin: 0; padding: 0; background: #04040a; font-family: 'Helvetica Neue', Arial, sans-serif; color: #e8e6e1; }
+  .wrap { max-width: 560px; margin: 0 auto; padding: 48px 24px; }
+  .logo { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 40px; }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #a78bfa; margin-right: 6px; }
+  h1 { font-size: 28px; font-weight: 700; color: #fff; line-height: 1.2; margin: 0 0 16px; letter-spacing: -0.02em; }
+  p { font-size: 15px; color: rgba(255,255,255,0.55); line-height: 1.7; margin: 0 0 16px; }
+  .highlight { color: rgba(255,255,255,0.85); }
+  .score-box { background: rgba(167,139,250,0.08); border: 1px solid rgba(167,139,250,0.2); border-radius: 16px; padding: 28px; margin: 28px 0; text-align: center; }
+  .score-num { font-size: 64px; font-weight: 700; color: #a78bfa; line-height: 1; margin-bottom: 8px; }
+  .score-label { font-size: 13px; color: rgba(255,255,255,0.35); letter-spacing: 0.1em; text-transform: uppercase; }
+  .rate-row { display: flex; justify-content: space-between; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 18px 22px; margin: 16px 0; }
+  .rate-label { font-size: 13px; color: rgba(255,255,255,0.4); }
+  .rate-value { font-size: 18px; font-weight: 600; color: #fff; }
+  .btn { display: inline-block; margin: 24px 0; padding: 14px 32px; background: linear-gradient(135deg,#a78bfa,#818cf8); color: #fff; text-decoration: none; border-radius: 12px; font-weight: 600; font-size: 15px; }
+  .divider { height: 1px; background: rgba(255,255,255,0.06); margin: 32px 0; }
+  .footer { font-size: 12px; color: rgba(255,255,255,0.2); line-height: 1.6; }
+  .footer a { color: rgba(167,139,250,0.6); text-decoration: none; }
+</style></head>
+<body>
+<div class="wrap">
+  <div class="logo"><span class="dot"></span>GhostOS</div>
+  <h1>${name}, your audit results are in.</h1>
+  <p>We just finished analyzing <span class="highlight">${handle}</span>. Here's the summary:</p>
+
+  <div class="score-box">
+    <div class="score-num">${score}</div>
+    <div class="score-label">Brand Deal Readiness Score</div>
+  </div>
+
+  <div class="rate-row">
+    <div>
+      <div class="rate-label">Estimated First Deal Range</div>
+      <div class="rate-value">$${low.toLocaleString()} – $${high.toLocaleString()}</div>
+    </div>
+  </div>
+
+  <p>Your full results include your rate card, cold outreach templates, media kit positioning, and a 14-day action plan. Log in to view everything.</p>
+
+  <a href="https://ghostos.live/dashboard" class="btn">View Full Results →</a>
+
+  <div class="divider"></div>
+  <div class="footer">
+    You're receiving this because you ran an audit at ghostos.live.<br>
+    <a href="https://ghostos.live">ghostos.live</a> · Questions? Reply to this email.
+  </div>
+</div>
+</body>
+</html>`,
+          });
+        }
+      } catch (emailErr) {
+        // Don't fail the audit if email fails
+        console.error("POST_AUDIT_EMAIL_ERROR:", emailErr);
+      }
     }
 
     return Response.json({ data });
