@@ -1,811 +1,157 @@
 "use client";
+import { useSignIn } from "@clerk/nextjs";
+import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 
-import { useState } from "react";
-
-type AuditResult = {
-  readiness_score: number;
-  estimated_first_deal_range_usd: { low: number; target: number; high: number };
-  best_fit_brand_categories: string[];
-  why_brands_would_pay: string[];
-  top_gaps_to_fix_next_14_days: string[];
-  next_actions: { today: string[]; this_week: string[]; this_month: string[] };
-  media_kit_positioning?: string;
-  media_kit_brand_pitch_bullets?: string[];
-  rate_card_usd?: {
-    single_post: number;
-    three_post_package: number;
-    monthly_ambassador: number;
-    usage_rights_addon: number;
-    exclusivity_addon: number;
-  };
-  cold_outreach_templates?: {
-    direct_brand: string;
-    agency: string;
-    follow_up: string;
-  };
-};
-
-export default function AuditPage() {
-  const [followers, setFollowers] = useState("30000");
-  const [avgViews, setAvgViews] = useState("45000");
-  const [engagementRate, setEngagementRate] = useState("6.5");
-  const [niche, setNiche] = useState("streetwear + lifestyle");
-  const [audienceGeo, setAudienceGeo] = useState("US (California), some UK");
-
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<AuditResult | null>(null);
-
-  async function runAudit() {
-    setLoading(true);
-    setError(null);
-    setResult(null);
-
-    try {
-      const res = await fetch("/api/audit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          followers: Number(followers),
-          avgViews: Number(avgViews),
-          engagementRate: Number(engagementRate),
-          niche,
-          audienceGeo,
-        }),
+function ParticleCanvas() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current; if (!canvas) return;
+    const cv = canvas; const ctx = cv.getContext("2d"); if (!ctx) return;
+    const c = ctx; let animId: number;
+    type P = { x:number;y:number;vx:number;vy:number;size:number;opacity:number;target:number;color:string };
+    const particles: P[] = [];
+    const resize = () => { cv.width = window.innerWidth; cv.height = window.innerHeight; };
+    resize(); window.addEventListener("resize", resize);
+    const colors = ["255,255,255","255,245,210","255,225,150","255,200,80","210,235,255"];
+    const spawn = (): P => ({ x: Math.random()*window.innerWidth, y: cv.height+30, vx:(Math.random()-0.5)*0.35, vy:-(Math.random()*0.55+0.12), size:Math.random()*20+3, opacity:0, target:Math.random()*0.45+0.06, color:colors[Math.floor(Math.random()*colors.length)] });
+    for (let i=0;i<80;i++){const p=spawn();p.y=Math.random()*cv.height;p.opacity=Math.random()*0.35;particles.push(p);}
+    function animate(){
+      c.clearRect(0,0,cv.width,cv.height);
+      particles.forEach((p,i)=>{
+        if(p.opacity<p.target)p.opacity=Math.min(p.opacity+0.001,p.target);
+        const g=c.createRadialGradient(p.x,p.y,0,p.x,p.y,p.size);
+        g.addColorStop(0,`rgba(${p.color},${p.opacity})`);g.addColorStop(0.3,`rgba(${p.color},${p.opacity*0.4})`);g.addColorStop(1,`rgba(${p.color},0)`);
+        c.beginPath();c.arc(p.x,p.y,p.size,0,Math.PI*2);c.fillStyle=g;c.fill();
+        p.x+=p.vx;p.y+=p.vy;
+        if(p.y<-p.size*2||p.x<-80||p.x>cv.width+80)particles[i]=spawn();
       });
-
-      const json = await res.json();
-      if (!res.ok) throw new Error(json?.error || "Request failed");
-      setResult(json.data);
-    } catch (e: any) {
-      setError(e.message || "Something went wrong");
-    } finally {
-      setLoading(false);
+      animId=requestAnimationFrame(animate);
     }
+    animate();
+    return ()=>{cancelAnimationFrame(animId);window.removeEventListener("resize",resize);};
+  },[]);
+  return <canvas ref={canvasRef} style={{position:"fixed",top:0,left:0,width:"100%",height:"100%",pointerEvents:"none",zIndex:0}} />;
+}
+
+export default function SignInPage() {
+  const { signIn, isLoaded, setActive } = useSignIn();
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  async function handleSignIn(e: React.FormEvent) {
+    e.preventDefault();
+    if (!isLoaded) return;
+    if (!email.trim()) { setError("Email is required."); return; }
+    if (!password.trim()) { setError("Password is required."); return; }
+    setLoading(true); setError("");
+    try {
+      const result = await signIn.create({ identifier: email, password });
+      if (result.status === "complete") {
+        await setActive({ session: result.createdSessionId });
+        router.push("/dashboard");
+      }
+    } catch (e: unknown) {
+      const err = e as { errors?: { message: string }[] };
+      setError(err.errors?.[0]?.message || "Invalid email or password.");
+    } finally { setLoading(false); }
   }
 
-  const score = result?.readiness_score ?? 0;
-  const scoreColor =
-    score >= 75 ? "#4ade80" : score >= 50 ? "#facc15" : "#f87171";
+  async function handleGoogle() {
+    if (!isLoaded) return;
+    await signIn.authenticateWithRedirect({ strategy: "oauth_google", redirectUrl: "/sso-callback", redirectUrlComplete: "/dashboard" });
+  }
+
+  async function handleApple() {
+    if (!isLoaded) return;
+    await signIn.authenticateWithRedirect({ strategy: "oauth_apple", redirectUrl: "/sso-callback", redirectUrlComplete: "/dashboard" });
+  }
 
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Geist:wght@300;400;500;600&display=swap');
-
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-          background: #080808;
-          color: #e8e6e1;
-          font-family: 'Geist', sans-serif;
-          min-height: 100vh;
-        }
-
-        .page {
-          min-height: 100vh;
-          background: #080808;
-          background-image:
-            radial-gradient(ellipse 80% 50% at 50% -10%, rgba(120, 90, 255, 0.08), transparent),
-            radial-gradient(ellipse 60% 40% at 80% 100%, rgba(255, 180, 50, 0.04), transparent);
-        }
-
-        .container {
-          max-width: 780px;
-          margin: 0 auto;
-          padding: 60px 24px 100px;
-        }
-
-        /* Header */
-        .header {
-          margin-bottom: 56px;
-        }
-
-        .eyebrow {
-          font-family: 'DM Mono', monospace;
-          font-size: 10px;
-          letter-spacing: 0.2em;
-          text-transform: uppercase;
-          color: #6b6b6b;
-          margin-bottom: 12px;
-        }
-
-        .title {
-          font-family: 'DM Serif Display', serif;
-          font-size: clamp(32px, 5vw, 48px);
-          font-weight: 400;
-          line-height: 1.1;
-          color: #f0ede8;
-          letter-spacing: -0.02em;
-        }
-
-        .title em {
-          font-style: italic;
-          color: #c9b8ff;
-        }
-
-        .subtitle {
-          margin-top: 12px;
-          font-size: 14px;
-          color: #555;
-          font-weight: 300;
-          letter-spacing: 0.01em;
-        }
-
-        /* Form card */
-        .form-card {
-          background: #0f0f0f;
-          border: 1px solid #1e1e1e;
-          border-radius: 20px;
-          padding: 32px;
-          position: relative;
-          overflow: hidden;
-        }
-
-        .form-card::before {
-          content: '';
-          position: absolute;
-          top: 0; left: 0; right: 0;
-          height: 1px;
-          background: linear-gradient(90deg, transparent, rgba(201, 184, 255, 0.3), transparent);
-        }
-
-        .form-grid-3 {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 16px;
-        }
-
-        .form-grid-2 {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 16px;
-          margin-top: 16px;
-        }
-
-        @media (max-width: 600px) {
-          .form-grid-3, .form-grid-2 { grid-template-columns: 1fr; }
-        }
-
-        .field label {
-          display: block;
-        }
-
-        .field-label {
-          font-family: 'DM Mono', monospace;
-          font-size: 10px;
-          letter-spacing: 0.15em;
-          text-transform: uppercase;
-          color: #4a4a4a;
-          margin-bottom: 8px;
-          display: block;
-        }
-
-        .field input {
-          width: 100%;
-          background: #080808;
-          border: 1px solid #1e1e1e;
-          border-radius: 10px;
-          padding: 10px 14px;
-          font-size: 14px;
-          color: #e8e6e1;
-          font-family: 'Geist', sans-serif;
-          outline: none;
-          transition: border-color 0.2s;
-        }
-
-        .field input:focus {
-          border-color: #3d3d3d;
-        }
-
-        .run-btn {
-          margin-top: 24px;
-          width: 100%;
-          padding: 14px;
-          background: #c9b8ff;
-          color: #0a0814;
-          border: none;
-          border-radius: 12px;
-          font-family: 'Geist', sans-serif;
-          font-size: 14px;
-          font-weight: 600;
-          letter-spacing: 0.03em;
-          cursor: pointer;
-          transition: all 0.2s;
-          position: relative;
-          overflow: hidden;
-        }
-
-        .run-btn:hover:not(:disabled) {
-          background: #ddd0ff;
-          transform: translateY(-1px);
-          box-shadow: 0 8px 30px rgba(201, 184, 255, 0.2);
-        }
-
-        .run-btn:disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
-        }
-
-        .loading-dots::after {
-          content: '';
-          animation: dots 1.2s steps(4, end) infinite;
-        }
-
-        @keyframes dots {
-          0%, 20% { content: ''; }
-          40% { content: '.'; }
-          60% { content: '..'; }
-          80%, 100% { content: '...'; }
-        }
-
-        .error-box {
-          margin-top: 16px;
-          padding: 12px 16px;
-          background: rgba(239, 68, 68, 0.06);
-          border: 1px solid rgba(239, 68, 68, 0.2);
-          border-radius: 10px;
-          font-size: 13px;
-          color: #fca5a5;
-        }
-
-        /* Results */
-        .results {
-          margin-top: 40px;
-          animation: fadeUp 0.4s ease;
-        }
-
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(16px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Score hero */
-        .score-hero {
-          background: #0f0f0f;
-          border: 1px solid #1e1e1e;
-          border-radius: 20px;
-          padding: 36px 32px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 24px;
-          position: relative;
-          overflow: hidden;
-        }
-
-        .score-hero::before {
-          content: '';
-          position: absolute;
-          top: 0; left: 0; right: 0;
-          height: 1px;
-          background: linear-gradient(90deg, transparent, rgba(201, 184, 255, 0.2), transparent);
-        }
-
-        .score-label {
-          font-family: 'DM Mono', monospace;
-          font-size: 10px;
-          letter-spacing: 0.2em;
-          text-transform: uppercase;
-          color: #4a4a4a;
-          margin-bottom: 8px;
-        }
-
-        .score-title {
-          font-family: 'DM Serif Display', serif;
-          font-size: 22px;
-          font-weight: 400;
-          color: #f0ede8;
-        }
-
-        .score-desc {
-          margin-top: 6px;
-          font-size: 13px;
-          color: #444;
-        }
-
-        .score-number {
-          font-family: 'DM Serif Display', serif;
-          font-size: 72px;
-          font-weight: 400;
-          line-height: 1;
-          letter-spacing: -0.03em;
-          flex-shrink: 0;
-        }
-
-        .score-denom {
-          font-size: 28px;
-          color: #333;
-        }
-
-        /* Score bar */
-        .score-bar-wrap {
-          margin-top: 24px;
-          height: 3px;
-          background: #1a1a1a;
-          border-radius: 99px;
-          overflow: hidden;
-        }
-
-        .score-bar-fill {
-          height: 100%;
-          border-radius: 99px;
-          transition: width 1s ease;
-        }
-
-        /* Deal range */
-        .deal-range {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 12px;
-          margin-top: 16px;
-        }
-
-        @media (max-width: 500px) {
-          .deal-range { grid-template-columns: 1fr; }
-        }
-
-        .deal-card {
-          background: #080808;
-          border: 1px solid #1a1a1a;
-          border-radius: 14px;
-          padding: 16px 18px;
-        }
-
-        .deal-card-label {
-          font-family: 'DM Mono', monospace;
-          font-size: 9px;
-          letter-spacing: 0.2em;
-          text-transform: uppercase;
-          color: #3a3a3a;
-          margin-bottom: 6px;
-        }
-
-        .deal-card-value {
-          font-family: 'DM Serif Display', serif;
-          font-size: 28px;
-          color: #e8e6e1;
-          letter-spacing: -0.02em;
-        }
-
-        .deal-card.target {
-          border-color: rgba(201, 184, 255, 0.2);
-          background: rgba(201, 184, 255, 0.03);
-        }
-
-        .deal-card.target .deal-card-label { color: #7a6fa8; }
-        .deal-card.target .deal-card-value { color: #c9b8ff; }
-
-        /* Section blocks */
-        .section-block {
-          margin-top: 24px;
-          background: #0f0f0f;
-          border: 1px solid #1e1e1e;
-          border-radius: 20px;
-          padding: 28px 32px;
-        }
-
-        .section-eyebrow {
-          font-family: 'DM Mono', monospace;
-          font-size: 9px;
-          letter-spacing: 0.2em;
-          text-transform: uppercase;
-          color: #4a4a4a;
-          margin-bottom: 16px;
-        }
-
-        .section-title {
-          font-family: 'DM Serif Display', serif;
-          font-size: 20px;
-          font-weight: 400;
-          color: #f0ede8;
-          margin-bottom: 20px;
-        }
-
-        /* Tag pills */
-        .tags {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 8px;
-        }
-
-        .tag {
-          background: #141414;
-          border: 1px solid #232323;
-          border-radius: 99px;
-          padding: 6px 14px;
-          font-size: 12px;
-          color: #888;
-          font-weight: 400;
-        }
-
-        /* Bullet list */
-        .bullet-list {
-          list-style: none;
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-        }
-
-        .bullet-list li {
-          display: flex;
-          align-items: flex-start;
-          gap: 12px;
-          font-size: 14px;
-          color: #888;
-          line-height: 1.5;
-        }
-
-        .bullet-list li::before {
-          content: '—';
-          color: #2e2e2e;
-          flex-shrink: 0;
-          margin-top: 1px;
-          font-family: 'DM Mono', monospace;
-        }
-
-        /* Gap list (highlighted) */
-        .gap-list {
-          list-style: none;
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-        }
-
-        .gap-list li {
-          display: flex;
-          align-items: flex-start;
-          gap: 12px;
-          font-size: 14px;
-          color: #aaa;
-          line-height: 1.5;
-        }
-
-        .gap-dot {
-          width: 6px;
-          height: 6px;
-          border-radius: 50%;
-          background: #f87171;
-          flex-shrink: 0;
-          margin-top: 6px;
-        }
-
-        /* Actions grid */
-        .actions-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 12px;
-        }
-
-        @media (max-width: 600px) {
-          .actions-grid { grid-template-columns: 1fr; }
-        }
-
-        .action-card {
-          background: #080808;
-          border: 1px solid #1a1a1a;
-          border-radius: 14px;
-          padding: 18px;
-        }
-
-        .action-card-title {
-          font-family: 'DM Mono', monospace;
-          font-size: 9px;
-          letter-spacing: 0.2em;
-          text-transform: uppercase;
-          color: #c9b8ff;
-          margin-bottom: 14px;
-        }
-
-        /* Rate card grid */
-        .rate-grid {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 12px;
-        }
-
-        @media (max-width: 500px) {
-          .rate-grid { grid-template-columns: 1fr; }
-        }
-
-        .rate-item {
-          background: #080808;
-          border: 1px solid #1a1a1a;
-          border-radius: 14px;
-          padding: 18px 20px;
-        }
-
-        .rate-item-label {
-          font-size: 11px;
-          color: #444;
-          margin-bottom: 6px;
-          font-family: 'DM Mono', monospace;
-          letter-spacing: 0.05em;
-        }
-
-        .rate-item-value {
-          font-family: 'DM Serif Display', serif;
-          font-size: 26px;
-          color: #e8e6e1;
-          letter-spacing: -0.02em;
-        }
-
-        .rate-item.addon .rate-item-value {
-          color: #4ade80;
-          font-size: 22px;
-        }
-
-        /* Media kit positioning */
-        .positioning-box {
-          background: #080808;
-          border: 1px solid #1e1e1e;
-          border-left: 2px solid #c9b8ff;
-          border-radius: 0 12px 12px 0;
-          padding: 20px 24px;
-          font-size: 14px;
-          color: #aaa;
-          line-height: 1.7;
-          font-style: italic;
-        }
-
-        /* Outreach templates */
-        .template-block {
-          background: #080808;
-          border: 1px solid #1a1a1a;
-          border-radius: 14px;
-          padding: 20px 24px;
-        }
-
-        .template-label {
-          font-family: 'DM Mono', monospace;
-          font-size: 9px;
-          letter-spacing: 0.2em;
-          text-transform: uppercase;
-          color: #4a4a4a;
-          margin-bottom: 14px;
-        }
-
-        .template-text {
-          font-size: 13px;
-          color: #777;
-          line-height: 1.75;
-          white-space: pre-wrap;
-          font-family: 'Geist', sans-serif;
-        }
-
-        /* Divider */
-        .divider {
-          height: 1px;
-          background: #141414;
-          margin: 0;
-        }
-
-        /* Footer badge */
-        .footer-badge {
-          margin-top: 60px;
-          text-align: center;
-          font-family: 'DM Mono', monospace;
-          font-size: 10px;
-          letter-spacing: 0.15em;
-          text-transform: uppercase;
-          color: #2a2a2a;
-        }
+        .page { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; position: relative; z-index: 1; background: #04040a; font-family: 'DM Sans', sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+        @media(max-width:768px){ .page { grid-template-columns: 1fr; } .left-panel { display: none !important; } }
+        .left-panel { display: flex; flex-direction: column; justify-content: center; padding: 80px; border-right: 1px solid rgba(255,255,255,0.05); min-height: 100vh; }
+        .left-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 80px; }
+        .left-logo-dot { width: 10px; height: 10px; border-radius: 50%; background: #a78bfa; box-shadow: 0 0 14px #a78bfa; }
+        .left-logo-text { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; color: rgba(255,255,255,0.9); }
+        .left-headline { font-family: 'Playfair Display', serif; font-size: clamp(36px,4vw,56px); font-weight: 700; line-height: 1.1; letter-spacing: -0.03em; color: rgba(255,255,255,0.93); margin-bottom: 20px; }
+        .left-headline em { font-style: italic; color: #a78bfa; }
+        .left-sub { font-size: 18px; font-weight: 300; color: rgba(255,255,255,0.35); line-height: 1.7; margin-bottom: 56px; max-width: 420px; }
+        .left-features { display: flex; flex-direction: column; gap: 20px; }
+        .left-feature { display: flex; align-items: center; gap: 14px; }
+        .left-feature-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(167,139,250,0.5); flex-shrink: 0; }
+        .left-feature-text { font-size: 16px; color: rgba(255,255,255,0.45); }
+        .right-panel { display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 80px 60px; min-height: 100vh; }
+        .auth-card { width: 100%; max-width: 480px; }
+        .auth-title { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 700; color: rgba(255,255,255,0.93); margin-bottom: 8px; letter-spacing: -0.02em; }
+        .auth-sub { font-size: 16px; font-weight: 300; color: rgba(255,255,255,0.35); margin-bottom: 36px; }
+        .social-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; }
+        .social-btn { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 14px 20px; border-radius: 14px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.8); font-size: 15px; font-weight: 500; cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
+        .social-btn:hover { background: rgba(255,255,255,0.08); transform: translateY(-1px); }
+        .divider { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
+        .divider-line { flex: 1; height: 1px; background: rgba(255,255,255,0.07); }
+        .divider-text { font-size: 12px; color: rgba(255,255,255,0.2); letter-spacing: 0.1em; text-transform: uppercase; }
+        .field-group { display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px; }
+        .field { display: flex; flex-direction: column; gap: 8px; }
+        .field-label { font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); }
+        .field-input { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px 16px; font-size: 16px; font-family: 'DM Sans', sans-serif; color: rgba(255,255,255,0.9); outline: none; transition: all 0.2s; width: 100%; }
+        .field-input::placeholder { color: rgba(255,255,255,0.15); }
+        .field-input:focus { border-color: rgba(167,139,250,0.45); background: rgba(167,139,250,0.05); box-shadow: 0 0 0 3px rgba(167,139,250,0.08); }
+        .forgot-link { text-align: right; margin-top: -8px; margin-bottom: 16px; }
+        .forgot-link a { font-size: 13px; color: rgba(167,139,250,0.7); text-decoration: none; }
+        .error-box { background: rgba(248,113,113,0.07); border: 1px solid rgba(248,113,113,0.2); border-radius: 10px; padding: 12px 16px; font-size: 14px; color: #fca5a5; margin-bottom: 16px; }
+        .submit-btn { width: 100%; padding: 16px; border-radius: 14px; background: linear-gradient(135deg,#a78bfa,#818cf8); color: #fff; font-size: 16px; font-weight: 600; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1); }
+        .submit-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(167,139,250,0.35); }
+        .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .auth-footer { text-align: center; margin-top: 24px; font-size: 15px; color: rgba(255,255,255,0.28); }
+        .auth-footer a { color: #a78bfa; text-decoration: none; font-weight: 500; }
       `}</style>
-
+      <ParticleCanvas />
       <div className="page">
-        <div className="container">
-
-          {/* Header */}
-          <div className="header">
-            <div className="eyebrow">Creator Revenue OS</div>
-            <h1 className="title">
-              Brand Deal<br /><em>Readiness Audit</em>
-            </h1>
-            <p className="subtitle">For TikTok creators (20k–200k) trying to land their first deal.</p>
+        <div className="left-panel">
+          <div className="left-logo"><div className="left-logo-dot" /><span className="left-logo-text">GhostOS</span></div>
+          <h1 className="left-headline">Welcome<br /><em>back.</em></h1>
+          <p className="left-sub">Your brand deal intelligence is waiting. Pick up right where you left off.</p>
+          <div className="left-features">
+            {["Readiness score out of 100","Your real rate card","Cold outreach templates","14-day action plan","Media kit positioning"].map(f => (
+              <div className="left-feature" key={f}><div className="left-feature-dot" /><span className="left-feature-text">{f}</span></div>
+            ))}
           </div>
-
-          {/* Form */}
-          <div className="form-card">
-            <div className="form-grid-3">
-              <Field label="Followers" value={followers} onChange={setFollowers} numeric />
-              <Field label="Avg Views" value={avgViews} onChange={setAvgViews} numeric />
-              <Field label="Engagement %" value={engagementRate} onChange={setEngagementRate} numeric />
+        </div>
+        <div className="right-panel">
+          <div className="auth-card">
+            <h1 className="auth-title">Log in</h1>
+            <p className="auth-sub">Good to have you back.</p>
+            <div className="social-row">
+              <button className="social-btn" onClick={handleGoogle}>
+                <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.47 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                Google
+              </button>
+              <button className="social-btn" onClick={handleApple}>
+                <svg width="16" height="18" viewBox="0 0 814 1000" fill="rgba(255,255,255,0.85)"><path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-57.8-155.5-127.4C46 790.7 0 663 0 541.8c0-207.5 135.4-317.3 269-317.3 70.1 0 128.4 46.4 172.5 46.4 42.8 0 109.6-49 192.5-49 30.8 0 110.6 2.6 168.6 80.2zm-198.5-100.6c-17.9 23.4-47.2 41.3-76.1 41.3-3.9 0-7.7-.3-11.6-.9 0-27.5 12.3-55.5 30.2-74.7 19.3-21.4 51.4-37.6 78.1-38.5 1.3 4.5 1.9 9 1.9 13.5 0 26.5-11 54.4-22.5 59.3z"/></svg>
+                Apple
+              </button>
             </div>
-            <div className="form-grid-2">
-              <Field label="Niche" value={niche} onChange={setNiche} />
-              <Field label="Audience Geo" value={audienceGeo} onChange={setAudienceGeo} />
-            </div>
-            <button className="run-btn" onClick={runAudit} disabled={loading}>
-              {loading ? <span className="loading-dots">Analyzing your profile</span> : "Run Audit →"}
-            </button>
-            {error && <div className="error-box">{error}</div>}
+            <div className="divider"><div className="divider-line" /><span className="divider-text">or</span><div className="divider-line" /></div>
+            <form onSubmit={handleSignIn}>
+              <div className="field-group">
+                <div className="field"><label className="field-label">Email</label><input className="field-input" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" required /></div>
+                <div className="field"><label className="field-label">Password</label><input className="field-input" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Your password" required /></div>
+              </div>
+              <div className="forgot-link"><a href="/forgot-password">Forgot password?</a></div>
+              {error && <div className="error-box">{error}</div>}
+              <button className="submit-btn" type="submit" disabled={loading}>{loading ? "Signing in..." : "Log In →"}</button>
+            </form>
+            <p className="auth-footer">Don't have an account? <a href="/sign-up">Sign up free</a></p>
           </div>
-
-          {/* Results */}
-          {result && (
-            <div className="results">
-
-              {/* Score hero */}
-              <div className="score-hero">
-                <div style={{ flex: 1 }}>
-                  <div className="score-label">Readiness Score</div>
-                  <div className="score-title">Brand Deal Readiness</div>
-                  <div className="score-desc">How close you are to landing your first deal</div>
-                  <div className="score-bar-wrap" style={{ marginTop: 20 }}>
-                    <div
-                      className="score-bar-fill"
-                      style={{ width: `${score}%`, background: scoreColor }}
-                    />
-                  </div>
-                </div>
-                <div className="score-number" style={{ color: scoreColor }}>
-                  {score}<span className="score-denom">/100</span>
-                </div>
-              </div>
-
-              {/* Deal range */}
-              <div className="section-block">
-                <div className="section-eyebrow">Estimated First Deal</div>
-                <div className="deal-range">
-                  <div className="deal-card">
-                    <div className="deal-card-label">Conservative</div>
-                    <div className="deal-card-value">${result.estimated_first_deal_range_usd.low}</div>
-                  </div>
-                  <div className="deal-card target">
-                    <div className="deal-card-label">Target</div>
-                    <div className="deal-card-value">${result.estimated_first_deal_range_usd.target}</div>
-                  </div>
-                  <div className="deal-card">
-                    <div className="deal-card-label">Best case</div>
-                    <div className="deal-card-value">${result.estimated_first_deal_range_usd.high}</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Brand categories */}
-              <div className="section-block">
-                <div className="section-eyebrow">Best-Fit Brand Categories</div>
-                <div className="tags">
-                  {result.best_fit_brand_categories.map((c, i) => (
-                    <span className="tag" key={i}>{c}</span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Why brands pay */}
-              <div className="section-block">
-                <div className="section-eyebrow">Why Brands Would Pay You</div>
-                <ul className="bullet-list">
-                  {result.why_brands_would_pay.map((x, i) => <li key={i}>{x}</li>)}
-                </ul>
-              </div>
-
-              {/* Gaps */}
-              <div className="section-block">
-                <div className="section-eyebrow">Top Gaps — Next 14 Days</div>
-                <ul className="gap-list">
-                  {result.top_gaps_to_fix_next_14_days.map((x, i) => (
-                    <li key={i}><span className="gap-dot" />{x}</li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Next actions */}
-              <div className="section-block">
-                <div className="section-eyebrow">Action Plan</div>
-                <div className="actions-grid">
-                  {[
-                    { title: "Today", items: result.next_actions.today },
-                    { title: "This Week", items: result.next_actions.this_week },
-                    { title: "This Month", items: result.next_actions.this_month },
-                  ].map(({ title, items }) => (
-                    <div className="action-card" key={title}>
-                      <div className="action-card-title">{title}</div>
-                      <ul className="bullet-list">
-                        {items.map((x, i) => <li key={i}>{x}</li>)}
-                      </ul>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Media kit positioning */}
-              {result.media_kit_positioning && (
-                <div className="section-block">
-                  <div className="section-eyebrow">Media Kit Positioning</div>
-                  <div className="positioning-box">{result.media_kit_positioning}</div>
-                </div>
-              )}
-
-              {/* Pitch bullets */}
-              {result.media_kit_brand_pitch_bullets?.length > 0 && (
-                <div className="section-block">
-                  <div className="section-eyebrow">Media Kit Pitch Bullets</div>
-                  <ul className="bullet-list">
-                    {result.media_kit_brand_pitch_bullets.map((b, i) => <li key={i}>{b}</li>)}
-                  </ul>
-                </div>
-              )}
-
-              {/* Rate card */}
-              {result.rate_card_usd && (
-                <div className="section-block">
-                  <div className="section-eyebrow">Rate Card (USD)</div>
-                  <div className="rate-grid">
-                    <div className="rate-item">
-                      <div className="rate-item-label">Single Post</div>
-                      <div className="rate-item-value">${result.rate_card_usd.single_post}</div>
-                    </div>
-                    <div className="rate-item">
-                      <div className="rate-item-label">3-Post Package</div>
-                      <div className="rate-item-value">${result.rate_card_usd.three_post_package}</div>
-                    </div>
-                    <div className="rate-item">
-                      <div className="rate-item-label">Monthly Ambassador</div>
-                      <div className="rate-item-value">${result.rate_card_usd.monthly_ambassador}</div>
-                    </div>
-                    <div className="rate-item addon">
-                      <div className="rate-item-label">Usage Rights Add-on</div>
-                      <div className="rate-item-value">+${result.rate_card_usd.usage_rights_addon}</div>
-                    </div>
-                    <div className="rate-item addon">
-                      <div className="rate-item-label">Exclusivity Add-on</div>
-                      <div className="rate-item-value">+${result.rate_card_usd.exclusivity_addon}</div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Outreach templates */}
-              {result.cold_outreach_templates && (
-                <div className="section-block">
-                  <div className="section-eyebrow">Cold Outreach Templates</div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                    {[
-                      { label: "Direct Brand", text: result.cold_outreach_templates.direct_brand },
-                      { label: "Agency", text: result.cold_outreach_templates.agency },
-                      { label: "Follow-Up", text: result.cold_outreach_templates.follow_up },
-                    ].map(({ label, text }) => (
-                      <div className="template-block" key={label}>
-                        <div className="template-label">{label}</div>
-                        <div className="template-text">{text}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-            </div>
-          )}
-
-          <div className="footer-badge">Creator Revenue OS · Powered by AI</div>
         </div>
       </div>
     </>
-  );
-}
-
-function Field({
-  label,
-  value,
-  onChange,
-  numeric,
-}: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  numeric?: boolean;
-}) {
-  return (
-    <div className="field">
-      <label>
-        <span className="field-label">{label}</span>
-        <input
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          inputMode={numeric ? "numeric" : "text"}
-        />
-      </label>
-    </div>
   );
 }
