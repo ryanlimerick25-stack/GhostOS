@@ -96,8 +96,8 @@ export default function SignUpPage() {
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         .page { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; position: relative; z-index: 1; background: #04040a; font-family: 'DM Sans', sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
         @media(max-width:768px){ .page { grid-template-columns: 1fr; } .left-panel { display: none !important; } }
-        .left-panel { display: flex; flex-direction: column; justify-content: center; padding: 80px; border-right: 1px solid rgba(255,255,255,0.05); min-height: 100vh; }
-        .left-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 80px; }
+        .left-panel { display: flex; flex-direction: column; justify-content: center; padding: 48px; border-right: 1px solid rgba(255,255,255,0.05); min-height: 100vh; }
+        .left-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 40px; }
         .left-logo-dot { width: 10px; height: 10px; border-radius: 50%; background: #a78bfa; box-shadow: 0 0 14px #a78bfa; }
         .left-logo-text { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; color: rgba(255,255,255,0.9); }
         .left-headline { font-family: 'Playfair Display', serif; font-size: clamp(36px,4vw,56px); font-weight: 700; line-height: 1.1; letter-spacing: -0.03em; color: rgba(255,255,255,0.93); margin-bottom: 20px; }
@@ -107,7 +107,7 @@ export default function SignUpPage() {
         .left-feature { display: flex; align-items: center; gap: 14px; }
         .left-feature-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(167,139,250,0.5); flex-shrink: 0; }
         .left-feature-text { font-size: 16px; color: rgba(255,255,255,0.45); }
-        .right-panel { display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 80px 60px; min-height: 100vh; }
+        .right-panel { display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 48px 60px; min-height: 100vh; }
         .auth-card { width: 100%; max-width: 480px; }
         .auth-title { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 700; color: rgba(255,255,255,0.93); margin-bottom: 8px; letter-spacing: -0.02em; }
         .auth-sub { font-size: 16px; font-weight: 300; color: rgba(255,255,255,0.35); margin-bottom: 36px; }
