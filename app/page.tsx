@@ -80,7 +80,7 @@ export default function LandingPage() {
     <>
       <style>{`
         :root {
-          --bg: #04040a; --glass: rgba(255,255,255,0.032); --glass-b: rgba(255,255,255,0.07);
+          --bg: #04040a; --glass: rgba(255,255,255,0.055); --glass-b: rgba(255,255,255,0.10);
           --accent: #a78bfa; --accent2: #818cf8; --gold: #f5c842;
           --text1: rgba(255,255,255,0.93); --text2: rgba(255,255,255,0.55); --text3: rgba(255,255,255,0.28);
           --r-lg: 24px; --pad: clamp(20px,6vw,100px);
@@ -133,7 +133,7 @@ export default function LandingPage() {
         .features-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: clamp(10px,1.5vw,20px); margin-top: clamp(32px,4vw,64px); }
         .feat-card { background: var(--glass); border: 1px solid var(--glass-b); border-radius: var(--r-lg); padding: clamp(20px,2.5vw,36px) clamp(18px,2.2vw,32px); transition: all 0.3s; cursor: pointer; position: relative; overflow: hidden; height: 100%; }
         .feat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background: linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent); }
-        .feat-card:hover { background: rgba(255,255,255,0.05); transform: translateY(-4px); border-color: rgba(167,139,250,0.2); }
+        .feat-card:hover { background: rgba(255,255,255,0.08); transform: translateY(-4px); border-color: rgba(167,139,250,0.2); }
         .feat-icon { font-size: clamp(18px,2vw,28px); color: var(--accent); margin-bottom: clamp(10px,1.2vw,16px); display: block; }
         .feat-title { font-size: clamp(15px,1.5vw,22px); font-weight: 500; color: var(--text1); margin-bottom: clamp(6px,0.8vw,10px); }
         .feat-desc { font-size: clamp(13px,1.2vw,17px); line-height: 1.65; font-weight: 300; color: var(--text2); }
@@ -210,7 +210,7 @@ export default function LandingPage() {
             <a className="btn-primary" href="/audit">Run Your Free Audit →</a>
             <button className="btn-secondary" onClick={() => document.getElementById('features')?.scrollIntoView({behavior:'smooth'})}>See How It Works</button>
           </div>
-          <p className="hero-note">Free to use · No credit card required · Results in 30 seconds</p>
+          <p className="hero-note">2,400+ creators audited · Free to use · Results in 30 seconds</p>
         </div>
       </section>
 
