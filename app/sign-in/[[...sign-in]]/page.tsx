@@ -72,7 +72,7 @@ export default function SignInPage() {
         .left-panel {
           display: flex;
           flex-direction: column;
-          justify-content: space-between;
+          justify-content: center; gap: 48px;
           padding: 48px 44px;
           min-height: 100vh;
           border-right: 1px solid rgba(212,146,74,0.1);
