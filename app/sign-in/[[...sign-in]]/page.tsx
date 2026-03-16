@@ -96,7 +96,7 @@ export default function SignInPage() {
           box-shadow: 0 0 10px rgba(212,146,74,0.5);
         }
         .left-body {
-          flex: 1;
+          
           display: flex;
           flex-direction: column;
           justify-content: center;
