@@ -45,7 +45,7 @@ export default function SignInPage() {
         @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500;1,600&family=DM+Sans:wght@300;400;500&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         .page {
-          min-height: 100vh;
+          align-self: center;
           display: grid;
           grid-template-columns: 1fr 1fr;
           background: #1a1208;
@@ -72,9 +72,9 @@ export default function SignInPage() {
         .left-panel {
           display: flex;
           flex-direction: column;
-          justify-content: center; gap: 24px;
+          justify-content: center; gap: 32px; padding-top: 0; padding-bottom: 0;
           padding: 48px 44px;
-          min-height: 100vh;
+          align-self: center;
           
           position: relative;
           z-index: 1;
@@ -146,7 +146,7 @@ export default function SignInPage() {
           justify-content: center;
           align-items: center;
           padding: 48px 44px;
-          min-height: 100vh;
+          align-self: center;
           position: relative;
           z-index: 1;
         }
