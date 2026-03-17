@@ -45,6 +45,7 @@ export default function SignInPage() {
         @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500;1,600&family=DM+Sans:wght@300;400;500&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         .page {
+          min-height: 100vh;
           align-self: center;
           display: grid;
           grid-template-columns: 1fr 1fr;
@@ -66,7 +67,8 @@ export default function SignInPage() {
           z-index: 0;
         }
         @media(max-width: 768px) {
-          .page { grid-template-columns: 1fr; }
+          .page {
+          min-height: 100vh; grid-template-columns: 1fr; }
           .left-panel { display: none !important; }
         }
         .left-panel {
