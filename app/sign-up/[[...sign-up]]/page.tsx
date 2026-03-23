@@ -135,7 +135,7 @@ export default function SignUpPage() {
       <ParticleCanvas />
       <div className="page">
         <div className="left-panel">
-          <div className="left-logo"><div className="left-logo-dot" /><span className="left-logo-text">GhostOS</span></div>
+          <a href="/" className="left-logo"><div className="left-logo-dot" /><span className="left-logo-text">GhostOS</span></a>
           <h1 className="left-headline">Get paid what you're<br /><em>actually worth.</em></h1>
           <p className="left-sub">The brand deal intelligence tool built for TikTok creators who are serious about monetizing their audience.</p>
           <div className="left-features">

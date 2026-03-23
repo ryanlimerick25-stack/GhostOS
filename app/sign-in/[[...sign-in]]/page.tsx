@@ -273,7 +273,7 @@ export default function SignInPage() {
 
       <div className="page">
         <div className="left-panel">
-          <div className="left-logo"><div className="left-logo-dot" />GhostOS</div>
+          <a href="/" className="left-logo"><div className="left-logo-dot" />GhostOS</a>
           <div className="left-body">
             <div className="left-eyebrow">Good to have you back</div>
             <h1 className="left-headline">Your deals<br />are <em>waiting.</em></h1>
