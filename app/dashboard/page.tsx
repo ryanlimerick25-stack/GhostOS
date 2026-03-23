@@ -92,7 +92,7 @@ export default function Dashboard() {
         .nav-btn { padding: clamp(8px,0.8vw,14px) clamp(16px,1.8vw,32px); border-radius: 99px; font-size: clamp(13px,1.3vw,20px); font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; text-decoration: none; display: inline-block; border: none; }
         .nav-audit { background: linear-gradient(135deg,#a78bfa,#818cf8); color: #fff; }
         .nav-audit:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(167,139,250,0.3); }
-        .nav-signout { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); }
+        .nav-link { padding: clamp(8px,0.8vw,14px) clamp(12px,1.5vw,28px); border-radius: 99px; font-size: clamp(13px,1.3vw,20px); font-weight: 400; color: rgba(255,255,255,0.4); text-decoration: none; display: inline-block; transition: color 0.2s; } .nav-link:hover { color: rgba(255,255,255,0.8); } .nav-signout { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); }
         .nav-signout:hover { color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.08); }
         .page { max-width: 1100px; margin: 0 auto; padding: 140px 24px 60px; }
         .welcome { margin-bottom: 36px; }
