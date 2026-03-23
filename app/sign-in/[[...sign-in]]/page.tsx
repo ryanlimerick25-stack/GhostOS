@@ -271,6 +271,7 @@ export default function SignInPage() {
         .auth-footer a { color: rgba(212,146,74,0.55); text-decoration: none; }
       `}</style>
 
+      <nav className="auth-nav"><a href="/" className="auth-nav-logo"><div className="auth-nav-dot" />GhostOS</a><div className="auth-nav-links"><a href="/#features" className="auth-nav-link">Features</a><a href="/pricing" className="auth-nav-link">Pricing</a><a href="/sign-up" className="auth-nav-cta">Sign up free</a></div></nav>
       <div className="page">
         <div className="left-panel">
           <a href="/" className="left-logo"><div className="left-logo-dot" />GhostOS</a>

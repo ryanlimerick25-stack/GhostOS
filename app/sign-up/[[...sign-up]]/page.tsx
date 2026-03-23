@@ -133,6 +133,7 @@ export default function SignUpPage() {
         .code-input { text-align: center; font-size: 28px; font-weight: 600; letter-spacing: 0.3em; }
       `}</style>
       <ParticleCanvas />
+      <nav className="auth-nav"><a href="/" className="auth-nav-logo"><div className="auth-nav-dot" />GhostOS</a><div className="auth-nav-links"><a href="/#features" className="auth-nav-link">Features</a><a href="/pricing" className="auth-nav-link">Pricing</a><a href="/sign-in" className="auth-nav-cta">Log in</a></div></nav>
       <div className="page">
         <div className="left-panel">
           <a href="/" className="left-logo"><div className="left-logo-dot" /><span className="left-logo-text">GhostOS</span></a>
