@@ -156,7 +156,7 @@ export default function LandingPage() {
         footer { position: relative; z-index: 1; border-top: 1px solid rgba(255,255,255,0.05); padding: clamp(24px,3vw,40px) var(--pad); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
         .footer-logo { font-family: 'Playfair Display', serif; font-size: clamp(13px,1.2vw,16px); font-weight: 700; color: var(--text2); display: flex; align-items: center; gap: 7px; }
         .footer-links { display: flex; gap: clamp(12px,2vw,24px); }
-        .footer-link { font-size: clamp(11px,1.1vw,14px); color: var(--text3); text-decoration: none; cursor: pointer; }
+        .footer-link { font-size: clamp(11px,1.1vw,14px); color: rgba(255,255,255,0.6); text-decoration: none; cursor: pointer; }
         .footer-link:hover { color: var(--text2); }
         .footer-copy { font-size: clamp(11px,1.1vw,14px); color: var(--text3); }
         .divider { border: none; border-top: 1px solid rgba(255,255,255,0.04); margin: 0; }
