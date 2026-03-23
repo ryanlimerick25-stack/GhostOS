@@ -286,9 +286,9 @@ export default function LandingPage() {
       <footer>
         <div className="footer-logo"><div className="nav-dot" />GhostOS</div>
         <div className="footer-links">
-          <span className="footer-link">Privacy</span>
-          <span className="footer-link">Terms</span>
-          <span className="footer-link">Contact</span>
+          <a href="/privacy" className="footer-link">Privacy</a>
+          <a href="/terms" className="footer-link">Terms</a>
+          <a href="/contact" className="footer-link">Contact</a>
         </div>
         <div className="footer-copy">© 2026 GhostOS. All rights reserved.</div>
       </footer>
