@@ -257,7 +257,7 @@ export default function LandingPage() {
               <div className="testi-card" onClick={() => setActiveTestimonial(t)} style={{cursor:"pointer"}}>
                 <div className="t-score">Score: {t.score}/100</div>
                 <p className="t-quote">"{t.quote}"</p>
-                <div className="t-handle">{t.handle}</div>
+                
                 <div className="t-niche">{t.niche} creator</div>
               </div>
             </FadeIn>
@@ -299,7 +299,7 @@ export default function LandingPage() {
             <div style={{height:"1px",background:"rgba(255,255,255,0.07)",margin:"clamp(20px,2.5vw,40px) 0"}} />
             <p style={{fontSize:"clamp(14px,1.5vw,24px)",color:"rgba(255,255,255,0.6)",lineHeight:1.9}}>{activeTestimonial.detail}</p>
             <div style={{marginTop:"clamp(20px,2.5vw,40px)",display:"flex",alignItems:"center",gap:"16px"}}>
-              <div style={{fontFamily:"'DM Mono',monospace",fontSize:"13px",color:"rgba(167,139,250,0.9)"}}>{activeTestimonial.handle}</div>
+              
               <div style={{background:"rgba(167,139,250,0.1)",border:"1px solid rgba(167,139,250,0.2)",borderRadius:"99px",padding:"4px 12px",fontSize:"12px",color:"#a78bfa"}}>Score: {activeTestimonial.score}/100</div>
             </div>
             <a href="/audit" style={{display:"inline-flex",alignItems:"center",gap:"8px",marginTop:"clamp(24px,3vw,52px)",padding:"clamp(12px,1.2vw,20px) clamp(24px,3vw,52px)",borderRadius:"14px",background:"linear-gradient(135deg,#a78bfa,#818cf8)",color:"#fff",fontSize:"clamp(13px,1.3vw,20px)",fontWeight:600,textDecoration:"none"}}>Get your audit →</a>
