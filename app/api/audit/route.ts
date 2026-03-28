@@ -133,6 +133,14 @@ Rules:
 - Make rate card numbers realistic for a first brand deal.
 - Outreach templates should be short, confident, and niche-specific.
 - Lists should contain 3–6 items max.
+- For "top_gaps_to_fix_next_14_days": Be BRUTALLY SPECIFIC to this creator's actual numbers. Do NOT give generic advice like "make a media kit" or "optimize your profile". Instead, look at their actual stats and call out the real problem:
+  * If engagement rate is low (under 4%): tell them EXACTLY what that means for their deal value and what content format to test
+  * If views/followers ratio is low (under 30%): tell them their content isn't reaching beyond their audience and give a specific fix
+  * If engagement is high but followers are low: tell them to prioritize follower growth before pitching
+  * If niche is low-monetization (Music, Comedy): tell them how to reposition or add a secondary niche angle brands can use
+  * If audience is international/mixed: tell them their US rate premium is being lost and what to do
+  * Reference their actual numbers in the gaps (e.g. "Your 2.1% engagement rate is below the 4% threshold brands look for...")
+  * Give ONE specific action per gap, not vague advice
 - For "best_fit_brands": Return 6-8 SPECIFIC, REAL brand names (not categories) that realistically work with creators at this exact follower tier and niche. Scale appropriately:
   * 20k-50k followers: indie/DTC brands, emerging brands, small-mid size companies (e.g. Bloom Nutrition, GHOST energy, Cuts Clothing, Fabletics, Obagi, Tactix, BPN)
   * 50k-100k followers: mid-tier brands actively running influencer campaigns (e.g. Gymshark, Morphe, MVMT, Honey, Athletic Greens, Liquid IV)
