@@ -348,7 +348,8 @@ export default function Dashboard() {
                       </div>
                     )}
 
-                    <a href="/audit" style={{display:"inline-flex",alignItems:"center",gap:"6px",marginTop:"8px",padding:"10px 20px",borderRadius:"10px",background:"linear-gradient(135deg,#a78bfa,#818cf8)",color:"#fff",fontSize:"13px",fontWeight:600,textDecoration:"none",fontFamily:"inherit"}}>
+                    <a href="/deal-analyzer" style={{padding:"8px 18px",borderRadius:"99px",fontSize:"13px",fontWeight:500,background:"rgba(201,184,255,0.08)",border:"1px solid rgba(201,184,255,0.15)",color:"#c9b8ff",textDecoration:"none"}}>Deal Analyzer</a>
+          <a href="/audit" style={{display:"inline-flex",alignItems:"center",gap:"6px",marginTop:"8px",padding:"10px 20px",borderRadius:"10px",background:"linear-gradient(135deg,#a78bfa,#818cf8)",color:"#fff",fontSize:"13px",fontWeight:600,textDecoration:"none",fontFamily:"inherit"}}>
                       Run New Audit →
                     </a>
                   </div>
