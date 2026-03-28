@@ -6,7 +6,7 @@ import { useUser } from "@clerk/nextjs";
 type AuditResult = {
   readiness_score: number;
   estimated_first_deal_range_usd: { low: number; target: number; high: number };
-  best_fit_brand_categories: string[];
+  best_fit_brands: string[];
   why_brands_would_pay: string[];
   top_gaps_to_fix_next_14_days: string[];
   next_actions: { today: string[]; this_week: string[]; this_month: string[] };
@@ -277,8 +277,8 @@ export default function AuditPage() {
                 </div>
               </div>
               <div className="section-block">
-                <div className="section-eyebrow">Best-Fit Brand Categories</div>
-                <div className="tags">{result.best_fit_brand_categories.map((c, i) => <span className="tag" key={i}>{c}</span>)}</div>
+                <div className="section-eyebrow">Brands That Would Work With You</div>
+                <div className="tags">{result.best_fit_brands.map((c, i) => <span className="tag" key={i}>{c}</span>)}</div>
               </div>
               <div className="section-block">
                 <div className="section-eyebrow">Why Brands Would Pay You</div>

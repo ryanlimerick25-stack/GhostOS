@@ -109,7 +109,7 @@ Output STRICTLY as valid JSON with this schema:
 {
   "readiness_score": number,
   "estimated_first_deal_range_usd": { "low": number, "target": number, "high": number },
-  "best_fit_brand_categories": string[],
+  "best_fit_brands": string[],
   "why_brands_would_pay": string[],
   "top_gaps_to_fix_next_14_days": string[],
   "next_actions": { "today": string[], "this_week": string[], "this_month": string[] },
@@ -133,6 +133,13 @@ Rules:
 - Make rate card numbers realistic for a first brand deal.
 - Outreach templates should be short, confident, and niche-specific.
 - Lists should contain 3–6 items max.
+- For "best_fit_brands": Return 6-8 SPECIFIC, REAL brand names (not categories) that realistically work with creators at this exact follower tier and niche. Scale appropriately:
+  * 20k-50k followers: indie/DTC brands, emerging brands, small-mid size companies (e.g. Bloom Nutrition, GHOST energy, Cuts Clothing, Fabletics, Obagi, Tactix, BPN)
+  * 50k-100k followers: mid-tier brands actively running influencer campaigns (e.g. Gymshark, Morphe, MVMT, Honey, Athletic Greens, Liquid IV)
+  * 100k-200k followers: established brands with creator programs (e.g. NordVPN, Squarespace, Fashion Nova, Shein, BetterHelp, HelloFresh)
+  * NEVER suggest Nike, Adidas, Apple, Amazon, Netflix, Google, or other mega-brands for creators under 500k — they do not work with micro-creators.
+  * Match brands specifically to the niche. A fitness creator should get supplement/apparel brands. A beauty creator should get skincare/makeup brands. Do not mix unrelated brands.
+  * Only include brands that actively run influencer/creator campaigns in 2025-2026.
 `;
 
     const resp = await client.responses.create({ model: "gpt-4.1-mini", input: prompt });

@@ -296,11 +296,11 @@ export default function Dashboard() {
                     </div>
 
                     {/* Brand categories */}
-                    {a.result.best_fit_brand_categories?.length > 0 && (
+                    {a.result.best_fit_brands?.length > 0 && (
                       <div className="detail-section">
-                        <div className="detail-section-label">Best-Fit Brand Categories</div>
+                        <div className="detail-section-label">Brands That Would Work With You</div>
                         <div className="tags">
-                          {a.result.best_fit_brand_categories.map((c: string, i: number) => (
+                          {a.result.best_fit_brands.map((c: string, i: number) => (
                             <span className="tag" key={i}>{c}</span>
                           ))}
                         </div>
