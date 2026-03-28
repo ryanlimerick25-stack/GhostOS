@@ -109,7 +109,7 @@ Output STRICTLY as valid JSON with this schema:
 {
   "readiness_score": number,
   "estimated_first_deal_range_usd": { "low": number, "target": number, "high": number },
-  "best_fit_brands": string[],
+  "best_fit_brands": { "name": string, "url": string }[],
   "why_brands_would_pay": string[],
   "top_gaps_to_fix_next_14_days": string[],
   "next_actions": { "today": string[], "this_week": string[], "this_month": string[] },
@@ -140,6 +140,7 @@ Rules:
   * NEVER suggest Nike, Adidas, Apple, Amazon, Netflix, Google, or other mega-brands for creators under 500k — they do not work with micro-creators.
   * Match brands specifically to the niche. A fitness creator should get supplement/apparel brands. A beauty creator should get skincare/makeup brands. Do not mix unrelated brands.
   * Only include brands that actively run influencer/creator campaigns in 2025-2026.
+- For each brand in "best_fit_brands", include its real website URL (e.g. {"name": "Gymshark", "url": "https://www.gymshark.com"}). Use the brand's actual homepage URL, not a search link.
 `;
 
     const resp = await client.responses.create({ model: "gpt-4.1-mini", input: prompt });

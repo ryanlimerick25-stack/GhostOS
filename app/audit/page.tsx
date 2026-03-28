@@ -6,7 +6,7 @@ import { useUser } from "@clerk/nextjs";
 type AuditResult = {
   readiness_score: number;
   estimated_first_deal_range_usd: { low: number; target: number; high: number };
-  best_fit_brands: string[];
+  best_fit_brands: { name: string; url: string }[];
   why_brands_would_pay: string[];
   top_gaps_to_fix_next_14_days: string[];
   next_actions: { today: string[]; this_week: string[]; this_month: string[] };
@@ -278,7 +278,7 @@ export default function AuditPage() {
               </div>
               <div className="section-block">
                 <div className="section-eyebrow">Brands That Would Work With You</div>
-                <div className="tags">{result.best_fit_brands.map((c, i) => <a className="tag" key={i} href={`https://www.google.com/search?q=${encodeURIComponent(c + " brand influencer marketing")}`} target="_blank" rel="noopener noreferrer" style={{textDecoration:"none",cursor:"pointer"}}>{c} ↗</a>)}</div>
+                <div className="tags">{result.best_fit_brands.map((b, i) => <a className="tag" key={i} href={typeof b === "string" ? `https://www.google.com/search?q=${encodeURIComponent(b)}` : b.url} target="_blank" rel="noopener noreferrer" style={{textDecoration:"none",cursor:"pointer"}}>{typeof b === "string" ? b : b.name} ↗</a>)}</div>
               </div>
               <div className="section-block">
                 <div className="section-eyebrow">Why Brands Would Pay You</div>
