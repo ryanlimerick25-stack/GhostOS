@@ -25,7 +25,12 @@ export default function SignInPage() {
       }
     } catch (e: unknown) {
       const err = e as { errors?: { message: string }[] };
-      setError(err.errors?.[0]?.message || "Invalid email or password.");
+      const msg = err.errors?.[0]?.message || "Invalid email or password.";
+      if (msg.toLowerCase().includes("session") || msg.toLowerCase().includes("already")) {
+        router.push("/dashboard");
+        return;
+      }
+      setError(msg);
     } finally { setLoading(false); }
   }
 
