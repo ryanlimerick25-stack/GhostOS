@@ -47,9 +47,6 @@ export default function AuditPage() {
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<AuditResult | null>(null);
   const [fromCache, setFromCache] = useState(false);
-  const [mode, setMode] = useState<"manual" | "screenshot">("manual");
-  const [screenshots, setScreenshots] = useState<File[]>([]);
-  const [dragOver, setDragOver] = useState(false);
 
   useEffect(() => {
     const used = parseInt(localStorage.getItem("free_audits_used") || "0");
@@ -69,31 +66,6 @@ export default function AuditPage() {
   }, [loading]);
 
 
-  async function runScreenshotAudit() {
-    if (screenshots.length === 0) { setError("Please upload at least one screenshot."); return; }
-    setLoading(true); setError(null); setResult(null); setFromCache(false);
-    try {
-      const formData = new FormData();
-      screenshots.forEach(f => formData.append("screenshots", f));
-      const res = await fetch("/api/audit-screenshot", { method: "POST", body: formData });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json?.error || "Request failed");
-      setResult(json.data);
-    } catch (e: any) {
-      setError(e.message || "Something went wrong");
-    } finally { setLoading(false); }
-  }
-
-  function handleDrop(e: React.DragEvent) {
-    e.preventDefault(); setDragOver(false);
-    const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith("image/"));
-    setScreenshots(prev => [...prev, ...files].slice(0, 2));
-  }
-
-  function handleFileInput(e: React.ChangeEvent<HTMLInputElement>) {
-    const files = Array.from(e.target.files || []).filter(f => f.type.startsWith("image/"));
-    setScreenshots(prev => [...prev, ...files].slice(0, 2));
-  }
 
   async function runAudit() {
     const isProUser = user?.publicMetadata?.is_pro === true;
@@ -229,20 +201,6 @@ export default function AuditPage() {
         .template-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: #4a4a4a; margin-bottom: 14px; }
         .template-text { font-size: 13px; color: #777; line-height: 1.75; white-space: pre-wrap; font-family: 'Geist', sans-serif; }
 
-        .mode-toggle { display: flex; background: #0f0f0f; border: 1px solid #1e1e1e; border-radius: 12px; padding: 4px; gap: 4px; margin-bottom: 24px; width: fit-content; }
-        .mode-btn { padding: 8px 20px; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; font-family: inherit; transition: all 0.2s; color: #555; background: transparent; }
-        .mode-btn.active { background: #1e1e1e; color: #e8e6e1; }
-        .drop-zone { border: 1px dashed #2a2a2a; border-radius: 16px; padding: 48px 24px; text-align: center; cursor: pointer; transition: all 0.2s; background: #0a0a0a; }
-        .drop-zone.over { border-color: #c9b8ff; background: rgba(201,184,255,0.03); }
-        .drop-zone-title { font-size: 15px; font-weight: 500; color: #888; margin-bottom: 6px; }
-        .drop-zone-sub { font-size: 13px; color: #444; margin-bottom: 20px; }
-        .upload-btn-inner { padding: 10px 24px; background: rgba(201,184,255,0.1); border: 1px solid rgba(201,184,255,0.2); border-radius: 10px; font-size: 13px; font-weight: 500; color: #c9b8ff; cursor: pointer; font-family: inherit; }
-        .screenshot-previews { display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
-        .screenshot-preview { position: relative; border-radius: 10px; overflow: hidden; border: 1px solid #2a2a2a; }
-        .screenshot-preview img { width: 120px; height: 160px; object-fit: cover; display: block; }
-        .screenshot-remove { position: absolute; top: 4px; right: 4px; background: rgba(0,0,0,0.7); border: none; border-radius: 50%; width: 20px; height: 20px; color: #fff; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; }
-        .screenshot-tip { margin-top: 16px; background: rgba(167,139,250,0.05); border: 1px solid rgba(167,139,250,0.1); border-radius: 10px; padding: 12px 16px; font-size: 12px; color: rgba(255,255,255,0.35); line-height: 1.6; }
-        .screenshot-tip strong { color: rgba(167,139,250,0.7); }
         .footer-badge { margin-top: 60px; text-align: center; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: #444; }
       `}</style>
 
@@ -265,47 +223,6 @@ export default function AuditPage() {
             <p className="subtitle">For TikTok creators (20k–200k) trying to land their first deal.</p>
           </div>
 
-          <div className="mode-toggle">
-            <button className={"mode-btn" + (mode === "manual" ? " active" : "")} onClick={() => setMode("manual")}>Enter Manually</button>
-            <button className={"mode-btn" + (mode === "screenshot" ? " active" : "")} onClick={() => setMode("screenshot")}>📸 Scan Screenshots</button>
-          </div>
-
-          {mode === "screenshot" && (
-          <div className="form-card">
-            <div
-              className={"drop-zone" + (dragOver ? " over" : "")}
-              onDragOver={e => { e.preventDefault(); setDragOver(true); }}
-              onDragLeave={() => setDragOver(false)}
-              onDrop={handleDrop}
-              onClick={() => document.getElementById("screenshot-input")?.click()}
-            >
-              <div style={{fontSize:"32px",marginBottom:"12px"}}>📱</div>
-              <div className="drop-zone-title">Drop your TikTok screenshots here</div>
-              <div className="drop-zone-sub">Upload your profile page and analytics tab for the most accurate audit</div>
-              <button className="upload-btn-inner" onClick={e => { e.stopPropagation(); document.getElementById("screenshot-input")?.click(); }}>Choose Screenshots</button>
-              <input id="screenshot-input" type="file" accept="image/*" multiple style={{display:"none"}} onChange={handleFileInput} />
-            </div>
-            {screenshots.length > 0 && (
-              <div className="screenshot-previews">
-                {screenshots.map((f, i) => (
-                  <div className="screenshot-preview" key={i}>
-                    <img src={URL.createObjectURL(f)} alt={`Screenshot ${i+1}`} />
-                    <button className="screenshot-remove" onClick={() => setScreenshots(prev => prev.filter((_,idx) => idx !== i))}>×</button>
-                  </div>
-                ))}
-              </div>
-            )}
-            <div className="screenshot-tip">
-              <strong>Tip:</strong> Upload 2 screenshots — your <strong>Profile page</strong> (follower count + bio) and your <strong>Analytics tab</strong> (avg views + engagement). Analytics is in TikTok → Creator Tools.
-            </div>
-            <button className="run-btn" style={{marginTop:20}} onClick={runScreenshotAudit} disabled={loading || screenshots.length === 0}>
-              {loading ? <span className="loading-dots">{loadingMessages[loadingMessageIndex]}</span> : `Analyze ${screenshots.length} Screenshot${screenshots.length !== 1 ? "s" : ""} →`}
-            </button>
-            {error && <div className="error-box">{error}</div>}
-          </div>
-          )}
-
-          {mode === "manual" && <>
           <div style={{background:"rgba(167,139,250,0.06)",border:"1px solid rgba(167,139,250,0.15)",borderRadius:"12px",padding:"14px 18px",marginBottom:"16px",display:"flex",alignItems:"flex-start",gap:"12px"}}>
             <span style={{fontSize:"16px",flexShrink:0}}>📊</span>
             <div>
@@ -329,7 +246,6 @@ export default function AuditPage() {
             </button>
             {error && <div className="error-box">{error}</div>}
           </div>
-          </>}
 
           {result && (
             <div className="results">
