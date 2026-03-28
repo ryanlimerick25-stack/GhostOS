@@ -41,6 +41,7 @@ export default function AuditPage() {
   const [engagementRate, setEngagementRate] = useState("");
   const [niche, setNiche] = useState("");
   const [audienceGeo, setAudienceGeo] = useState("");
+  const [tiktokHandle, setTiktokHandle] = useState("");
   const [loading, setLoading] = useState(false);
   const [freeAuditsUsed, setFreeAuditsUsed] = useState(0);
   const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
@@ -104,6 +105,7 @@ export default function AuditPage() {
           engagementRate: Number(engagementRate),
           niche,
           audienceGeo,
+          tiktokHandle: tiktokHandle.replace("@", ""),
         }),
       });
 
@@ -240,6 +242,14 @@ export default function AuditPage() {
             <div className="form-grid-2">
               <NicheSelect label="Niche" value={niche} onChange={setNiche} />
               <GeoSelect label="Audience Geo" value={audienceGeo} onChange={setAudienceGeo} />
+            </div>
+            <div style={{marginTop:"16px"}}>
+              <span className="field-label">TikTok Handle</span>
+              <div style={{position:"relative"}}>
+                <span style={{position:"absolute",left:"14px",top:"50%",transform:"translateY(-50%)",color:"#444",fontSize:"14px",fontFamily:"inherit",pointerEvents:"none"}}>@</span>
+                <input value={tiktokHandle} onChange={e => setTiktokHandle(e.target.value.replace("@",""))} placeholder="yourcreatorname" style={{width:"100%",background:"#080808",border:"1px solid #1e1e1e",borderRadius:"10px",padding:"10px 14px 10px 28px",fontSize:"14px",color:"#e8e6e1",fontFamily:"inherit",outline:"none",boxSizing:"border-box"}} />
+              </div>
+              <div style={{fontSize:"11px",color:"#3a3a3a",marginTop:"6px",fontFamily:"'DM Mono',monospace",letterSpacing:"0.05em"}}>Optional — used to personalize your outreach templates</div>
             </div>
             <button className="run-btn" onClick={runAudit} disabled={loading}>
               {loading ? <span className="loading-dots">{loadingMessages[loadingMessageIndex]}</span> : "Run Audit →"}
