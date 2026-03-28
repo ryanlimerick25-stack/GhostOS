@@ -66,9 +66,6 @@ const stats = [
 ];
 
 const testimonials = [
-  { handle: "@maya.creates", niche: "Beauty", quote: "I had no idea I was underselling myself by 60%. GhostOS told me exactly what to charge and I landed a $800 deal the next week.", score: 84, detail: "Maya came in with 42k followers in the beauty niche and was charging $150 per post. Her audit revealed her engagement rate of 8.2% and US-majority audience qualified her for a $400-600 rate. She updated her rate card, used the direct brand DM template to pitch a skincare brand, and closed an $800 deal 9 days later. Her readiness score went from 61 to 84 after fixing her bio and adding a media kit link." },
-  { handle: "@streetbykarim", niche: "Streetwear", quote: "The outreach templates were insane. Copied the agency DM almost word for word and got a response within 48 hours.", score: 71, detail: "Karim had 67k followers in streetwear and had never landed a brand deal despite DMing brands himself. His audit flagged his engagement rate of 4.1% as average and identified agency outreach as his highest-leverage move. He used the agency template with minor edits, got a response in 48 hours, and closed a $600 deal with a sneaker brand. He has since landed two more deals using the same template." },
-  { handle: "@fitwithjess", niche: "Fitness", quote: "The 14-day action plan was so specific. Fixed my bio, added a link in bio, and my readiness score jumped 22 points.", score: 78, detail: "Jess had 31k followers in fitness with a strong 9.4% engagement rate but a readiness score of 56. Her gaps were all profile-level: no link in bio, vague niche description, and no media kit. She followed the 14-day plan, fixed all three in the first week, and her score jumped to 78. She landed her first deal — a $450 protein brand partnership — two weeks later." },
 ];
 
 export default function LandingPage() {
