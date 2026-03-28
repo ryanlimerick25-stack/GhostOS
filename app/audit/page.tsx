@@ -278,7 +278,7 @@ export default function AuditPage() {
               </div>
               <div className="section-block">
                 <div className="section-eyebrow">Brands That Would Work With You</div>
-                <div className="tags">{result.best_fit_brands.map((c, i) => <span className="tag" key={i}>{c}</span>)}</div>
+                <div className="tags">{result.best_fit_brands.map((c, i) => <a className="tag" key={i} href={`https://www.google.com/search?q=${encodeURIComponent(c + " brand influencer marketing")}`} target="_blank" rel="noopener noreferrer" style={{textDecoration:"none",cursor:"pointer"}}>{c} ↗</a>)}</div>
               </div>
               <div className="section-block">
                 <div className="section-eyebrow">Why Brands Would Pay You</div>
