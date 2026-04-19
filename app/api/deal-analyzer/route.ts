@@ -99,15 +99,17 @@ Rules:
 
     // Track usage in Supabase
     if (userId) {
-      await supabase.from("deal_analyses").insert({
-        user_id: userId,
-        brand_name: brandName,
-        offered_rate: Number(offeredRate),
-        verdict: data.verdict,
-        fair_value_low: data.fair_value_low,
-        fair_value_high: data.fair_value_high,
-        result: data,
-      }).catch(() => {}); // Don't fail if table doesn't exist yet
+      try {
+        await supabase.from("deal_analyses").insert({
+          user_id: userId,
+          brand_name: brandName,
+          offered_rate: Number(offeredRate),
+          verdict: data.verdict,
+          fair_value_low: data.fair_value_low,
+          fair_value_high: data.fair_value_high,
+          result: data,
+        });
+      } catch (_) {}
     }
 
     return Response.json({ data });
