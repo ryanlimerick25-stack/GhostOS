@@ -92,7 +92,7 @@ export default function DealAnalyzer() {
         .title em { font-style: italic; color: #c9b8ff; }
         .subtitle { margin-top: 12px; font-size: 14px; color: #999; font-weight: 300; }
         .card { background: #0f0f0f; border: 1px solid #1e1e1e; border-radius: 20px; padding: 32px; position: relative; overflow: hidden; margin-bottom: 16px; }
-        .card::before { content: \'\'; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg,transparent,rgba(201,184,255,0.3),transparent); }
+        .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg,transparent,rgba(201,184,255,0.3),transparent); }
         .field-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: #666; margin-bottom: 8px; display: block; }
         .input { width: 100%; background: #080808; border: 1px solid #1e1e1e; border-radius: 10px; padding: 10px 14px; font-size: 14px; color: #e8e6e1; font-family: inherit; outline: none; transition: border-color 0.2s; }
         .input:focus { border-color: #3d3d3d; }

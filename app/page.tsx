@@ -65,7 +65,7 @@ const stats = [
   { value: "91%", label: "Audit Accuracy Rate" },
 ];
 
-const testimonials = [
+const testimonials: {handle:string,niche:string,quote:string,score:number,detail:string}[] = [
 ];
 
 export default function LandingPage() {
