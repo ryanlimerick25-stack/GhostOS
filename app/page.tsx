@@ -178,6 +178,7 @@ export default function LandingPage() {
           <button onClick={() => { document.getElementById('features')?.scrollIntoView({behavior:'smooth'}); setMenuOpen(false); }} style={{fontSize:"28px",color:"rgba(255,255,255,0.9)",background:"none",border:"none",fontFamily:"inherit",cursor:"pointer"}}>Features</button>
           <button onClick={() => { document.getElementById('testimonials')?.scrollIntoView({behavior:'smooth'}); setMenuOpen(false); }} style={{fontSize:"28px",color:"rgba(255,255,255,0.9)",background:"none",border:"none",fontFamily:"inherit",cursor:"pointer"}}>Reviews</button>
           <a href="/pricing" onClick={() => setMenuOpen(false)} style={{fontSize:"28px",color:"rgba(255,255,255,0.9)",textDecoration:"none"}}>Pricing</a>
+          <a href="/deal-analyzer" onClick={() => setMenuOpen(false)} style={{fontSize:"28px",color:"rgba(255,255,255,0.9)",textDecoration:"none"}}>Deal Analyzer</a>
           <a href="/sign-in" onClick={() => setMenuOpen(false)} style={{fontSize:"28px",color:"rgba(255,255,255,0.9)",textDecoration:"none"}}>Log in</a>
           <a href="/sign-up" onClick={() => setMenuOpen(false)} style={{fontSize:"22px",padding:"16px 44px",background:"linear-gradient(135deg,#a78bfa,#818cf8)",color:"#fff",borderRadius:"14px",textDecoration:"none",fontWeight:600}}>Get Started</a>
         </div>
@@ -189,6 +190,7 @@ export default function LandingPage() {
           <button className="nav-link" onClick={() => document.getElementById('features')?.scrollIntoView({behavior:'smooth'})}>Features</button>
           <button className="nav-link" onClick={() => document.getElementById('testimonials')?.scrollIntoView({behavior:'smooth'})}>Reviews</button>
           <a className="nav-link" href="/pricing">Pricing</a>
+          <a className="nav-link" href="/deal-analyzer">Deal Analyzer</a>
           <a className="nav-btn nav-ghost" href="/sign-in">Log in</a>
           <a className="nav-btn nav-primary" href="/sign-up">Get Started</a>
         </div>
