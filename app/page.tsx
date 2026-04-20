@@ -84,7 +84,7 @@ export default function LandingPage() {
         }
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
-        body { background: var(--bg); color: var(--text1); font-family: 'DM Sans', sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+        body { --bg: #04040a; --glass: rgba(255,255,255,0.055); --glass-b: rgba(255,255,255,0.10); --accent: #a78bfa; --accent2: #818cf8; --gold: #f5c842; --text1: rgba(255,255,255,0.93); --text: rgba(255,255,255,0.9); --text2: rgba(255,255,255,0.55); --text3: rgba(255,255,255,0.28); --r-lg: 24px; --pad: clamp(20px,6vw,100px); background: var(--bg); color: var(--text1); font-family: 'DM Sans', sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
         nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 var(--pad); height: clamp(60px,8vw,110px); background: rgba(4,4,10,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); }
         .nav-logo { font-family: 'Playfair Display', serif; font-size: clamp(18px,2.5vw,32px); font-weight: 700; color: var(--text1); letter-spacing: -0.02em; display: flex; align-items: center; gap: 8px; text-decoration: none; }
         .nav-dot { width: clamp(6px,0.8vw,10px); height: clamp(6px,0.8vw,10px); border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); animation: pulse 2s ease infinite; flex-shrink: 0; }
