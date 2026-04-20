@@ -79,7 +79,7 @@ export default function LandingPage() {
         :root {
           --bg: #04040a; --glass: rgba(255,255,255,0.055); --glass-b: rgba(255,255,255,0.10);
           --accent: #a78bfa; --accent2: #818cf8; --gold: #f5c842;
-          --text1: rgba(255,255,255,0.93); --text2: rgba(255,255,255,0.55); --text3: rgba(255,255,255,0.28);
+          --text1: rgba(255,255,255,0.93); --text: rgba(255,255,255,0.9); --text2: rgba(255,255,255,0.55); --text3: rgba(255,255,255,0.28);
           --r-lg: 24px; --pad: clamp(20px,6vw,100px);
         }
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -117,12 +117,12 @@ export default function LandingPage() {
         .btn-secondary { padding: clamp(12px,1.2vw,20px) clamp(20px,2.5vw,44px); border-radius: 14px; background: var(--glass); border: 1px solid var(--glass-b); color: var(--text1); font-size: clamp(13px,1.2vw,18px); font-weight: 500; cursor: pointer; text-decoration: none; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; font-family: 'DM Sans', sans-serif; }
         .btn-secondary:hover { background: rgba(255,255,255,0.07); transform: translateY(-1px); }
         .hero-note { margin-top: clamp(12px,1.5vw,22px); font-size: clamp(11px,1.1vw,15px); color: var(--text3); }
-        .stats-wrap { position: relative; z-index: 1; margin: 0 0 clamp(60px,8vw,100px); }
+        .stats-wrap { position: relative; z-index: 1; margin: 0 0 clamp(20px,3vw,40px); }
         .stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; border-top: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.06); }
         .stat-tile { background: var(--bg); padding: clamp(24px,4vw,56px) clamp(16px,3vw,40px); text-align: center; }
         .stat-value { font-family: 'Playfair Display', serif; font-size: clamp(28px,5vw,64px); font-weight: 700; letter-spacing: -0.02em; color: var(--text1); margin-bottom: 4px; }
         .stat-label { font-size: clamp(11px,1.1vw,16px); font-weight: 400; color: var(--text3); }
-        .section { position: relative; z-index: 1; padding: clamp(60px,8vw,120px) var(--pad); }
+        .section { position: relative; z-index: 1; padding: clamp(40px,5vw,80px) var(--pad); }
         .section-label { font-size: clamp(10px,1vw,13px); font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: clamp(10px,1.2vw,18px); display: block; }
         .section-title { font-family: 'Playfair Display', serif; font-size: clamp(28px,5.5vw,88px); font-weight: 600; line-height: 1.1; letter-spacing: -0.02em; color: var(--text1); margin-bottom: clamp(10px,1.2vw,18px); }
         .section-title em { font-style: italic; color: var(--text2); }
