@@ -1,6 +1,7 @@
 import { ClerkProvider } from '@clerk/nextjs'
 import { PostHogProvider } from './providers/posthog'
 import type { Metadata } from 'next'
+import { Analytics } from '@vercel/analytics/next'
 
 export const metadata: Metadata = {
   title: {
@@ -58,7 +59,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Geist:wght@300;400;500;600&display=swap"
             />
           </head>
-          <body>{children}</body>
+          <body>{children}<Analytics /></body>
         </html>
       </PostHogProvider>
     </ClerkProvider>
