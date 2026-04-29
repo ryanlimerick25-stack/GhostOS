@@ -144,8 +144,8 @@ export default function AuditPage() {
         .subtitle { margin-top: 12px; font-size: 14px; color: #999; font-weight: 300; letter-spacing: 0.01em; }
         .form-card { background: #0f0f0f; border: 1px solid #1e1e1e; border-radius: 20px; padding: 32px; position: relative; overflow: hidden; }
         .form-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(201, 184, 255, 0.3), transparent); }
-        .form-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-        .form-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 16px; }
+        .form-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; } @media(max-width:500px) { .form-grid-3 { grid-template-columns: 1fr; } }
+        .form-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 16px; } @media(max-width:500px) { .form-grid-2 { grid-template-columns: 1fr; } }
         @media (max-width: 600px) { .form-grid-3, .form-grid-2 { grid-template-columns: 1fr; } }
         .field label { display: block; }
         .field-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: #666; margin-bottom: 8px; display: block; }
@@ -206,7 +206,7 @@ export default function AuditPage() {
         .footer-badge { margin-top: 60px; text-align: center; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: #444; }
       `}</style>
 
-      <nav style={{position:"fixed",top:0,left:0,right:0,zIndex:100,display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 40px",height:"64px",background:"rgba(8,8,8,0.85)",backdropFilter:"blur(20px)",borderBottom:"1px solid rgba(255,255,255,0.05)"}}>
+      <nav style={{position:"fixed",top:0,left:0,right:0,zIndex:100,display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 clamp(16px,4vw,40px)",height:"64px",background:"rgba(8,8,8,0.85)",backdropFilter:"blur(20px)",borderBottom:"1px solid rgba(255,255,255,0.05)"}}>
         <a href="/" style={{fontFamily:"'DM Serif Display',serif",fontSize:"18px",fontWeight:700,color:"rgba(255,255,255,0.9)",display:"flex",alignItems:"center",gap:"8px",textDecoration:"none"}}>
           <div style={{width:"7px",height:"7px",borderRadius:"50%",background:"#a78bfa",boxShadow:"0 0 10px #a78bfa"}} />
           GhostOS
