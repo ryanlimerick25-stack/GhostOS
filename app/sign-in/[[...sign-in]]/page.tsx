@@ -126,7 +126,7 @@ export default function SignInPage() {
           color: rgba(255,255,255,0.9);
           margin-bottom: 18px;
         }
-        .left-headline em { font-style: italic; color: #e8a855; }
+        .left-headline em { font-style: italic; color: #a78bfa; }
         .left-sub {
           font-size: 15px;
           font-weight: 300;
@@ -252,7 +252,7 @@ export default function SignInPage() {
           width: 100%;
           padding: 13px;
           border-radius: 11px;
-          background: linear-gradient(135deg, #c97e30, #e8a855);
+          background: linear-gradient(135deg, #a78bfa, #818cf8);
           border: none;
           color: #0a0814;
           font-size: 14px;
