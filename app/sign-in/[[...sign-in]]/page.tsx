@@ -123,7 +123,7 @@ export default function SignInPage() {
           font-weight: 500;
           line-height: 1.15;
           letter-spacing: -0.01em;
-          color: rgba(255,240,200,0.95);
+          color: rgba(255,255,255,0.9);
           margin-bottom: 18px;
         }
         .left-headline em { font-style: italic; color: #e8a855; }
@@ -146,7 +146,7 @@ export default function SignInPage() {
           line-height: 1.75;
           margin-bottom: 6px;
         }
-        .left-quote-by { font-size: 11px; color: rgba(255,220,150,0.18); }
+        .left-quote-by { font-size: 11px; color: rgba(255,255,255,0.2); }
         .right-panel {
           display: flex;
           flex-direction: column;
@@ -170,7 +170,7 @@ export default function SignInPage() {
           font-family: 'Lora', serif;
           font-size: 28px;
           font-weight: 500;
-          color: rgba(255,240,200,0.95);
+          color: rgba(255,255,255,0.9);
           margin-bottom: 4px;
           letter-spacing: -0.01em;
         }
@@ -188,8 +188,8 @@ export default function SignInPage() {
           gap: 8px;
           padding: 11px;
           border-radius: 10px;
-          background: rgba(255,220,150,0.04);
-          border: 1px solid rgba(255,220,150,0.09);
+          background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(255,255,255,0.09);
           font-size: 13px;
           font-weight: 400;
           color: rgba(255,255,255,0.55);
@@ -198,24 +198,24 @@ export default function SignInPage() {
           font-family: 'DM Sans', sans-serif;
         }
         .social-btn:hover {
-          background: rgba(255,220,150,0.07);
-          border-color: rgba(255,220,150,0.15);
+          background: rgba(255,255,255,0.05);
+          border-color: rgba(255,255,255,0.15);
           color: rgba(255,255,255,0.85);
         }
         .divider { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
-        .divider-line { flex: 1; height: 1px; background: rgba(255,220,150,0.06); }
+        .divider-line { flex: 1; height: 1px; background: rgba(255,255,255,0.05); }
         .divider-text {
           font-size: 10px;
           letter-spacing: 0.12em;
           text-transform: uppercase;
-          color: rgba(255,220,150,0.18);
+          color: rgba(255,255,255,0.2);
         }
         .field { margin-bottom: 14px; }
         .field-label {
           font-size: 10px;
           letter-spacing: 0.14em;
           text-transform: uppercase;
-          color: rgba(255,220,150,0.28);
+          color: rgba(255,255,255,0.35);
           font-weight: 500;
           margin-bottom: 7px;
           display: block;
@@ -223,11 +223,11 @@ export default function SignInPage() {
         .field-input {
           width: 100%;
           padding: 12px 14px;
-          background: rgba(255,220,150,0.03);
-          border: 1px solid rgba(255,220,150,0.08);
+          background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(255,255,255,0.08);
           border-radius: 10px;
           font-size: 14px;
-          color: rgba(255,240,200,0.85);
+          color: rgba(255,255,255,0.85);
           font-family: 'DM Sans', sans-serif;
           outline: none;
           transition: all 0.2s;
@@ -236,7 +236,7 @@ export default function SignInPage() {
           border-color: rgba(167,139,250,0.4);
           background: rgba(167,139,250,0.05);
         }
-        .field-input::placeholder { color: rgba(255,220,150,0.16); }
+        .field-input::placeholder { color: rgba(255,255,255,0.2); }
         .forgot-link { text-align: right; margin-bottom: 20px; }
         .forgot-link a { font-size: 12px; color: rgba(167,139,250,0.45); text-decoration: none; }
         .error-box {
@@ -254,7 +254,7 @@ export default function SignInPage() {
           border-radius: 11px;
           background: linear-gradient(135deg, #c97e30, #e8a855);
           border: none;
-          color: #1a1208;
+          color: #0a0814;
           font-size: 14px;
           font-weight: 600;
           font-family: 'DM Sans', sans-serif;
@@ -271,7 +271,7 @@ export default function SignInPage() {
         .auth-footer {
           text-align: center;
           font-size: 12px;
-          color: rgba(255,220,150,0.2);
+          color: rgba(255,255,255,0.2);
         }
         .auth-footer a { color: rgba(167,139,250,0.55); text-decoration: none; }
       `}</style>
