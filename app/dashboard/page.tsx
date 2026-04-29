@@ -68,6 +68,9 @@ export default function Dashboard() {
   }
 
   const freeAuditsUsed = !isPro ? audits.length : null;
+  const scoreImprovement = audits.length >= 2
+    ? audits[0].readiness_score - audits[audits.length - 1].readiness_score
+    : null;
   const freeAuditsLeft = freeAuditsUsed !== null ? Math.max(0, 3 - freeAuditsUsed) : null;
 
   if (!isLoaded || loading) return (
@@ -125,6 +128,10 @@ export default function Dashboard() {
         .audit-right { text-align: right; }
         .audit-score { font-family: 'Playfair Display', serif; font-size: clamp(32px,3vw,48px); font-weight: 700; line-height: 1; margin-bottom: 4px; }
         .audit-score-label { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; }
+        .score-trend { font-size: 11px; font-weight: 600; margin-top: 4px; }
+        .score-trend.up { color: #4ade80; }
+        .score-trend.down { color: #f87171; }
+        .score-trend.same { color: rgba(255,255,255,0.3); }
         .audit-deal { font-size: 12px; color: rgba(255,255,255,0.3); margin-top: 6px; }
         .audit-date { font-size: 11px; color: rgba(255,255,255,0.2); margin-top: 2px; }
         .audit-expand-btn { font-size: 11px; color: rgba(167,139,250,0.7); margin-top: 6px; cursor: pointer; background: none; border: none; font-family: inherit; padding: 0; }
@@ -256,7 +263,20 @@ export default function Dashboard() {
             <a className="btn-primary" href="/audit">Run Your First Audit →</a>
           </div>
         ) : (
-          <div className="audits-list">
+          {scoreImprovement !== null && (
+          <div style={{background: scoreImprovement > 0 ? "rgba(74,222,128,0.06)" : "rgba(248,113,113,0.06)", border: `1px solid ${scoreImprovement > 0 ? "rgba(74,222,128,0.15)" : "rgba(248,113,113,0.15)"}`, borderRadius:"16px", padding:"16px 24px", marginBottom:"16px", display:"flex", alignItems:"center", justifyContent:"space-between"}}>
+            <div>
+              <div style={{fontSize:"11px",fontFamily:"'DM Mono',monospace",letterSpacing:"0.15em",textTransform:"uppercase",color:"rgba(255,255,255,0.3)",marginBottom:"4px"}}>Score Progress</div>
+              <div style={{fontSize:"15px",fontWeight:500,color:scoreImprovement > 0 ? "#4ade80" : "#f87171"}}>
+                {scoreImprovement > 0 ? `↑ You've improved ${scoreImprovement} points since your first audit` : `↓ Score dropped ${Math.abs(scoreImprovement)} points — check your gaps`}
+              </div>
+            </div>
+            <div style={{fontFamily:"'Playfair Display',serif",fontSize:"32px",fontWeight:700,color:scoreImprovement > 0 ? "#4ade80" : "#f87171"}}>
+              {scoreImprovement > 0 ? `+${scoreImprovement}` : scoreImprovement}
+            </div>
+          </div>
+        )}
+        <div className="audits-list">
             {audits.map((a) => (
               <div className="audit-card" key={a.id}>
                 <div className="audit-card-header" onClick={() => setExpandedAudit(expandedAudit === a.id ? null : a.id)}>
