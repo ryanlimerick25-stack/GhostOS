@@ -29,6 +29,22 @@ export async function POST(req: Request) {
     if (!key) return Response.json({ error: "OPENAI_API_KEY missing" }, { status: 500 });
 
     const input = (await req.json()) as AuditInput;
+
+    // Server-side free audit limit enforcement
+    if (userId) {
+      const { count } = await supabase
+        .from("audits")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", userId);
+
+      const client2 = await clerkClient();
+      const userData = await client2.users.getUser(userId);
+      const isPro = userData.publicMetadata?.is_pro === true;
+
+      if (!isPro && (count ?? 0) >= 3) {
+        return Response.json({ error: "You've used your 3 free audits. Upgrade to GhostOS Pro for unlimited audits." }, { status: 403 });
+      }
+    }
     if (!input || !Number.isFinite(input.followers) || !Number.isFinite(input.avgViews) || !Number.isFinite(input.engagementRate) || !input.niche || !input.audienceGeo) {
       return Response.json({ error: "Invalid input. Please fill all fields." }, { status: 400 });
     }
