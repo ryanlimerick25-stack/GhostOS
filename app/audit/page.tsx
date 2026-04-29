@@ -144,8 +144,8 @@ export default function AuditPage() {
         .subtitle { margin-top: 12px; font-size: 14px; color: #999; font-weight: 300; letter-spacing: 0.01em; }
         .form-card { background: #0f0f0f; border: 1px solid #1e1e1e; border-radius: 20px; padding: 32px; position: relative; overflow: hidden; }
         .form-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(201, 184, 255, 0.3), transparent); }
-        .form-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; } @media(max-width:620px) { .form-grid-3 { grid-template-columns: 1fr; } }
-        .form-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 16px; } @media(max-width:620px) { .form-grid-2 { grid-template-columns: 1fr; } }
+        .form-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; } @media(max-width:700px) { .form-grid-3 { grid-template-columns: 1fr; } }
+        .form-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 16px; } @media(max-width:700px) { .form-grid-2 { grid-template-columns: 1fr; } }
         @media (max-width: 600px) { .form-grid-3, .form-grid-2 { grid-template-columns: 1fr; } }
         .field label { display: block; }
         .field-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: #666; margin-bottom: 8px; display: block; }
