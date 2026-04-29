@@ -48,13 +48,13 @@ export default function SignInPage() {
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500;1,600&family=DM+Sans:wght@300;400;500&display=swap');
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; } .auth-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 clamp(20px,4vw,60px); height: 64px; background: rgba(26,18,8,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(212,146,74,0.08); } .auth-nav-logo { font-family: Lora,serif; font-size: 18px; font-weight: 600; color: rgba(255,235,190,0.9); display: flex; align-items: center; gap: 8px; text-decoration: none; } .auth-nav-dot { width: 6px; height: 6px; border-radius: 50%; background: #d4924a; box-shadow: 0 0 8px rgba(212,146,74,0.5); flex-shrink: 0; } .auth-nav-links { display: flex; align-items: center; gap: 8px; } .auth-nav-link { font-size: 14px; color: rgba(255,230,170,0.4); text-decoration: none; padding: 6px 14px; border-radius: 99px; transition: color 0.2s; } .auth-nav-link:hover { color: rgba(255,230,170,0.8); } .auth-nav-cta { font-size: 14px; font-weight: 500; color: rgba(255,235,190,0.85); text-decoration: none; padding: 8px 20px; border-radius: 99px; border: 1px solid rgba(212,146,74,0.25); transition: all 0.2s; } .auth-nav-cta:hover { background: rgba(212,146,74,0.08); border-color: rgba(212,146,74,0.4); } .auth-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 clamp(20px,4vw,60px); height: 64px; background: rgba(26,18,8,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(212,146,74,0.08); } .auth-nav-logo { font-family: Lora,serif; font-size: 18px; font-weight: 600; color: rgba(255,235,190,0.9); display: flex; align-items: center; gap: 8px; text-decoration: none; } .auth-nav-dot { width: 6px; height: 6px; border-radius: 50%; background: #d4924a; box-shadow: 0 0 8px rgba(212,146,74,0.5); flex-shrink: 0; } .auth-nav-links { display: flex; align-items: center; gap: 8px; } .auth-nav-link { font-size: 14px; color: rgba(255,230,170,0.4); text-decoration: none; padding: 6px 14px; border-radius: 99px; transition: color 0.2s; } .auth-nav-link:hover { color: rgba(255,230,170,0.8); } .auth-nav-cta { font-size: 14px; font-weight: 500; color: rgba(255,235,190,0.85); text-decoration: none; padding: 8px 20px; border-radius: 99px; border: 1px solid rgba(212,146,74,0.25); transition: all 0.2s; } .auth-nav-cta:hover { background: rgba(212,146,74,0.08); border-color: rgba(212,146,74,0.4); }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; } .auth-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 clamp(20px,4vw,60px); height: 64px; background: rgba(4,4,10,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(167,139,250,0.08); } .auth-nav-logo { font-family: 'Playfair Display',serif; font-size: 18px; font-weight: 600; color: rgba(255,255,255,0.9); display: flex; align-items: center; gap: 8px; text-decoration: none; } .auth-nav-dot { width: 6px; height: 6px; border-radius: 50%; background: #a78bfa; box-shadow: 0 0 8px rgba(167,139,250,0.5); flex-shrink: 0; } .auth-nav-links { display: flex; align-items: center; gap: 8px; } .auth-nav-link { font-size: 14px; color: rgba(255,255,255,0.4); text-decoration: none; padding: 6px 14px; border-radius: 99px; transition: color 0.2s; } .auth-nav-link:hover { color: rgba(255,255,255,0.8); } .auth-nav-cta { font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.85); text-decoration: none; padding: 8px 20px; border-radius: 99px; border: 1px solid rgba(167,139,250,0.25); transition: all 0.2s; } .auth-nav-cta:hover { background: rgba(167,139,250,0.08); border-color: rgba(167,139,250,0.4); } .auth-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 clamp(20px,4vw,60px); height: 64px; background: rgba(4,4,10,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(167,139,250,0.08); } .auth-nav-logo { font-family: 'Playfair Display',serif; font-size: 18px; font-weight: 600; color: rgba(255,255,255,0.9); display: flex; align-items: center; gap: 8px; text-decoration: none; } .auth-nav-dot { width: 6px; height: 6px; border-radius: 50%; background: #a78bfa; box-shadow: 0 0 8px rgba(167,139,250,0.5); flex-shrink: 0; } .auth-nav-links { display: flex; align-items: center; gap: 8px; } .auth-nav-link { font-size: 14px; color: rgba(255,255,255,0.4); text-decoration: none; padding: 6px 14px; border-radius: 99px; transition: color 0.2s; } .auth-nav-link:hover { color: rgba(255,255,255,0.8); } .auth-nav-cta { font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.85); text-decoration: none; padding: 8px 20px; border-radius: 99px; border: 1px solid rgba(167,139,250,0.25); transition: all 0.2s; } .auth-nav-cta:hover { background: rgba(167,139,250,0.08); border-color: rgba(167,139,250,0.4); }
         .page {
           min-height: 100vh;
           align-self: center;
           display: grid;
           grid-template-columns: 1fr 1fr;
-          background: #1a1208;
+          background: #04040a;
           font-family: 'DM Sans', sans-serif;
           -webkit-font-smoothing: antialiased;
           position: relative;
@@ -93,14 +93,14 @@ export default function SignInPage() {
           font-family: 'Lora', serif;
           font-size: 19px;
           font-weight: 600;
-          color: rgba(255,235,190,0.9);
+          color: rgba(255,255,255,0.9);
         }
         .left-logo-dot {
           width: 7px;
           height: 7px;
           border-radius: 50%;
-          background: #d4924a;
-          box-shadow: 0 0 10px rgba(212,146,74,0.5);
+          background: #a78bfa;
+          box-shadow: 0 0 10px rgba(167,139,250,0.5);
         }
         .left-body {
           
@@ -113,7 +113,7 @@ export default function SignInPage() {
           font-size: 11px;
           letter-spacing: 0.14em;
           text-transform: uppercase;
-          color: rgba(212,146,74,0.6);
+          color: rgba(167,139,250,0.6);
           font-weight: 500;
           margin-bottom: 16px;
         }
@@ -130,19 +130,19 @@ export default function SignInPage() {
         .left-sub {
           font-size: 15px;
           font-weight: 300;
-          color: rgba(255,230,170,0.35);
+          color: rgba(255,255,255,0.35);
           line-height: 1.85;
           max-width: 300px;
         }
         .left-quote-wrap {
-          border-left: 2px solid rgba(212,146,74,0.18);
+          border-left: 2px solid rgba(167,139,250,0.18);
           padding-left: 16px;
         }
         .left-quote {
           font-family: 'Lora', serif;
           font-style: italic;
           font-size: 13px;
-          color: rgba(255,230,170,0.32);
+          color: rgba(255,255,255,0.32);
           line-height: 1.75;
           margin-bottom: 6px;
         }
@@ -162,7 +162,7 @@ export default function SignInPage() {
           font-size: 11px;
           letter-spacing: 0.15em;
           text-transform: uppercase;
-          color: rgba(212,146,74,0.5);
+          color: rgba(167,139,250,0.5);
           font-weight: 500;
           margin-bottom: 22px;
         }
@@ -177,7 +177,7 @@ export default function SignInPage() {
         .auth-sub {
           font-size: 13px;
           font-weight: 300;
-          color: rgba(255,230,170,0.28);
+          color: rgba(255,255,255,0.28);
           margin-bottom: 28px;
         }
         .social-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
@@ -192,7 +192,7 @@ export default function SignInPage() {
           border: 1px solid rgba(255,220,150,0.09);
           font-size: 13px;
           font-weight: 400;
-          color: rgba(255,230,170,0.55);
+          color: rgba(255,255,255,0.55);
           cursor: pointer;
           transition: all 0.2s;
           font-family: 'DM Sans', sans-serif;
@@ -200,7 +200,7 @@ export default function SignInPage() {
         .social-btn:hover {
           background: rgba(255,220,150,0.07);
           border-color: rgba(255,220,150,0.15);
-          color: rgba(255,230,170,0.85);
+          color: rgba(255,255,255,0.85);
         }
         .divider { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
         .divider-line { flex: 1; height: 1px; background: rgba(255,220,150,0.06); }
@@ -233,12 +233,12 @@ export default function SignInPage() {
           transition: all 0.2s;
         }
         .field-input:focus {
-          border-color: rgba(212,146,74,0.4);
-          background: rgba(212,146,74,0.05);
+          border-color: rgba(167,139,250,0.4);
+          background: rgba(167,139,250,0.05);
         }
         .field-input::placeholder { color: rgba(255,220,150,0.16); }
         .forgot-link { text-align: right; margin-bottom: 20px; }
-        .forgot-link a { font-size: 12px; color: rgba(212,146,74,0.45); text-decoration: none; }
+        .forgot-link a { font-size: 12px; color: rgba(167,139,250,0.45); text-decoration: none; }
         .error-box {
           background: rgba(248,113,113,0.07);
           border: 1px solid rgba(248,113,113,0.2);
@@ -273,7 +273,7 @@ export default function SignInPage() {
           font-size: 12px;
           color: rgba(255,220,150,0.2);
         }
-        .auth-footer a { color: rgba(212,146,74,0.55); text-decoration: none; }
+        .auth-footer a { color: rgba(167,139,250,0.55); text-decoration: none; }
       `}</style>
 
       <nav className="auth-nav"><a href="/" className="auth-nav-logo"><div className="auth-nav-dot" />GhostOS</a><div className="auth-nav-links"><a href="/#features" className="auth-nav-link">Features</a><a href="/pricing" className="auth-nav-link">Pricing</a><a href="/sign-up" className="auth-nav-cta">Sign up free</a></div></nav>
@@ -302,7 +302,7 @@ export default function SignInPage() {
                 Google
               </button>
               <button className="social-btn" onClick={handleApple}>
-                <svg width="13" height="15" viewBox="0 0 814 1000" fill="rgba(255,230,170,0.7)"><path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-57.8-155.5-127.4C46 790.7 0 663 0 541.8c0-207.5 135.4-317.3 269-317.3 70.1 0 128.4 46.4 172.5 46.4 42.8 0 109.6-49 192.5-49 30.8 0 110.6 2.6 168.6 80.2zm-198.5-100.6c-17.9 23.4-47.2 41.3-76.1 41.3-3.9 0-7.7-.3-11.6-.9 0-27.5 12.3-55.5 30.2-74.7 19.3-21.4 51.4-37.6 78.1-38.5 1.3 4.5 1.9 9 1.9 13.5 0 26.5-11 54.4-22.5 59.3z"/></svg>
+                <svg width="13" height="15" viewBox="0 0 814 1000" fill="rgba(255,255,255,0.7)"><path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-57.8-155.5-127.4C46 790.7 0 663 0 541.8c0-207.5 135.4-317.3 269-317.3 70.1 0 128.4 46.4 172.5 46.4 42.8 0 109.6-49 192.5-49 30.8 0 110.6 2.6 168.6 80.2zm-198.5-100.6c-17.9 23.4-47.2 41.3-76.1 41.3-3.9 0-7.7-.3-11.6-.9 0-27.5 12.3-55.5 30.2-74.7 19.3-21.4 51.4-37.6 78.1-38.5 1.3 4.5 1.9 9 1.9 13.5 0 26.5-11 54.4-22.5 59.3z"/></svg>
                 Apple
               </button>
             </div>
