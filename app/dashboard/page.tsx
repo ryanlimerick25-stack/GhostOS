@@ -263,17 +263,22 @@ export default function Dashboard() {
             <a className="btn-primary" href="/audit">Run Your First Audit →</a>
           </div>
         ) : (
-          {scoreImprovement !== null && (
-          <div style={{background: scoreImprovement > 0 ? "rgba(74,222,128,0.06)" : "rgba(248,113,113,0.06)", border: `1px solid ${scoreImprovement > 0 ? "rgba(74,222,128,0.15)" : "rgba(248,113,113,0.15)"}`, borderRadius:"16px", padding:"16px 24px", marginBottom:"16px", display:"flex", alignItems:"center", justifyContent:"space-between"}}>
+          {scoreImprovement !== null && scoreImprovement > 0 && (
+          <div style={{background:"rgba(74,222,128,0.06)",border:"1px solid rgba(74,222,128,0.15)",borderRadius:"16px",padding:"16px 24px",marginBottom:"16px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
             <div>
               <div style={{fontSize:"11px",fontFamily:"'DM Mono',monospace",letterSpacing:"0.15em",textTransform:"uppercase",color:"rgba(255,255,255,0.3)",marginBottom:"4px"}}>Score Progress</div>
-              <div style={{fontSize:"15px",fontWeight:500,color:scoreImprovement > 0 ? "#4ade80" : "#f87171"}}>
-                {scoreImprovement > 0 ? `↑ You've improved ${scoreImprovement} points since your first audit` : `↓ Score dropped ${Math.abs(scoreImprovement)} points — check your gaps`}
-              </div>
+              <div style={{fontSize:"15px",fontWeight:500,color:"#4ade80"}}>{"↑ You've improved " + scoreImprovement + " points since your first audit"}</div>
             </div>
-            <div style={{fontFamily:"'Playfair Display',serif",fontSize:"32px",fontWeight:700,color:scoreImprovement > 0 ? "#4ade80" : "#f87171"}}>
-              {scoreImprovement > 0 ? `+${scoreImprovement}` : scoreImprovement}
+            <div style={{fontFamily:"'Playfair Display',serif",fontSize:"32px",fontWeight:700,color:"#4ade80"}}>{"+" + scoreImprovement}</div>
+          </div>
+        )}
+        {scoreImprovement !== null && scoreImprovement < 0 && (
+          <div style={{background:"rgba(248,113,113,0.06)",border:"1px solid rgba(248,113,113,0.15)",borderRadius:"16px",padding:"16px 24px",marginBottom:"16px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+            <div>
+              <div style={{fontSize:"11px",fontFamily:"'DM Mono',monospace",letterSpacing:"0.15em",textTransform:"uppercase",color:"rgba(255,255,255,0.3)",marginBottom:"4px"}}>Score Progress</div>
+              <div style={{fontSize:"15px",fontWeight:500,color:"#f87171"}}>{"↓ Score dropped " + Math.abs(scoreImprovement) + " points — check your gaps"}</div>
             </div>
+            <div style={{fontFamily:"'Playfair Display',serif",fontSize:"32px",fontWeight:700,color:"#f87171"}}>{scoreImprovement}</div>
           </div>
         )}
         <div className="audits-list">
