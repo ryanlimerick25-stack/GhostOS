@@ -52,7 +52,6 @@ export async function POST(req: Request) {
     const client = new OpenAI({ apiKey: key });
 
     // Check Supabase cache first — same inputs = same result
-    const cacheKey = `${input.followers}-${input.avgViews}-${input.engagementRate}-${input.niche}-${input.audienceGeo}`;
     const { data: cachedAudit } = await supabase
       .from("audits")
       .select("result")
@@ -68,7 +67,7 @@ export async function POST(req: Request) {
     if (cachedAudit?.result) {
       // Save to user's history if logged in
       if (userId) {
-        await supabase.from("audits").insert({
+        try { await supabase.from("audits").insert({
           user_id: userId,
           followers: input.followers,
           avg_views: input.avgViews,
@@ -81,7 +80,7 @@ export async function POST(req: Request) {
           deal_target: cachedAudit.result.estimated_first_deal_range_usd.target,
           deal_high: cachedAudit.result.estimated_first_deal_range_usd.high,
           result: cachedAudit.result,
-        }).catch(() => {});
+        }); } catch (_) {}
       }
       return Response.json({ data: cachedAudit.result, cached: true });
     }
