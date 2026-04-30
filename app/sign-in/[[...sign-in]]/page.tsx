@@ -74,7 +74,7 @@ export default function SignInPage() {
         @media(max-width: 768px) {
           .page {
           min-height: 100vh; grid-template-columns: 1fr; }
-          .left-panel { display: flex; flex-direction: column; justify-content: center; gap: 32px; padding: 48px 44px; min-height: 100vh; }
+          .left-panel { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 32px; padding: 48px 44px; min-height: 100vh; }
         }
         .left-panel {
           display: flex;
