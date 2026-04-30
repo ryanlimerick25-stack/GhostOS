@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { useEffect, useRef, useState } from "react";
+import { useUser } from "@clerk/nextjs";
 
 function ParticleCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
