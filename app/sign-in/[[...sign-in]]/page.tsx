@@ -37,7 +37,6 @@ export default function SignInPage() {
   async function handleGoogle() {
     if (!isLoaded) return;
     await signIn.authenticateWithRedirect({ strategy: "oauth_google", redirectUrl: "/sso-callback", redirectUrlComplete: "/dashboard" });
-  });
   }
 
   return (

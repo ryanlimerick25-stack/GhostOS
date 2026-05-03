@@ -83,7 +83,6 @@ export default function SignUpPage() {
   async function handleGoogle() {
     if (!isLoaded) return;
     await signUp.authenticateWithRedirect({ strategy: "oauth_google", redirectUrl: "/sso-callback", redirectUrlComplete: "/dashboard" });
-  });
   }
 
   return (
