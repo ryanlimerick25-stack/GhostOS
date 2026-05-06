@@ -55,14 +55,14 @@ export default function AuditPage() {
   }, []);
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (loading) {
-      interval = setInterval(() => {
-        setLoadingMessageIndex((prev) => (prev + 1) % loadingMessages.length);
-      }, 2500);
-    } else {
+    if (!loading) {
       setLoadingMessageIndex(0);
+      return;
     }
+    setLoadingMessageIndex(0);
+    const interval = setInterval(() => {
+      setLoadingMessageIndex((prev) => (prev + 1) % loadingMessages.length);
+    }, 2000);
     return () => clearInterval(interval);
   }, [loading]);
 
