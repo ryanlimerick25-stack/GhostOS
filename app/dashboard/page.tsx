@@ -1,4 +1,5 @@
 "use client";
+import "./page.module.css";
 import { useUser, useClerk } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -83,78 +84,6 @@ export default function Dashboard() {
 
   return (
     <>
-      <style>{`
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: #04040a; font-family: 'DM Sans', sans-serif; -webkit-font-smoothing: antialiased; color: rgba(255,255,255,0.9); }
-        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 var(--pad,8vw); height: clamp(60px,8vw,110px); background: rgba(4,4,10,0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .nav-logo { font-family: 'Playfair Display', serif; font-size: clamp(18px,2.5vw,32px); font-weight: 700; color: rgba(255,255,255,0.9); display: flex; align-items: center; gap: 8px; text-decoration: none; }
-        .nav-dot { width: 7px; height: 7px; border-radius: 50%; background: #a78bfa; box-shadow: 0 0 10px #a78bfa; animation: pulse 2s ease infinite; flex-shrink: 0; }
-        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
-        .nav-right { display: flex; align-items: center; gap: 12px; }
-        .nav-user { font-size: clamp(13px,1.3vw,20px); color: rgba(255,255,255,0.4); }
-        .nav-btn { padding: clamp(8px,0.8vw,14px) clamp(16px,1.8vw,32px); border-radius: 99px; font-size: clamp(13px,1.3vw,20px); font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; text-decoration: none; display: inline-block; border: none; }
-        .nav-audit { background: linear-gradient(135deg,#a78bfa,#818cf8); color: #fff; }
-        .nav-audit:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(167,139,250,0.3); }
-        .nav-link { padding: clamp(8px,0.8vw,14px) clamp(12px,1.5vw,28px); border-radius: 99px; font-size: clamp(13px,1.3vw,20px); font-weight: 400; color: rgba(255,255,255,0.4); text-decoration: none; display: inline-block; transition: color 0.2s; } .nav-link:hover { color: rgba(255,255,255,0.8); } .nav-signout { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); }
-        .nav-signout:hover { color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.08); }
-        .page { max-width: 1100px; margin: 0 auto; padding: 140px 24px 60px; }
-        .welcome { margin-bottom: 36px; }
-        .welcome-label { font-size: 13px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: #a78bfa; margin-bottom: 10px; }
-        .welcome-title { font-family: 'Playfair Display', serif; font-size: clamp(48px,5vw,72px); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; color: rgba(255,255,255,0.93); margin-bottom: 8px; }
-        .welcome-title em { font-style: italic; color: rgba(255,255,255,0.4); }
-        .welcome-sub { font-size: 18px; font-weight: 300; color: rgba(255,255,255,0.3); }
-        .stats-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 32px; }
-        @media(max-width:600px){.stats-row{grid-template-columns:1fr}}
-        .stat-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 20px; padding: 24px; position: relative; overflow: hidden; }
-        .stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background: linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent); }
-        .stat-label { font-size: 13px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.28); margin-bottom: 10px; }
-        .stat-value { font-family: 'Playfair Display', serif; font-size: clamp(40px,4vw,64px); font-weight: 700; letter-spacing: -0.02em; color: rgba(255,255,255,0.93); }
-        .stat-sub { font-size: 14px; color: rgba(255,255,255,0.25); margin-top: 4px; }
-        .section-title { font-family: 'Playfair Display', serif; font-size: clamp(28px,3vw,40px); font-weight: 600; color: rgba(255,255,255,0.9); margin-bottom: 16px; letter-spacing: -0.01em; }
-        .empty-state { background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.08); border-radius: 20px; padding: 56px 24px; text-align: center; }
-        .empty-icon { font-size: 36px; margin-bottom: 16px; }
-        .empty-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; color: rgba(255,255,255,0.6); margin-bottom: 8px; }
-        .empty-sub { font-size: 14px; color: rgba(255,255,255,0.25); margin-bottom: 24px; }
-        .btn-primary { display: inline-flex; align-items: center; gap: 8px; padding: 13px 28px; border-radius: 12px; background: linear-gradient(135deg,#a78bfa,#818cf8); color: #fff; font-size: 14px; font-weight: 600; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1); text-decoration: none; }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(167,139,250,0.35); }
-        .audits-list { display: flex; flex-direction: column; gap: 12px; }
-        .audit-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 20px; overflow: hidden; transition: all 0.2s; }
-        .audit-card:hover { border-color: rgba(167,139,250,0.2); }
-        .audit-card-header { padding: 24px 28px; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 24px; cursor: pointer; position: relative; }
-        .audit-card-header::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background: linear-gradient(90deg,transparent,rgba(255,255,255,0.07),transparent); }
-        .audit-card-header:hover { background: rgba(255,255,255,0.02); }
-        .audit-niche { font-size: 20px; font-weight: 500; color: rgba(255,255,255,0.9); margin-bottom: 6px; }
-        .audit-meta { font-size: 12px; color: rgba(255,255,255,0.28); display: flex; gap: 16px; flex-wrap: wrap; }
-        .audit-right { text-align: right; }
-        .audit-score { font-family: 'Playfair Display', serif; font-size: clamp(32px,3vw,48px); font-weight: 700; line-height: 1; margin-bottom: 4px; }
-        .audit-score-label { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; }
-        .score-trend { font-size: 11px; font-weight: 600; margin-top: 4px; }
-        .score-trend.up { color: #4ade80; }
-        .score-trend.down { color: #f87171; }
-        .score-trend.same { color: rgba(255,255,255,0.3); }
-        .audit-deal { font-size: 12px; color: rgba(255,255,255,0.3); margin-top: 6px; }
-        .audit-date { font-size: 11px; color: rgba(255,255,255,0.2); margin-top: 2px; }
-        .audit-expand-btn { font-size: 11px; color: rgba(167,139,250,0.7); margin-top: 6px; cursor: pointer; background: none; border: none; font-family: inherit; padding: 0; }
-        .audit-detail { border-top: 1px solid rgba(255,255,255,0.05); padding: 28px; background: rgba(0,0,0,0.2); animation: fadeIn 0.2s ease; }
-        @keyframes fadeIn { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
-        .detail-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 24px; }
-        @media(max-width:600px){.detail-grid{grid-template-columns:1fr}.audit-card-header{grid-template-columns:1fr}.audit-right{text-align:left}}
-        .detail-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 16px 18px; }
-        .detail-card-label { font-size: 9px; font-family: 'DM Mono', monospace; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.25); margin-bottom: 6px; }
-        .detail-card-value { font-family: 'Playfair Display', serif; font-size: 24px; color: rgba(255,255,255,0.9); letter-spacing: -0.02em; }
-        .detail-section { margin-bottom: 20px; }
-        .detail-section-label { font-size: 9px; font-family: 'DM Mono', monospace; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.25); margin-bottom: 10px; }
-        .detail-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-        .detail-list li { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.5; display: flex; gap: 10px; }
-        .detail-list li::before { content: '—'; color: rgba(255,255,255,0.15); flex-shrink: 0; font-family: 'DM Mono', monospace; }
-        .tags { display: flex; flex-wrap: wrap; gap: 6px; }
-        .tag { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 99px; padding: 4px 12px; font-size: 11px; color: rgba(255,255,255,0.5); }
-        .trend-bar { display: flex; align-items: flex-end; gap: 6px; height: 48px; margin-top: 8px; }
-        .trend-bar-item { flex: 1; border-radius: 4px 4px 0 0; min-width: 8px; transition: opacity 0.2s; cursor: default; position: relative; }
-        .trend-bar-item:hover { opacity: 0.8; }
-        .progress-bar-wrap { height: 4px; background: rgba(255,255,255,0.06); border-radius: 99px; overflow: hidden; margin-top: 8px; }
-        .progress-bar-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg,#a78bfa,#818cf8); }
-      `}</style>
 
       <nav>
         <a className="nav-logo" href="/"><div className="nav-dot" />GhostOS</a>

@@ -1,4 +1,5 @@
 "use client";
+import "./page.module.css";
 import { useSignUp } from "@clerk/nextjs";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
@@ -88,52 +89,11 @@ export default function SignUpPage() {
   if (!isLoaded) return (
     <div style={{minHeight:'100vh',background:'#04040a',display:'flex',alignItems:'center',justifyContent:'center'}}>
       <div style={{width:40,height:40,border:'2px solid rgba(167,139,250,0.2)',borderTop:'2px solid #a78bfa',borderRadius:'50%',animation:'spin 0.8s linear infinite'}} />
-      <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
     </div>
   );
 
   return (
     <>
-      <style>{`
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; } .auth-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 clamp(20px,4vw,60px); height: 64px; background: rgba(4,4,10,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); } .auth-nav-logo { font-family: Playfair Display,serif; font-size: 18px; font-weight: 700; color: rgba(255,255,255,0.9); display: flex; align-items: center; gap: 8px; text-decoration: none; } .auth-nav-dot { width: 6px; height: 6px; border-radius: 50%; background: #a78bfa; box-shadow: 0 0 8px rgba(167,139,250,0.5); flex-shrink: 0; } .auth-nav-links { display: flex; align-items: center; gap: 8px; } .auth-nav-link { font-size: 14px; color: rgba(255,255,255,0.35); text-decoration: none; padding: 6px 14px; border-radius: 99px; transition: color 0.2s; } .auth-nav-link:hover { color: rgba(255,255,255,0.75); } .auth-nav-cta { font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.8); text-decoration: none; padding: 8px 20px; border-radius: 99px; border: 1px solid rgba(255,255,255,0.12); transition: all 0.2s; } .auth-nav-cta:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.2); } .auth-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 clamp(20px,4vw,60px); height: 64px; background: rgba(4,4,10,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); } .auth-nav-logo { font-family: Playfair Display,serif; font-size: 18px; font-weight: 700; color: rgba(255,255,255,0.9); display: flex; align-items: center; gap: 8px; text-decoration: none; } .auth-nav-dot { width: 6px; height: 6px; border-radius: 50%; background: #a78bfa; box-shadow: 0 0 8px rgba(167,139,250,0.5); flex-shrink: 0; } .auth-nav-links { display: flex; align-items: center; gap: 8px; } .auth-nav-link { font-size: 14px; color: rgba(255,255,255,0.35); text-decoration: none; padding: 6px 14px; border-radius: 99px; transition: color 0.2s; } .auth-nav-link:hover { color: rgba(255,255,255,0.75); } .auth-nav-cta { font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.8); text-decoration: none; padding: 8px 20px; border-radius: 99px; border: 1px solid rgba(255,255,255,0.12); transition: all 0.2s; } .auth-nav-cta:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.2); }
-        .page { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; position: relative; z-index: 1; background: #04040a; font-family: 'DM Sans', sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
-        @media(max-width:768px){ .page { grid-template-columns: 1fr; } .left-panel { display: none !important; } }
-        .left-panel { display: flex; flex-direction: column; justify-content: center; padding: 48px; border-right: 1px solid rgba(255,255,255,0.05); min-height: 100vh; }
-        .left-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 40px; }
-        .left-logo-dot { width: 10px; height: 10px; border-radius: 50%; background: #a78bfa; box-shadow: 0 0 14px #a78bfa; }
-        .left-logo-text { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; color: rgba(255,255,255,0.9); }
-        .left-headline { font-family: 'Playfair Display', serif; font-size: clamp(36px,4vw,56px); font-weight: 700; line-height: 1.1; letter-spacing: -0.03em; color: rgba(255,255,255,0.93); margin-bottom: 20px; }
-        .left-headline em { font-style: italic; color: #a78bfa; }
-        .left-sub { font-size: 18px; font-weight: 300; color: rgba(255,255,255,0.35); line-height: 1.7; margin-bottom: 56px; max-width: 420px; }
-        .left-features { display: flex; flex-direction: column; gap: 20px; }
-        .left-feature { display: flex; align-items: center; gap: 14px; }
-        .left-feature-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(167,139,250,0.5); flex-shrink: 0; }
-        .left-feature-text { font-size: 16px; color: rgba(255,255,255,0.45); }
-        .right-panel { display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 48px 60px; min-height: 100vh; }
-        .auth-card { width: 100%; max-width: 480px; }
-        .auth-title { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 700; color: rgba(255,255,255,0.93); margin-bottom: 8px; letter-spacing: -0.02em; }
-        .auth-sub { font-size: 16px; font-weight: 300; color: rgba(255,255,255,0.35); margin-bottom: 36px; }
-        .social-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; }
-        .social-btn { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 14px 20px; border-radius: 14px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.8); font-size: 15px; font-weight: 500; cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
-        .social-btn:hover { background: rgba(255,255,255,0.08); transform: translateY(-1px); }
-        .divider { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
-        .divider-line { flex: 1; height: 1px; background: rgba(255,255,255,0.07); }
-        .divider-text { font-size: 12px; color: rgba(255,255,255,0.2); letter-spacing: 0.1em; text-transform: uppercase; }
-        .field-group { display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px; }
-        .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .field { display: flex; flex-direction: column; gap: 8px; }
-        .field-label { font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); }
-        .field-input { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px 16px; font-size: 16px; font-family: 'DM Sans', sans-serif; color: rgba(255,255,255,0.9); outline: none; transition: all 0.2s; width: 100%; }
-        .field-input::placeholder { color: rgba(255,255,255,0.15); }
-        .field-input:focus { border-color: rgba(167,139,250,0.45); background: rgba(167,139,250,0.05); box-shadow: 0 0 0 3px rgba(167,139,250,0.08); }
-        .error-box { background: rgba(248,113,113,0.07); border: 1px solid rgba(248,113,113,0.2); border-radius: 10px; padding: 12px 16px; font-size: 14px; color: #fca5a5; margin-bottom: 16px; }
-        .submit-btn { width: 100%; padding: 16px; border-radius: 14px; background: linear-gradient(135deg,#a78bfa,#818cf8); color: #fff; font-size: 16px; font-weight: 600; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1); }
-        .submit-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(167,139,250,0.35); }
-        .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .auth-footer { text-align: center; margin-top: 24px; font-size: 15px; color: rgba(255,255,255,0.28); }
-        .auth-footer a { color: #a78bfa; text-decoration: none; font-weight: 500; }
-        .code-input { text-align: center; font-size: 28px; font-weight: 600; letter-spacing: 0.3em; }
-      `}</style>
       <ParticleCanvas />
       <nav className="auth-nav"><a href="/" className="auth-nav-logo"><div className="auth-nav-dot" />GhostOS</a><div className="auth-nav-links"><a href="/#features" className="auth-nav-link">Features</a><a href="/pricing" className="auth-nav-link">Pricing</a><a href="/sign-in" className="auth-nav-cta">Log in</a></div></nav>
       <div className="page">
