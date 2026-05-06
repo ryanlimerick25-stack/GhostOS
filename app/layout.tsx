@@ -72,8 +72,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <ClerkProvider
       signInUrl="/sign-in"
       signUpUrl="/sign-up"
-      afterSignInUrl="/dashboard"
-      afterSignUpUrl="/audit"
+      signInFallbackRedirectUrl="/dashboard"
+      signUpFallbackRedirectUrl="/audit"
     >
       <PostHogProvider>
         <html lang="en" className={`${playfair.variable} ${dmSans.variable} ${dmSerif.variable} ${dmMono.variable}`}>

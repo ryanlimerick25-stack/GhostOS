@@ -21,13 +21,13 @@ export default function SignInPage() {
       const result = await signIn.create({ identifier: email, password });
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId });
-        router.push("/dashboard");
+        router.replace("/dashboard");
       }
     } catch (e: unknown) {
       const err = e as { errors?: { message: string }[] };
       const msg = err.errors?.[0]?.message || "Invalid email or password.";
       if (msg.toLowerCase().includes("session") || msg.toLowerCase().includes("already")) {
-        router.push("/dashboard");
+        router.replace("/dashboard");
         return;
       }
       setError(msg);
