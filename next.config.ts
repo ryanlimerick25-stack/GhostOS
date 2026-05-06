@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   experimental: {
     optimizeCss: true,
+    optimizePackageImports: ['@clerk/nextjs', '@stripe/stripe-js', '@sentry/nextjs', 'lucide-react'],
   },
   images: {
     formats: ["image/avif", "image/webp"],
