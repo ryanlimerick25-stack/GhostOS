@@ -1,4 +1,35 @@
 import { ClerkProvider } from '@clerk/nextjs'
+import { Playfair_Display, DM_Sans, DM_Serif_Display, DM_Mono } from 'next/font/google'
+
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  weight: ['400', '600', '700'],
+  style: ['normal', 'italic'],
+  variable: '--font-playfair',
+  display: 'swap',
+})
+
+const dmSans = DM_Sans({
+  subsets: ['latin'],
+  weight: ['300', '400', '500'],
+  variable: '--font-dm-sans',
+  display: 'swap',
+})
+
+const dmSerif = DM_Serif_Display({
+  subsets: ['latin'],
+  weight: ['400'],
+  style: ['normal', 'italic'],
+  variable: '--font-dm-serif',
+  display: 'swap',
+})
+
+const dmMono = DM_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  variable: '--font-dm-mono',
+  display: 'swap',
+})
 import { PostHogProvider } from './providers/posthog'
 import type { Metadata } from 'next'
 import { Analytics } from '@vercel/analytics/next'
@@ -45,20 +76,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       afterSignUpUrl="/audit"
     >
       <PostHogProvider>
-        <html lang="en">
+        <html lang="en" className={`${playfair.variable} ${dmSans.variable} ${dmSerif.variable} ${dmMono.variable}`}>
           <head>
-            <link rel="preconnect" href="https://fonts.googleapis.com" />
-            <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-            <link
-              rel="preload"
-              as="style"
-              href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Geist:wght@300;400;500;600&display=swap"
-            />
-            <link
-              rel="stylesheet"
-              href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Geist:wght@300;400;500;600&display=swap"
-            />
-          </head>
+</head>
           <body>{children}<Analytics /></body>
         </html>
       </PostHogProvider>
