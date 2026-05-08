@@ -23,7 +23,7 @@ export default function SignInPage() {
         await setActive({ session: result.createdSessionId });
         router.replace("/dashboard");
       } else {
-        setError("Status: " + result.status + " — " + JSON.stringify(result.supportedFirstFactors?.map((f: {strategy: string}) => f.strategy)));
+        setError("Sign in could not complete. Please try Google or reset your password.");
       }
     } catch (e: unknown) {
       const err = e as { errors?: { message: string }[] };
