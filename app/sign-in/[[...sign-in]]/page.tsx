@@ -23,7 +23,7 @@ export default function SignInPage() {
         await setActive({ session: result.createdSessionId });
         router.replace("/dashboard");
       } else {
-        setError("This email is linked to a Google account. Please use \"Continue with Google\" to sign in.");
+        setError("Status: " + result.status + " — " + JSON.stringify(result.supportedFirstFactors?.map((f: {strategy: string}) => f.strategy)));
       }
     } catch (e: unknown) {
       const err = e as { errors?: { message: string }[] };
