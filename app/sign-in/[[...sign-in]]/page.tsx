@@ -22,6 +22,8 @@ export default function SignInPage() {
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId });
         router.replace("/dashboard");
+      } else {
+        setError("Sign in could not complete. Please try Google or reset your password.");
       }
     } catch (e: unknown) {
       const err = e as { errors?: { message: string }[] };
