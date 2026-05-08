@@ -201,7 +201,7 @@ Rules:
 - For each brand in "best_fit_brands", include its real website URL (e.g. {"name": "Gymshark", "url": "https://www.gymshark.com"}). Use the brand's actual homepage URL, not a search link.
 `;
 
-    const resp = await client.responses.create({ model: "gpt-4.1-mini", input: prompt });
+    const resp = await client.responses.create({ model: "gpt-4.1-mini", input: prompt, temperature: 0.2 });
     const text = (resp.output_text || "").trim();
     let jsonStr = text;
     if (!text.startsWith("{")) { const match = text.match(/\{[\s\S]*\}/); if (match) jsonStr = match[0]; }
