@@ -23,7 +23,7 @@ export default function SignInPage() {
         await setActive({ session: result.createdSessionId });
         router.replace("/dashboard");
       } else {
-        setError("Sign in could not complete. Please try Google or reset your password.");
+        setError("This email is linked to a Google account. Please use \"Continue with Google\" to sign in.");
       }
     } catch (e: unknown) {
       const err = e as { errors?: { message: string }[] };
