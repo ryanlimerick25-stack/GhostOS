@@ -13,7 +13,7 @@ export default function SignInPage() {
 
   async function handleSignIn(e: React.FormEvent) {
     e.preventDefault();
-    if (!isLoaded) return;
+    if (!isLoaded || !signIn) return;
     if (!email.trim()) { setError("Email is required."); return; }
     if (!password.trim()) { setError("Password is required."); return; }
     setLoading(true); setError("");
