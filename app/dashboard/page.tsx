@@ -71,7 +71,7 @@ export default function Dashboard() {
   const scoreImprovement = audits.length >= 2
     ? audits[0].readiness_score - audits[audits.length - 1].readiness_score
     : null;
-  const freeAuditsLeft = freeAuditsUsed !== null ? Math.max(0, 3 - freeAuditsUsed) : null;
+  const freeAuditsLeft = freeAuditsUsed !== null ? Math.max(0, 1 - freeAuditsUsed) : null;
 
   if (!isLoaded || loading) return (
     <div style={{ minHeight: "100vh", background: "#04040a", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -184,7 +184,7 @@ export default function Dashboard() {
               <div className="progress-bar-fill" style={{width:`${Math.min(100,(audits.length/3)*100)}%`, background: audits.length >= 3 ? "#f87171" : "linear-gradient(90deg,#a78bfa,#818cf8)"}} />
             </div>
             {freeAuditsLeft === 0 && (
-              <div style={{marginTop:"10px",fontSize:"12px",color:"#fca5a5"}}>You've used all 3 free audits. <button onClick={handleUpgrade} style={{color:"#a78bfa",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit",fontSize:"12px",padding:0}}>Upgrade to Pro →</button></div>
+              <div style={{marginTop:"10px",fontSize:"12px",color:"#fca5a5"}}>You've used your 1 free audit. <button onClick={handleUpgrade} style={{color:"#a78bfa",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit",fontSize:"12px",padding:0}}>Upgrade to Pro →</button></div>
             )}
           </div>
         )}

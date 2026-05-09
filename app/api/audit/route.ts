@@ -41,8 +41,8 @@ export async function POST(req: Request) {
       const userData = await client2.users.getUser(userId);
       const isPro = userData.publicMetadata?.is_pro === true;
 
-      if (!isPro && (count ?? 0) >= 3) {
-        return Response.json({ error: "You've used your 3 free audits. Upgrade to GhostOS Pro for unlimited audits." }, { status: 403 });
+      if (!isPro && (count ?? 0) >= 1) {
+        return Response.json({ error: "You've used your 1 free audit. Upgrade to GhostOS Pro for unlimited audits." }, { status: 403 });
       }
     }
     if (!input || !Number.isFinite(input.followers) || !Number.isFinite(input.avgViews) || !Number.isFinite(input.engagementRate) || !input.niche || !input.audienceGeo) {

@@ -79,13 +79,13 @@ export default function AuditPage() {
       const json = await res.json();
       const serverCount = json?.count ?? 0;
       if (serverCount >= 3) {
-        setError("You've used your 3 free audits. Upgrade to GhostOS Pro for unlimited audits.");
+        setError("You've used your 1 free audit. Upgrade to GhostOS Pro for unlimited audits.");
         return;
       }
     } else {
       const used = parseInt(localStorage.getItem("free_audits_used") || "0");
       if (used >= 3) {
-        setError("You've used your 3 free audits. Sign up or upgrade to GhostOS Pro for unlimited audits.");
+        setError("You've used your 1 free audit. Sign up or upgrade to GhostOS Pro for unlimited audits.");
         return;
       }
     }
