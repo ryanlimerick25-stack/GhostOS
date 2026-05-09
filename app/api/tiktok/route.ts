@@ -17,13 +17,13 @@ export async function GET(req: Request) {
       }
     );
     const data = await res.json();
-    console.log("RapidAPI response:", JSON.stringify(data).slice(0, 500));
     const user = data?.data?.user;
-    if (!user) return Response.json({ error: "User not found", debug: JSON.stringify(data).slice(0, 300) }, { status: 404 });
+    const stats = data?.data?.stats;
+    if (!user || !stats) return Response.json({ error: "User not found" }, { status: 404 });
 
-    const followers = user.followerCount ?? 0;
-    const hearts = user.heartCount ?? 0;
-    const videos = user.videoCount ?? 0;
+    const followers = stats.followerCount ?? 0;
+    const hearts = stats.heartCount ?? 0;
+    const videos = stats.videoCount ?? 0;
     const avgViews = videos > 0 ? Math.round(hearts / videos) : 0;
     const engagementRate = followers > 0 ? parseFloat(((hearts / videos / followers) * 100).toFixed(2)) : 0;
 
