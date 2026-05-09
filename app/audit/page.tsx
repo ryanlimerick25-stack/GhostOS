@@ -48,6 +48,23 @@ export default function AuditPage() {
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<AuditResult | null>(null);
   const [fromCache, setFromCache] = useState(false);
+  const [fetching, setFetching] = useState(false);
+  const [fetchError, setFetchError] = useState<string | null>(null);
+
+  async function fetchTikTokProfile() {
+    if (!tiktokHandle.trim()) { setFetchError("Enter your TikTok handle first."); return; }
+    setFetching(true); setFetchError(null);
+    try {
+      const res = await fetch("/api/tiktok?username=" + tiktokHandle.replace("@", ""));
+      const data = await res.json();
+      if (data.error) { setFetchError("Could not find that TikTok account."); return; }
+      setFollowers(String(data.followers));
+      setAvgViews(String(data.avgViews));
+      setEngagementRate(String(data.engagementRate));
+    } catch {
+      setFetchError("Failed to fetch TikTok data. Enter manually.");
+    } finally { setFetching(false); }
+  }
 
   useEffect(() => {
     const used = parseInt(localStorage.getItem("free_audits_used") || "0");
@@ -248,6 +265,12 @@ export default function AuditPage() {
               <div style={{position:"relative"}}>
                 <span style={{position:"absolute",left:"14px",top:"50%",transform:"translateY(-50%)",color:"#444",fontSize:"14px",fontFamily:"inherit",pointerEvents:"none"}}>@</span>
                 <input value={tiktokHandle} onChange={e => setTiktokHandle(e.target.value.replace("@",""))} placeholder="yourcreatorname" style={{width:"100%",background:"#080808",border:"1px solid #1e1e1e",borderRadius:"10px",padding:"10px 14px 10px 28px",fontSize:"14px",color:"#e8e6e1",fontFamily:"inherit",outline:"none",boxSizing:"border-box"}} />
+              </div>
+              <div style={{display:"flex",alignItems:"center",gap:"8px",marginTop:"8px"}}>
+                <button onClick={fetchTikTokProfile} disabled={fetching} style={{padding:"8px 16px",background:"rgba(167,139,250,0.1)",border:"1px solid rgba(167,139,250,0.3)",borderRadius:"8px",color:"#a78bfa",fontSize:"12px",fontWeight:500,cursor:"pointer",fontFamily:"inherit",transition:"all 0.2s"}}>
+                  {fetching ? "Fetching..." : "✦ Auto-fill from TikTok"}
+                </button>
+                {fetchError && <span style={{fontSize:"11px",color:"#fca5a5"}}>{fetchError}</span>}
               </div>
               <div style={{fontSize:"11px",color:"#3a3a3a",marginTop:"6px",fontFamily:"'DM Mono',monospace",letterSpacing:"0.05em"}}>Optional — used to personalize your outreach templates</div>
             </div>
