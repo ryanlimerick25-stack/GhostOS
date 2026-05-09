@@ -19,13 +19,15 @@ export async function GET(req: Request) {
     const data = await res.json();
     const user = data?.data?.user;
     const stats = data?.data?.stats;
-    if (!user || !stats) return Response.json({ error: "User not found", raw: JSON.stringify(data).slice(0, 500) }, { status: 404 });
+    if (!user || !stats) return Response.json({ error: "Account not found or is private. Please enter your stats manually." }, { status: 404 });
 
     const followers = stats.followerCount ?? 0;
     const hearts = stats.heartCount ?? 0;
     const videos = stats.videoCount ?? 0;
-    const avgViews = videos > 0 ? Math.round(hearts / videos) : 0;
-    const engagementRate = followers > 0 ? parseFloat(((hearts / videos / followers) * 100).toFixed(2)) : 0;
+    const avgViews = videos > 0 && hearts > 0 ? Math.round(hearts / videos) : 0;
+    const engagementRate = followers > 0 && videos > 0 && hearts > 0 
+      ? parseFloat(((hearts / videos / followers) * 100).toFixed(2)) 
+      : 0;
 
     return Response.json({ followers, avgViews, engagementRate, nickname: user.nickname });
   } catch {

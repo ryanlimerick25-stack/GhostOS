@@ -57,7 +57,7 @@ export default function AuditPage() {
     try {
       const res = await fetch("/api/tiktok?username=" + tiktokHandle.replace("@", ""));
       const data = await res.json();
-      if (data.error) { setFetchError("Could not find that TikTok account."); return; }
+      if (data.error) { setFetchError("Account not found or is private. Enter stats manually."); return; }
       setFollowers(String(data.followers));
       setAvgViews(String(data.avgViews));
       setEngagementRate(String(data.engagementRate));
