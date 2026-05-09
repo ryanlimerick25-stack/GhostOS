@@ -268,7 +268,7 @@ export default function AuditPage() {
               </div>
               <div style={{display:"flex",alignItems:"center",gap:"8px",marginTop:"8px"}}>
                 <button onClick={fetchTikTokProfile} disabled={fetching} style={{padding:"8px 16px",background:"rgba(167,139,250,0.1)",border:"1px solid rgba(167,139,250,0.3)",borderRadius:"8px",color:"#a78bfa",fontSize:"12px",fontWeight:500,cursor:"pointer",fontFamily:"inherit",transition:"all 0.2s"}}>
-                  {fetching ? "Fetching..." : "✦ Auto-fill from TikTok"}
+                  {fetching ? "Fetching..." : "✦ Auto-fill followers from TikTok"}
                 </button>
                 {fetchError && <span style={{fontSize:"11px",color:"#fca5a5"}}>{fetchError}</span>}
               </div>
