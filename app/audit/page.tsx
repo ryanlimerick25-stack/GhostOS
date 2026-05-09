@@ -172,6 +172,16 @@ export default function AuditPage() {
         .run-btn:hover:not(:disabled) { background: #ddd0ff; transform: translateY(-1px); box-shadow: 0 8px 30px rgba(201, 184, 255, 0.2); }
         .run-btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .loading-dots::after { content: ''; animation: dots 1.2s steps(4, end) infinite; }
+        .audit-overlay { position: fixed; inset: 0; background: rgba(4,4,10,0.92); backdrop-filter: blur(12px); z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 32px; }
+        .audit-overlay-spinner { width: 64px; height: 64px; border: 3px solid rgba(167,139,250,0.15); border-top: 3px solid #a78bfa; border-radius: 50%; animation: spin 0.9s linear infinite; }
+        .audit-overlay-title { font-family: 'Playfair Display', serif; font-size: clamp(22px,3vw,32px); font-weight: 600; color: rgba(255,255,255,0.9); letter-spacing: -0.01em; text-align: center; }
+        .audit-overlay-sub { font-size: 14px; color: rgba(255,255,255,0.35); font-family: 'DM Mono', monospace; letter-spacing: 0.05em; text-align: center; }
+        .audit-overlay-dots { display: flex; gap: 8px; }
+        .audit-overlay-dot { width: 8px; height: 8px; border-radius: 50%; background: #a78bfa; animation: dotPulse 1.4s ease infinite; }
+        .audit-overlay-dot:nth-child(2) { animation-delay: 0.2s; }
+        .audit-overlay-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes dotPulse { 0%,100%{opacity:0.2;transform:scale(0.8)} 50%{opacity:1;transform:scale(1)} }
         @keyframes dots { 0%, 20% { content: ''; } 40% { content: '.'; } 60% { content: '..'; } 80%, 100% { content: '...'; } }
         .error-box { margin-top: 16px; padding: 12px 16px; background: rgba(239, 68, 68, 0.06); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 10px; font-size: 13px; color: #fca5a5; }
         .cache-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(74, 222, 128, 0.06); border: 1px solid rgba(74, 222, 128, 0.2); border-radius: 99px; padding: 5px 12px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #4ade80; margin-bottom: 20px; }
@@ -277,6 +287,20 @@ export default function AuditPage() {
             <button className="run-btn" onClick={runAudit} disabled={loading}>
               {loading ? <span className="loading-dots">{loadingMessages[loadingMessageIndex]}</span> : "Run Audit →"}
             </button>
+            {loading && (
+              <div className="audit-overlay">
+                <div className="audit-overlay-spinner" />
+                <div>
+                  <div className="audit-overlay-title">Running your audit...</div>
+                  <div className="audit-overlay-sub" style={{marginTop:"8px"}}>{loadingMessages[loadingMessageIndex]}</div>
+                </div>
+                <div className="audit-overlay-dots">
+                  <div className="audit-overlay-dot" />
+                  <div className="audit-overlay-dot" />
+                  <div className="audit-overlay-dot" />
+                </div>
+              </div>
+            )}
             {error && <div className="error-box">{error}</div>}
           </div>
 
