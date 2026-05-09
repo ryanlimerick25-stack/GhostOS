@@ -12,7 +12,6 @@ export async function GET(req: Request) {
   };
 
   try {
-    // Fetch user profile and recent posts in parallel
     const [profileRes, postsRes] = await Promise.all([
       fetch(`https://tiktok-scraper7.p.rapidapi.com/user/info?unique_id=${username}`, { headers }),
       fetch(`https://tiktok-scraper7.p.rapidapi.com/user/posts?unique_id=${username}&count=30`, { headers }),
@@ -27,29 +26,33 @@ export async function GET(req: Request) {
 
     const followers = stats.followerCount ?? 0;
     const videos = stats.videoCount ?? 0;
+    const hearts = stats.heartCount ?? 0;
 
-    // Calculate real avg views from recent posts
-    const posts = postsData?.data?.videos ?? [];
+    // Try multiple possible field names for posts array
+    const posts = postsData?.data?.videos 
+      ?? postsData?.data?.list 
+      ?? postsData?.data?.items
+      ?? postsData?.data
+      ?? [];
+
     let avgViews = 0;
     let engagementRate = 0;
 
-    if (posts.length > 0) {
-      const totalViews = posts.reduce((sum: number, v: {stats?: {playCount?: number}}) => sum + (v.stats?.playCount ?? 0), 0);
-      const totalLikes = posts.reduce((sum: number, v: {stats?: {diggCount?: number}}) => sum + (v.stats?.diggCount ?? 0), 0);
-      const totalComments = posts.reduce((sum: number, v: {stats?: {commentCount?: number}}) => sum + (v.stats?.commentCount ?? 0), 0);
+    if (Array.isArray(posts) && posts.length > 0) {
+      const totalViews = posts.reduce((sum: number, v: {stats?: {playCount?: number}, play_count?: number}) => sum + (v.stats?.playCount ?? v.play_count ?? 0), 0);
+      const totalLikes = posts.reduce((sum: number, v: {stats?: {diggCount?: number}, digg_count?: number}) => sum + (v.stats?.diggCount ?? v.digg_count ?? 0), 0);
+      const totalComments = posts.reduce((sum: number, v: {stats?: {commentCount?: number}, comment_count?: number}) => sum + (v.stats?.commentCount ?? v.comment_count ?? 0), 0);
       avgViews = Math.round(totalViews / posts.length);
       engagementRate = followers > 0 && totalViews > 0
         ? parseFloat((((totalLikes + totalComments) / posts.length / followers) * 100).toFixed(2))
         : 0;
     } else {
-      // Fallback to hearts/videos estimate
-      const hearts = stats.heartCount ?? 0;
       avgViews = videos > 0 ? Math.round(hearts / videos) : 0;
       engagementRate = followers > 0 && videos > 0 ? parseFloat(((hearts / videos / followers) * 100).toFixed(2)) : 0;
     }
 
-    return Response.json({ followers, avgViews, engagementRate, nickname: user.nickname });
-  } catch {
-    return Response.json({ error: "Failed to fetch TikTok data" }, { status: 500 });
+    return Response.json({ followers, avgViews, engagementRate, nickname: user.nickname, debug_posts_count: Array.isArray(posts) ? posts.length : "not array" });
+  } catch (e) {
+    return Response.json({ error: "Failed to fetch TikTok data", details: String(e) }, { status: 500 });
   }
 }
