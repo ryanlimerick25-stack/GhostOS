@@ -19,7 +19,7 @@ export async function GET(req: Request) {
     const data = await res.json();
     const user = data?.data?.user;
     const stats = data?.data?.stats;
-    if (!user || !stats) return Response.json({ error: "User not found" }, { status: 404 });
+    if (!user || !stats) return Response.json({ error: "User not found", raw: JSON.stringify(data).slice(0, 500) }, { status: 404 });
 
     const followers = stats.followerCount ?? 0;
     const hearts = stats.heartCount ?? 0;
