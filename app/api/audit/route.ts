@@ -134,6 +134,25 @@ PACKAGE PRICING:
 - Extended usage rights (6+ months): +50-100% to base rate
 - Exclusivity add-on: +25-50% to base rate
 
+FIRST DEAL REALITY CHECK (apply these discounts for first-time deal seekers):
+- Creators with no prior brand deal history: apply 0.6-0.7x to calculated rate (brands lowball first-timers)
+- Creators with a media kit ready: apply 0.85x (slight discount, more credible)
+- Creators with prior deals: apply full rate
+- The "target" price in estimated_first_deal_range_usd should reflect what a first-time creator can ACTUALLY get, not what they deserve
+- The "low" should be the floor a creator should never go below
+- The "high" should be what they can achieve after 2-3 deals with negotiation experience
+
+VIEWS-TO-FOLLOWERS RATIO INSIGHT:
+- Above 100%: viral potential, commands premium rates
+- 50-100%: solid reach, standard rates apply
+- 20-50%: average reach, slight discount
+- Below 20%: poor reach, brands will heavily discount or pass
+
+ENGAGEMENT QUALITY NOTE:
+- TikTok engagement of 3-6% is considered average (higher than Instagram baseline)
+- Engagement above 8% on TikTok is exceptional and commands 1.5-2x premium
+- Always factor in views-to-followers ratio alongside engagement rate
+
 OTHER REVENUE STREAMS:
 - TikTok Shop affiliate commissions: 5-20% per sale
 - TikTok Creator Rewards: $0.40-$1.00 per 1,000 views
