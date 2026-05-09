@@ -17,8 +17,9 @@ export async function GET(req: Request) {
       }
     );
     const data = await res.json();
+    console.log("RapidAPI response:", JSON.stringify(data).slice(0, 500));
     const user = data?.data?.user;
-    if (!user) return Response.json({ error: "User not found" }, { status: 404 });
+    if (!user) return Response.json({ error: "User not found", debug: JSON.stringify(data).slice(0, 300) }, { status: 404 });
 
     const followers = user.followerCount ?? 0;
     const hearts = user.heartCount ?? 0;
