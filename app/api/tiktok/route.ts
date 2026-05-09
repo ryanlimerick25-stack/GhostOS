@@ -47,8 +47,8 @@ export async function GET(req: Request) {
         : 0;
     } else {
       // Fallback estimate
-      avgViews = videos > 0 && hearts > 0 ? Math.round(hearts / videos) : 0;
-      engagementRate = followers > 0 && videos > 0 && hearts > 0 ? parseFloat(((hearts / videos / followers) * 100).toFixed(2)) : 0;
+      avgViews = videos > 0 ? Math.round(hearts / videos) : 0;
+      engagementRate = followers > 0 && videos > 0 ? parseFloat(((hearts / videos / followers) * 100).toFixed(2)) : 0;
     }
 
     return Response.json({ followers, avgViews, engagementRate, nickname: user.nickname });
