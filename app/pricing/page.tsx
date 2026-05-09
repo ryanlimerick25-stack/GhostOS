@@ -3,7 +3,7 @@ import { useUser } from "@clerk/nextjs";
 import { useState } from "react";
 
 const FREE_FEATURES = [
-  "3 free audits",
+  "1 free audit",
   "Readiness score (0–100)",
   "Estimated deal range",
   "Best-fit brand categories",
