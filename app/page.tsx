@@ -236,14 +236,21 @@ export default function LandingPage() {
                     </div>
                     <div className="pd-links">
                       <a className="pd-link" href="/dashboard">
-                        <span className="pd-link-icon">◈</span>Dashboard
+                        <span className="pd-link-icon">⊞</span>My Dashboard
                       </a>
                       <a className="pd-link" href="/audit">
-                        <span className="pd-link-icon">◎</span>New Audit
+                        <span className="pd-link-icon">◎</span>Run New Audit
                       </a>
+                      <a className="pd-link" href="/deal-analyzer">
+                        <span className="pd-link-icon">◈</span>Deal Analyzer
+                      </a>
+                      <div className="pd-divider" />
                       <a className="pd-link" href="/pricing">
-                        <span className="pd-link-icon">◇</span>Pricing
+                        <span className="pd-link-icon">⚡</span>Upgrade Plan
                       </a>
+                      <button className="pd-link" onClick={() => { setProfileOpen(false); document.getElementById('features')?.scrollIntoView({behavior:'smooth'}); }}>
+                        <span className="pd-link-icon">?</span>How It Works
+                      </button>
                       <div className="pd-divider" />
                       <button className="pd-link danger" onClick={() => { setProfileOpen(false); signOut().then(() => { window.location.href = "/"; }); }}>
                         <span className="pd-link-icon">→</span>Sign Out
