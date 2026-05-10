@@ -27,6 +27,7 @@ export default function Dashboard() {
   const [upgrading, setUpgrading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [expandedAudit, setExpandedAudit] = useState<string | null>(null);
+  const [profileOpen, setProfileOpen] = useState(false);
 
   useEffect(() => {
     if (!isLoaded) return;
@@ -154,6 +155,28 @@ export default function Dashboard() {
         .trend-bar-item:hover { opacity: 0.8; }
         .progress-bar-wrap { height: 4px; background: rgba(255,255,255,0.06); border-radius: 99px; overflow: hidden; margin-top: 8px; }
         .progress-bar-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg,#a78bfa,#818cf8); }
+        .profile-wrap { position: relative; }
+        .profile-btn { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg,#a78bfa,#818cf8); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #fff; font-family: inherit; flex-shrink: 0; transition: box-shadow 0.2s; }
+        .profile-btn:hover { box-shadow: 0 0 0 3px rgba(167,139,250,0.3); }
+        .profile-btn img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .profile-dropdown { position: absolute; top: calc(100% + 12px); right: 0; width: 300px; background: #0e0e1a; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; box-shadow: 0 24px 64px rgba(0,0,0,0.6); z-index: 200; overflow: hidden; animation: fadeIn 0.15s ease; }
+        .pd-header { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; gap: 14px; }
+        .pd-avatar { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg,#a78bfa,#818cf8); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; color: #fff; flex-shrink: 0; overflow: hidden; }
+        .pd-name { font-size: 15px; font-weight: 600; color: rgba(255,255,255,0.9); margin-bottom: 2px; }
+        .pd-email { font-size: 12px; color: rgba(255,255,255,0.3); }
+        .pd-plan { display: inline-flex; align-items: center; gap: 5px; margin-top: 6px; padding: 3px 10px; border-radius: 99px; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+        .pd-plan.pro { background: rgba(74,222,128,0.1); color: #4ade80; border: 1px solid rgba(74,222,128,0.2); }
+        .pd-plan.free { background: rgba(167,139,250,0.1); color: #a78bfa; border: 1px solid rgba(167,139,250,0.2); }
+        .pd-stats { padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.06); display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+        .pd-stat { text-align: center; }
+        .pd-stat-val { font-family: "Playfair Display", serif; font-size: 22px; font-weight: 700; color: rgba(255,255,255,0.9); line-height: 1; }
+        .pd-stat-label { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.25); margin-top: 4px; }
+        .pd-links { padding: 8px; }
+        .pd-link { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 12px; font-size: 13px; color: rgba(255,255,255,0.5); text-decoration: none; cursor: pointer; background: none; border: none; width: 100%; text-align: left; font-family: inherit; transition: all 0.15s; }
+        .pd-link:hover { background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.85); }
+        .pd-link-icon { width: 28px; height: 28px; border-radius: 8px; background: rgba(255,255,255,0.04); display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+        .pd-divider { height: 1px; background: rgba(255,255,255,0.05); margin: 4px 8px; }
+        .pd-link.danger:hover { color: #f87171; background: rgba(248,113,113,0.06); }
       `}</style>
 
       <nav>
@@ -163,6 +186,77 @@ export default function Dashboard() {
           <a href="/pricing" className="nav-link">Pricing</a>
           <a className="nav-btn nav-audit" href="/audit">New Audit →</a>
           <button className="nav-btn nav-signout" onClick={() => signOut(() => router.push("/"))}>Sign out</button>
+          <div className="profile-wrap">
+            <button className="profile-btn" onClick={() => setProfileOpen(o => !o)}>
+              {user?.imageUrl
+                ? <img src={user.imageUrl} alt="" style={{borderRadius:"50%"}} />
+                : (user?.firstName?.[0] || "C")}
+            </button>
+            {profileOpen && (
+              <>
+                <div style={{position:"fixed",inset:0,zIndex:199}} onClick={() => setProfileOpen(false)} />
+                <div className="profile-dropdown">
+                  <div className="pd-header">
+                    <div className="pd-avatar">
+                      {user?.imageUrl
+                        ? <img src={user.imageUrl} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}} />
+                        : (user?.firstName?.[0] || "C")}
+                    </div>
+                    <div>
+                      <div className="pd-name">{user?.firstName} {user?.lastName}</div>
+                      <div className="pd-email">{user?.emailAddresses?.[0]?.emailAddress}</div>
+                      <div className={"pd-plan " + (isPro ? "pro" : "free")}>
+                        {isPro ? "● Pro" : "◎ Free"}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="pd-stats">
+                    <div className="pd-stat">
+                      <div className="pd-stat-val">{audits.length}</div>
+                      <div className="pd-stat-label">Audits</div>
+                    </div>
+                    <div className="pd-stat">
+                      <div className="pd-stat-val" style={{color: audits.length ? scoreColor(Math.max(...audits.map(a => a.readiness_score))) : "rgba(255,255,255,0.2)"}}>
+                        {audits.length ? Math.max(...audits.map(a => a.readiness_score)) : "—"}
+                      </div>
+                      <div className="pd-stat-label">Best Score</div>
+                    </div>
+                    <div className="pd-stat">
+                      <div className="pd-stat-val" style={{fontSize:"16px"}}>
+                        {audits.length ? "$" + Math.max(...audits.map(a => a.deal_target)).toLocaleString() : "—"}
+                      </div>
+                      <div className="pd-stat-label">Best Deal</div>
+                    </div>
+                  </div>
+                  <div className="pd-links">
+                    <a className="pd-link" href="/audit">
+                      <span className="pd-link-icon">◎</span>
+                      Run New Audit
+                    </a>
+                    {isPro
+                      ? <button className="pd-link" onClick={() => { setProfileOpen(false); handlePortal(); }}>
+                          <span className="pd-link-icon">💳</span>
+                          Manage Subscription
+                        </button>
+                      : <button className="pd-link" onClick={() => { setProfileOpen(false); handleUpgrade(); }}>
+                          <span className="pd-link-icon">⚡</span>
+                          Upgrade to Pro
+                        </button>
+                    }
+                    <a className="pd-link" href="/pricing">
+                      <span className="pd-link-icon">◈</span>
+                      Pricing
+                    </a>
+                    <div className="pd-divider" />
+                    <button className="pd-link danger" onClick={() => signOut(() => router.push("/"))}>
+                      <span className="pd-link-icon">→</span>
+                      Sign Out
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </nav>
 
