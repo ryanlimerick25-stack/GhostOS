@@ -30,7 +30,6 @@ export default function Dashboard() {
   const [profileOpen, setProfileOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [settingsTab, setSettingsTab] = useState<'account'|'appearance'|'legal'>('account');
-  const [darkMode, setDarkMode] = useState(true);
   const profileRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -55,16 +54,6 @@ export default function Dashboard() {
     if (profileOpen) document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [profileOpen]);
-
-  useEffect(() => {
-    const saved = localStorage.getItem('ghostos-theme');
-    if (saved === 'light') setDarkMode(false);
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('ghostos-theme', darkMode ? 'dark' : 'light');
-    document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light');
-  }, [darkMode]);
 
   async function handleUpgrade() {
     setUpgrading(true);
@@ -281,13 +270,7 @@ export default function Dashboard() {
         .settings-tab:hover { color: rgba(255,255,255,0.7); }
         .settings-tab.active { color: #a78bfa; border-bottom-color: #a78bfa; }
         .settings-section-title { font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.2); margin-bottom: 4px; margin-top: 4px; }
-        .toggle-wrap { display: flex; align-items: center; gap: 10px; }
-        .toggle { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
-        .toggle input { opacity: 0; width: 0; height: 0; }
-        .toggle-slider { position: absolute; inset: 0; border-radius: 99px; background: rgba(255,255,255,0.1); cursor: pointer; transition: 0.2s; border: 1px solid rgba(255,255,255,0.1); }
-        .toggle-slider::before { content:''; position: absolute; width: 18px; height: 18px; left: 2px; top: 2px; border-radius: 50%; background: rgba(255,255,255,0.4); transition: 0.2s; }
-        .toggle input:checked + .toggle-slider { background: linear-gradient(135deg,#a78bfa,#818cf8); border-color: transparent; }
-        .toggle input:checked + .toggle-slider::before { transform: translateX(20px); background: #fff; }
+
         .legal-block { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 16px; font-size: 12px; color: rgba(255,255,255,0.35); line-height: 1.7; max-height: 180px; overflow-y: auto; }
         .legal-block::-webkit-scrollbar { width: 4px; }
         .legal-block::-webkit-scrollbar-track { background: transparent; }
@@ -608,7 +591,7 @@ export default function Dashboard() {
               <button className="modal-close" onClick={() => setSettingsOpen(false)}>✕</button>
             </div>
             <div className="settings-tabs">
-              {(["account","appearance","legal"] as const).map(tab => (
+              {(["account","legal"] as const).map(tab => (
                 <button key={tab} className={"settings-tab" + (settingsTab === tab ? " active" : "")} onClick={() => setSettingsTab(tab)}>
                   {tab.charAt(0).toUpperCase() + tab.slice(1)}
                 </button>
@@ -677,41 +660,7 @@ export default function Dashboard() {
                 </div>
               </>}
 
-              {settingsTab === "appearance" && <>
-                <div className="settings-section-title">Theme</div>
-                <div className="settings-row">
-                  <div>
-                    <div className="settings-label">Dark Mode</div>
-                    <div className="settings-sub">{darkMode ? "Dark theme active" : "Light theme active"}</div>
-                  </div>
-                  <label className="toggle">
-                    <input type="checkbox" checked={darkMode} onChange={e => setDarkMode(e.target.checked)} />
-                    <span className="toggle-slider" />
-                  </label>
-                </div>
-                <div className="settings-divider" />
-                <div className="settings-section-title">Display</div>
-                <div className="settings-row">
-                  <div>
-                    <div className="settings-label">Compact Audit Cards</div>
-                    <div className="settings-sub">Coming soon</div>
-                  </div>
-                  <label className="toggle">
-                    <input type="checkbox" disabled />
-                    <span className="toggle-slider" style={{opacity:0.4,cursor:"not-allowed"}} />
-                  </label>
-                </div>
-                <div className="settings-row">
-                  <div>
-                    <div className="settings-label">Audit Email Notifications</div>
-                    <div className="settings-sub">Receive email after each audit</div>
-                  </div>
-                  <label className="toggle">
-                    <input type="checkbox" defaultChecked disabled />
-                    <span className="toggle-slider" style={{opacity:0.4,cursor:"not-allowed"}} />
-                  </label>
-                </div>
-              </>}
+
 
               {settingsTab === "legal" && <>
                 <div className="settings-section-title">Terms of Service</div>
