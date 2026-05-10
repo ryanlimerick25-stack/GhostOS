@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useEffect, useRef, useState } from "react";
-import { useUser } from "@clerk/nextjs";
+import { useUser, useClerk } from "@clerk/nextjs";
 
 function ParticleCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -68,7 +68,20 @@ export default function LandingPage() {
   const [activeFeature, setActiveFeature] = React.useState<{icon:string,title:string,desc:string,detail:string}|null>(null);
   const [activeTestimonial, setActiveTestimonial] = React.useState<{handle:string,niche:string,quote:string,score:number,detail:string}|null>(null);
   const [menuOpen, setMenuOpen] = useState(false)
+  const [profileOpen, setProfileOpen] = useState(false)
+  const profileRef = useRef<HTMLDivElement>(null)
   const { user, isSignedIn } = useUser();
+  const { signOut } = useClerk();
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
+        setProfileOpen(false);
+      }
+    }
+    if (profileOpen) document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [profileOpen]);
 
   return (
     <>
@@ -94,6 +107,21 @@ export default function LandingPage() {
         .nav-ghost:hover { background: rgba(255,255,255,0.07); }
         .nav-primary { background: linear-gradient(135deg,var(--accent),var(--accent2)); border: none; color: #fff; margin-left: 4px; }
         .nav-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(167,139,250,0.3); }
+        .profile-wrap { position: relative; }
+        .profile-btn { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg,#a78bfa,#818cf8); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #fff; font-family: inherit; flex-shrink: 0; transition: box-shadow 0.2s; margin-left: 8px; }
+        .profile-btn:hover { box-shadow: 0 0 0 3px rgba(167,139,250,0.3); }
+        .profile-btn img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .profile-dropdown { position: absolute; top: calc(100% + 12px); right: 0; width: 260px; background: #0e0e1a; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; box-shadow: 0 24px 64px rgba(0,0,0,0.6); z-index: 200; overflow: hidden; animation: pdFade 0.15s ease; }
+        @keyframes pdFade { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
+        .pd-header { padding: 16px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .pd-name { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.9); margin-bottom: 2px; }
+        .pd-email { font-size: 11px; color: rgba(255,255,255,0.3); }
+        .pd-links { padding: 8px; }
+        .pd-link { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 10px; font-size: 13px; color: rgba(255,255,255,0.5); text-decoration: none; cursor: pointer; background: none; border: none; width: 100%; text-align: left; font-family: inherit; transition: all 0.15s; }
+        .pd-link:hover { background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.85); }
+        .pd-link-icon { width: 26px; height: 26px; border-radius: 7px; background: rgba(255,255,255,0.04); display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
+        .pd-divider { height: 1px; background: rgba(255,255,255,0.05); margin: 4px 8px; }
+        .pd-link.danger:hover { color: #f87171; background: rgba(248,113,113,0.06); }
         .nav-hamburger { display: none; background: none; border: none; cursor: pointer; padding: 8px; flex-direction: column; gap: 5px; }
         .nav-hamburger span { display: block; width: 26px; height: 2px; background: var(--text1); border-radius: 2px; }
         .nav-mobile-menu { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(4,4,10,0.97); z-index: 200; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px; }
@@ -193,12 +221,37 @@ export default function LandingPage() {
           {isSignedIn ? (
             <>
               <a className="nav-btn nav-ghost" href="/dashboard">Dashboard</a>
-              <a className="nav-btn nav-primary" href="/audit" style={{display:"flex",alignItems:"center",gap:"8px"}}>
-                <span style={{width:"24px",height:"24px",borderRadius:"50%",background:"rgba(167,139,250,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",fontWeight:600,color:"#a78bfa"}}>
-                  {user?.firstName?.[0] || user?.emailAddresses?.[0]?.emailAddress?.[0]?.toUpperCase() || "?"}
-                </span>
-                {user?.firstName || "Account"}
-              </a>
+              <a className="nav-btn nav-ghost" href="/audit">New Audit →</a>
+              <div className="profile-wrap" ref={profileRef}>
+                <button className="profile-btn" onClick={() => setProfileOpen(o => !o)}>
+                  {user?.imageUrl
+                    ? <img src={user.imageUrl} alt="" style={{borderRadius:"50%"}} />
+                    : (user?.firstName?.[0] || "C")}
+                </button>
+                {profileOpen && (
+                  <div className="profile-dropdown">
+                    <div className="pd-header">
+                      <div className="pd-name">{user?.firstName} {user?.lastName}</div>
+                      <div className="pd-email">{user?.emailAddresses?.[0]?.emailAddress}</div>
+                    </div>
+                    <div className="pd-links">
+                      <a className="pd-link" href="/dashboard">
+                        <span className="pd-link-icon">◈</span>Dashboard
+                      </a>
+                      <a className="pd-link" href="/audit">
+                        <span className="pd-link-icon">◎</span>New Audit
+                      </a>
+                      <a className="pd-link" href="/pricing">
+                        <span className="pd-link-icon">◇</span>Pricing
+                      </a>
+                      <div className="pd-divider" />
+                      <button className="pd-link danger" onClick={() => { setProfileOpen(false); signOut().then(() => { window.location.href = "/"; }); }}>
+                        <span className="pd-link-icon">→</span>Sign Out
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </>
           ) : (
             <>
