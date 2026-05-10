@@ -59,12 +59,7 @@ const features = [
   { icon: "✦", title: "Media Kit Positioning", desc: "Know how to position yourself in your media kit so brands immediately understand your value proposition.", detail: "Most media kits fail because they lead with vanity metrics instead of value. Your positioning statement answers the one question every brand manager has: why should I pay this creator instead of someone else? You get a positioning headline, a value proposition paragraph, and three pitch bullets all tailored to your niche and audience. Drop them straight into your media kit." },
 ];
 
-const stats = [
-  { value: "2,400+", label: "Creators Audited" },
-  { value: "$340", label: "Avg First Deal Value" },
-  { value: "14 days", label: "Avg Time to First Deal" },
-  { value: "91%", label: "Audit Accuracy Rate" },
-];
+const stats: {value:string,label:string}[] = [];
 
 const testimonials: {handle:string,niche:string,quote:string,score:number,detail:string}[] = [
 ];
@@ -229,7 +224,7 @@ export default function LandingPage() {
             <a className="btn-primary" href="/audit">Run Your Free Audit →</a>
             <button className="btn-secondary" onClick={() => document.getElementById('features')?.scrollIntoView({behavior:'smooth'})}>See How It Works</button>
           </div>
-          <p className="hero-note">2,400+ creators audited · Free to use · Results in 30 seconds</p>
+          <p className="hero-note">Free to use · Results in 30 seconds</p>
         </div>
       </section>
 
