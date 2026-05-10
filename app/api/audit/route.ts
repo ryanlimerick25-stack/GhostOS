@@ -255,58 +255,59 @@ Rules:
 
         if (email) {
           await resend.emails.send({
-            from: "GhostOS <onboarding@resend.dev>",
+            from: "GhostOS <hello@ghostos.live>",
             to: email,
             subject: `Your audit is ready — you scored ${score}/100`,
             html: `<!DOCTYPE html>
 <html>
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><style>
-  body { margin: 0; padding: 0; background: #04040a; font-family: 'Helvetica Neue', Arial, sans-serif; color: #e8e6e1; }
-  .wrap { max-width: 560px; margin: 0 auto; padding: 48px 24px; }
-  .logo { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 40px; }
-  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #a78bfa; margin-right: 6px; }
-  h1 { font-size: 28px; font-weight: 700; color: #fff; line-height: 1.2; margin: 0 0 16px; letter-spacing: -0.02em; }
-  p { font-size: 15px; color: rgba(255,255,255,0.55); line-height: 1.7; margin: 0 0 16px; }
-  .highlight { color: rgba(255,255,255,0.85); }
-  .score-box { background: rgba(167,139,250,0.08); border: 1px solid rgba(167,139,250,0.2); border-radius: 16px; padding: 28px; margin: 28px 0; text-align: center; }
-  .score-num { font-size: 64px; font-weight: 700; color: #a78bfa; line-height: 1; margin-bottom: 8px; }
-  .score-label { font-size: 13px; color: rgba(255,255,255,0.35); letter-spacing: 0.1em; text-transform: uppercase; }
-  .rate-row { display: flex; justify-content: space-between; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 18px 22px; margin: 16px 0; }
-  .rate-label { font-size: 13px; color: rgba(255,255,255,0.4); }
-  .rate-value { font-size: 18px; font-weight: 600; color: #fff; }
-  .btn { display: inline-block; margin: 24px 0; padding: 14px 32px; background: linear-gradient(135deg,#a78bfa,#818cf8); color: #fff; text-decoration: none; border-radius: 12px; font-weight: 600; font-size: 15px; }
-  .divider { height: 1px; background: rgba(255,255,255,0.06); margin: 32px 0; }
-  .footer { font-size: 12px; color: rgba(255,255,255,0.2); line-height: 1.6; }
-  .footer a { color: rgba(167,139,250,0.6); text-decoration: none; }
-</style></head>
-<body>
-<div class="wrap">
-  <div class="logo"><span class="dot"></span>GhostOS</div>
-  <h1>${name}, your audit results are in.</h1>
-  <p>We just finished analyzing <span class="highlight">${handle}</span>. Here's the summary:</p>
-
-  <div class="score-box">
-    <div class="score-num">${score}</div>
-    <div class="score-label">Brand Deal Readiness Score</div>
-  </div>
-
-  <div class="rate-row">
-    <div>
-      <div class="rate-label">Estimated First Deal Range</div>
-      <div class="rate-value">$${low.toLocaleString()} – $${high.toLocaleString()}</div>
-    </div>
-  </div>
-
-  <p>Your full results include your rate card, cold outreach templates, media kit positioning, and a 14-day action plan. Log in to view everything.</p>
-
-  <a href="https://ghostos.live/dashboard" class="btn">View Full Results →</a>
-
-  <div class="divider"></div>
-  <div class="footer">
-    You're receiving this because you ran an audit at ghostos.live.<br>
-    <a href="https://ghostos.live">ghostos.live</a> · Questions? Reply to this email.
-  </div>
-</div>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head>
+<body style="margin:0;padding:0;background-color:#04040a;font-family:Arial,Helvetica,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#04040a;">
+  <tr><td align="center" style="padding:48px 24px;">
+    <table width="560" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;width:100%;">
+      <tr><td style="padding-bottom:40px;">
+        <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background-color:#a78bfa;margin-right:6px;vertical-align:middle;"></span>
+        <span style="font-size:20px;font-weight:700;color:#ffffff;vertical-align:middle;">GhostOS</span>
+      </td></tr>
+      <tr><td style="padding-bottom:12px;">
+        <h1 style="margin:0;font-size:28px;font-weight:700;color:#ffffff;line-height:1.2;letter-spacing:-0.02em;">${name}, your audit results are in.</h1>
+      </td></tr>
+      <tr><td style="padding-bottom:24px;">
+        <p style="margin:0;font-size:15px;color:rgba(255,255,255,0.55);line-height:1.7;">We just finished analyzing <span style="color:rgba(255,255,255,0.85);">${handle}</span>. Here&#39;s the summary:</p>
+      </td></tr>
+      <tr><td style="padding-bottom:16px;">
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#1a1130;border:1px solid rgba(167,139,250,0.25);border-radius:16px;">
+          <tr><td align="center" style="padding:32px 24px;">
+            <div style="font-size:72px;font-weight:700;color:#a78bfa;line-height:1;margin-bottom:10px;">${score}</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.35);letter-spacing:0.12em;text-transform:uppercase;">Brand Deal Readiness Score</div>
+          </td></tr>
+        </table>
+      </td></tr>
+      <tr><td style="padding-bottom:24px;">
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#0d0d14;border:1px solid rgba(255,255,255,0.08);border-radius:12px;">
+          <tr><td style="padding:18px 22px;">
+            <div style="font-size:12px;color:rgba(255,255,255,0.4);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px;">Estimated First Deal Range</div>
+            <div style="font-size:22px;font-weight:600;color:#ffffff;">$${low} &#8211; $${high}</div>
+          </td></tr>
+        </table>
+      </td></tr>
+      <tr><td style="padding-bottom:24px;">
+        <p style="margin:0;font-size:15px;color:rgba(255,255,255,0.55);line-height:1.7;">Your full results include your <span style="color:rgba(255,255,255,0.8);">rate card</span>, <span style="color:rgba(255,255,255,0.8);">cold outreach templates</span>, <span style="color:rgba(255,255,255,0.8);">media kit positioning</span>, and a <span style="color:rgba(255,255,255,0.8);">14-day action plan</span>. Log in to view everything.</p>
+      </td></tr>
+      <tr><td style="padding-bottom:40px;">
+        <table cellpadding="0" cellspacing="0" border="0">
+          <tr><td align="center" style="border-radius:12px;background-color:#8b5cf6;">
+            <a href="https://ghostos.live/dashboard" style="display:inline-block;padding:14px 32px;color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;">View Full Results &#8594;</a>
+          </td></tr>
+        </table>
+      </td></tr>
+      <tr><td style="border-top:1px solid rgba(255,255,255,0.07);padding-top:28px;">
+        <p style="margin:0;font-size:12px;color:rgba(255,255,255,0.2);line-height:1.7;">You&#39;re receiving this because you ran an audit at ghostos.live.<br>
+        <a href="https://ghostos.live" style="color:rgba(167,139,250,0.6);text-decoration:none;">ghostos.live</a> &middot; Questions? Reply to this email.</p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
 </body>
 </html>`,
           });
