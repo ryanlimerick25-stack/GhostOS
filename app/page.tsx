@@ -252,6 +252,10 @@ export default function LandingPage() {
                         <span className="pd-link-icon">?</span>How It Works
                       </button>
                       <div className="pd-divider" />
+                      <button className="pd-link" onClick={() => { const t = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light'; document.documentElement.setAttribute('data-theme', t); localStorage.setItem('ghostos-theme', t); setProfileOpen(false); }}>
+                        <span className="pd-link-icon">◑</span>Toggle Theme
+                      </button>
+                      <div className="pd-divider" />
                       <button className="pd-link danger" onClick={() => { setProfileOpen(false); signOut().then(() => { window.location.href = "/"; }); }}>
                         <span className="pd-link-icon">→</span>Sign Out
                       </button>
