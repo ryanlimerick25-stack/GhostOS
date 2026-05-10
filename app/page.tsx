@@ -173,8 +173,7 @@ export default function LandingPage() {
         <div className="nav-mobile-menu">
           <button onClick={() => setMenuOpen(false)} style={{position:"absolute",top:"24px",right:"24px",background:"none",border:"none",color:"var(--text1)",fontSize:"36px",cursor:"pointer"}}>×</button>
           <button onClick={() => { document.getElementById('features')?.scrollIntoView({behavior:'smooth'}); setMenuOpen(false); }} style={{fontSize:"28px",color:"rgba(255,255,255,0.9)",background:"none",border:"none",fontFamily:"inherit",cursor:"pointer"}}>Features</button>
-          <button onClick={() => { document.getElementById('testimonials')?.scrollIntoView({behavior:'smooth'}); setMenuOpen(false); }} style={{fontSize:"28px",color:"rgba(255,255,255,0.9)",background:"none",border:"none",fontFamily:"inherit",cursor:"pointer"}}>Reviews</button>
-          <a href="/pricing" onClick={() => setMenuOpen(false)} style={{fontSize:"28px",color:"rgba(255,255,255,0.9)",textDecoration:"none"}}>Pricing</a>
+<a href="/pricing" onClick={() => setMenuOpen(false)} style={{fontSize:"28px",color:"rgba(255,255,255,0.9)",textDecoration:"none"}}>Pricing</a>
           <a href="/deal-analyzer" onClick={() => setMenuOpen(false)} style={{fontSize:"28px",color:"rgba(255,255,255,0.9)",textDecoration:"none"}}>Deal Analyzer</a>
           {isSignedIn ? (
               <a href="/dashboard" onClick={() => setMenuOpen(false)} style={{fontSize:"28px",color:"rgba(255,255,255,0.9)",textDecoration:"none"}}>Dashboard</a>
@@ -189,8 +188,7 @@ export default function LandingPage() {
         <a className="nav-logo" href="/"><div className="nav-dot" />GhostOS</a>
         <div className="nav-links">
           <button className="nav-link" onClick={() => document.getElementById('features')?.scrollIntoView({behavior:'smooth'})}>Features</button>
-          <button className="nav-link" onClick={() => document.getElementById('testimonials')?.scrollIntoView({behavior:'smooth'})}>Reviews</button>
-          <a className="nav-link" href="/pricing">Pricing</a>
+<a className="nav-link" href="/pricing">Pricing</a>
           <a className="nav-link" href="/deal-analyzer">Deal Analyzer</a>
           {isSignedIn ? (
             <>
