@@ -67,7 +67,7 @@ export async function POST(req: Request) {
     if (cachedAudit?.result) {
       // Save to user's history if logged in
       if (userId) {
-        try { await supabase.from("audits").insert({
+        const { error: cacheInsertError } = await supabase.from("audits").insert({
           user_id: userId,
           followers: input.followers,
           avg_views: input.avgViews,
@@ -80,7 +80,8 @@ export async function POST(req: Request) {
           deal_target: cachedAudit.result.estimated_first_deal_range_usd.target,
           deal_high: cachedAudit.result.estimated_first_deal_range_usd.high,
           result: cachedAudit.result,
-        }); } catch (_) {}
+        });
+        if (cacheInsertError) console.error("CACHE_INSERT_ERROR:", cacheInsertError);
       }
       return Response.json({ data: cachedAudit.result, cached: true });
     }
