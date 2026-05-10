@@ -1,6 +1,6 @@
 "use client";
 import { useUser, useClerk } from "@clerk/nextjs";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 
 type Audit = {
@@ -28,6 +28,8 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [expandedAudit, setExpandedAudit] = useState<string | null>(null);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const profileRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!isLoaded) return;
@@ -41,6 +43,16 @@ export default function Dashboard() {
       setLoading(false);
     });
   }, [isLoaded, user]);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
+        setProfileOpen(false);
+      }
+    }
+    if (profileOpen) document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [profileOpen]);
 
   async function handleUpgrade() {
     setUpgrading(true);
@@ -177,6 +189,23 @@ export default function Dashboard() {
         .pd-link-icon { width: 28px; height: 28px; border-radius: 8px; background: rgba(255,255,255,0.04); display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
         .pd-divider { height: 1px; background: rgba(255,255,255,0.05); margin: 4px 8px; }
         .pd-link.danger:hover { color: #f87171; background: rgba(248,113,113,0.06); }
+        .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 300; display: flex; align-items: center; justify-content: center; padding: 24px; backdrop-filter: blur(4px); }
+        .modal { background: #0e0e1a; border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; width: 100%; max-width: 480px; overflow: hidden; }
+        .modal-header { padding: 24px 28px; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: space-between; }
+        .modal-title { font-family: "Playfair Display", serif; font-size: 22px; font-weight: 600; color: rgba(255,255,255,0.9); }
+        .modal-close { width: 32px; height: 32px; border-radius: 8px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.4); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; font-family: inherit; transition: all 0.15s; }
+        .modal-close:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.8); }
+        .modal-body { padding: 24px 28px; display: flex; flex-direction: column; gap: 20px; }
+        .settings-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+        .settings-label { font-size: 14px; color: rgba(255,255,255,0.7); }
+        .settings-sub { font-size: 12px; color: rgba(255,255,255,0.3); margin-top: 2px; }
+        .settings-value { font-size: 13px; color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 6px 12px; }
+        .settings-btn { padding: 8px 18px; border-radius: 10px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit; transition: all 0.15s; border: none; }
+        .settings-btn-ghost { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); }
+        .settings-btn-ghost:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.8); }
+        .settings-btn-danger { background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.2); color: #f87171; }
+        .settings-btn-danger:hover { background: rgba(248,113,113,0.15); }
+        .settings-divider { height: 1px; background: rgba(255,255,255,0.05); }
       `}</style>
 
       <nav>
@@ -186,7 +215,7 @@ export default function Dashboard() {
           <a href="/pricing" className="nav-link">Pricing</a>
           <a className="nav-btn nav-audit" href="/audit">New Audit →</a>
           <button className="nav-btn nav-signout" onClick={() => signOut(() => router.push("/"))}>Sign out</button>
-          <div className="profile-wrap">
+          <div className="profile-wrap" ref={profileRef}>
             <button className="profile-btn" onClick={() => setProfileOpen(o => !o)}>
               {user?.imageUrl
                 ? <img src={user.imageUrl} alt="" style={{borderRadius:"50%"}} />
@@ -194,7 +223,6 @@ export default function Dashboard() {
             </button>
             {profileOpen && (
               <>
-                <div style={{position:"fixed",inset:0,zIndex:99}} onClick={() => setProfileOpen(false)} />
                 <div className="profile-dropdown">
                   <div className="pd-header">
                     <div className="pd-avatar">
@@ -247,6 +275,10 @@ export default function Dashboard() {
                       <span className="pd-link-icon">◈</span>
                       Pricing
                     </a>
+                    <button className="pd-link" onClick={() => { setProfileOpen(false); setSettingsOpen(true); }}>
+                      <span className="pd-link-icon">⚙</span>
+                      Settings
+                    </button>
                     <div className="pd-divider" />
                     <button className="pd-link danger" onClick={() => signOut(() => router.push("/"))}>
                       <span className="pd-link-icon">→</span>
@@ -480,6 +512,58 @@ export default function Dashboard() {
         </>
         )}
       </div>
+    {settingsOpen && (
+        <div className="modal-backdrop" onClick={e => { if (e.target === e.currentTarget) setSettingsOpen(false); }}>
+          <div className="modal">
+            <div className="modal-header">
+              <div className="modal-title">Settings</div>
+              <button className="modal-close" onClick={() => setSettingsOpen(false)}>✕</button>
+            </div>
+            <div className="modal-body">
+              <div className="settings-row">
+                <div>
+                  <div className="settings-label">Name</div>
+                  <div className="settings-sub">Managed via your Clerk account</div>
+                </div>
+                <div className="settings-value">{user?.firstName} {user?.lastName}</div>
+              </div>
+              <div className="settings-row">
+                <div>
+                  <div className="settings-label">Email</div>
+                  <div className="settings-sub">Used for audit result emails</div>
+                </div>
+                <div className="settings-value" style={{fontSize:"11px"}}>{user?.emailAddresses?.[0]?.emailAddress}</div>
+              </div>
+              <div className="settings-divider" />
+              <div className="settings-row">
+                <div>
+                  <div className="settings-label">Plan</div>
+                  <div className="settings-sub">{isPro ? "Unlimited audits" : "3 free audits total"}</div>
+                </div>
+                {isPro
+                  ? <button className="settings-btn settings-btn-ghost" onClick={() => { setSettingsOpen(false); handlePortal(); }}>Manage →</button>
+                  : <button className="settings-btn" style={{background:"linear-gradient(135deg,#a78bfa,#818cf8)",color:"#fff"}} onClick={() => { setSettingsOpen(false); handleUpgrade(); }}>Upgrade →</button>
+                }
+              </div>
+              <div className="settings-row">
+                <div>
+                  <div className="settings-label">Audits Run</div>
+                  <div className="settings-sub">All time</div>
+                </div>
+                <div className="settings-value">{audits.length} audit{audits.length !== 1 ? "s" : ""}</div>
+              </div>
+              <div className="settings-divider" />
+              <div className="settings-row">
+                <div>
+                  <div className="settings-label">Sign Out</div>
+                  <div className="settings-sub">You'll be returned to the homepage</div>
+                </div>
+                <button className="settings-btn settings-btn-danger" onClick={() => signOut(() => router.push("/"))}>Sign Out</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
