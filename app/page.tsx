@@ -348,7 +348,7 @@ export default function LandingPage() {
             <h2 className="cta-title">Ready to find out<br />what you're worth?</h2>
             <p className="cta-desc">Run your free audit in 30 seconds. No signup required to get started.</p>
             <div className="cta-btns">
-              <a className="btn-primary" href="/audit">Run Free Audit →</a>
+              <a className="btn-primary" href="/audit">{isSignedIn ? "Run Audit →" : "Run Free Audit →"}</a>
               {!isSignedIn && <a className="btn-secondary" href="/sign-up">Create Account</a>}
             </div>
           </div>
