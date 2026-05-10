@@ -63,16 +63,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     localStorage.setItem('ghostos-theme', darkMode ? 'dark' : 'light');
-    const root = document.documentElement;
-    if (darkMode) {
-      root.setAttribute('data-theme', 'dark');
-      document.body.style.background = '#04040a';
-      document.body.style.color = 'rgba(255,255,255,0.9)';
-    } else {
-      root.setAttribute('data-theme', 'light');
-      document.body.style.background = '#f0eff5';
-      document.body.style.color = 'rgba(10,8,20,0.9)';
-    }
+    document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light');
   }, [darkMode]);
 
   async function handleUpgrade() {
