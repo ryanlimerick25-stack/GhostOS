@@ -26,7 +26,7 @@ export default function SignUpPage() {
           },
           elements: {
             rootBox: { width: "100%", maxWidth: "420px" },
-            card: { background: "#0d0d18", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "20px", boxShadow: "0 24px 64px rgba(0,0,0,0.5)", padding: "32px" },
+            card: { background: "#0d0d18", border: "none", borderRadius: "20px", boxShadow: "none", padding: "32px" }, cardBox: { boxShadow: "none", border: "none" },
             headerTitle: { display: "none" },
             headerSubtitle: { display: "none" },
             socialButtonsBlockButton: { background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.8)", borderRadius: "10px" },
