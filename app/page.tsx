@@ -279,7 +279,7 @@ export default function LandingPage() {
           <p className="hero-sub">The audit tool built for TikTok creators.</p>
           <p className="hero-desc">You have the audience. You have the influence.<br /><strong>Now find out exactly what brands should pay you</strong> — and how to make them say yes.</p>
           <div className="hero-ctas">
-            <a className="btn-primary" href="/audit">Run Your Free Audit →</a>
+            <a className="btn-primary" href="/audit">{isSignedIn ? "Run Audit →" : "Run Your Free Audit →"}</a>
             <button className="btn-secondary" onClick={() => document.getElementById('features')?.scrollIntoView({behavior:'smooth'})}>See How It Works</button>
           </div>
           <p className="hero-note">Free to use · Results in 30 seconds</p>
