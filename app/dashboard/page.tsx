@@ -159,7 +159,7 @@ export default function Dashboard() {
         .profile-btn { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg,#a78bfa,#818cf8); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #fff; font-family: inherit; flex-shrink: 0; transition: box-shadow 0.2s; }
         .profile-btn:hover { box-shadow: 0 0 0 3px rgba(167,139,250,0.3); }
         .profile-btn img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-        .profile-dropdown { position: absolute; top: calc(100% + 12px); right: 0; width: 300px; background: #0e0e1a; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; box-shadow: 0 24px 64px rgba(0,0,0,0.6); z-index: 200; overflow: hidden; animation: fadeIn 0.15s ease; }
+        .profile-dropdown { position: absolute; top: calc(100% + 12px); right: 0; width: 300px; background: #0e0e1a; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; box-shadow: 0 24px 64px rgba(0,0,0,0.6); z-index: 200; overflow: hidden; animation: fadeIn 0.15s ease; pointer-events: all; }
         .pd-header { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; gap: 14px; }
         .pd-avatar { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg,#a78bfa,#818cf8); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; color: #fff; flex-shrink: 0; overflow: hidden; }
         .pd-name { font-size: 15px; font-weight: 600; color: rgba(255,255,255,0.9); margin-bottom: 2px; }
@@ -194,7 +194,7 @@ export default function Dashboard() {
             </button>
             {profileOpen && (
               <>
-                <div style={{position:"fixed",inset:0,zIndex:199}} onClick={() => setProfileOpen(false)} />
+                <div style={{position:"fixed",inset:0,zIndex:99}} onClick={() => setProfileOpen(false)} />
                 <div className="profile-dropdown">
                   <div className="pd-header">
                     <div className="pd-avatar">
