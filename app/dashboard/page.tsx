@@ -29,6 +29,8 @@ export default function Dashboard() {
   const [expandedAudit, setExpandedAudit] = useState<string | null>(null);
   const [profileOpen, setProfileOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [settingsTab, setSettingsTab] = useState<'account'|'appearance'|'legal'>('account');
+  const [darkMode, setDarkMode] = useState(true);
   const profileRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -53,6 +55,27 @@ export default function Dashboard() {
     if (profileOpen) document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [profileOpen]);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (darkMode) {
+      root.style.setProperty('--bg', '#04040a');
+      root.style.setProperty('--surface', 'rgba(255,255,255,0.03)');
+      root.style.setProperty('--border', 'rgba(255,255,255,0.07)');
+      root.style.setProperty('--text', 'rgba(255,255,255,0.9)');
+      root.style.setProperty('--text-muted', 'rgba(255,255,255,0.3)');
+      document.body.style.background = '#04040a';
+      document.body.style.color = 'rgba(255,255,255,0.9)';
+    } else {
+      root.style.setProperty('--bg', '#f5f4f0');
+      root.style.setProperty('--surface', 'rgba(0,0,0,0.04)');
+      root.style.setProperty('--border', 'rgba(0,0,0,0.08)');
+      root.style.setProperty('--text', 'rgba(0,0,0,0.85)');
+      root.style.setProperty('--text-muted', 'rgba(0,0,0,0.4)');
+      document.body.style.background = '#f5f4f0';
+      document.body.style.color = 'rgba(0,0,0,0.85)';
+    }
+  }, [darkMode]);
 
   async function handleUpgrade() {
     setUpgrading(true);
@@ -206,6 +229,24 @@ export default function Dashboard() {
         .settings-btn-danger { background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.2); color: #f87171; }
         .settings-btn-danger:hover { background: rgba(248,113,113,0.15); }
         .settings-divider { height: 1px; background: rgba(255,255,255,0.05); }
+        .settings-tabs { display: flex; gap: 4px; padding: 16px 28px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .settings-tab { padding: 8px 16px; border-radius: 8px 8px 0 0; font-size: 13px; font-weight: 500; cursor: pointer; background: none; border: none; font-family: inherit; color: rgba(255,255,255,0.35); transition: all 0.15s; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+        .settings-tab:hover { color: rgba(255,255,255,0.7); }
+        .settings-tab.active { color: #a78bfa; border-bottom-color: #a78bfa; }
+        .settings-section-title { font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.2); margin-bottom: 4px; margin-top: 4px; }
+        .toggle-wrap { display: flex; align-items: center; gap: 10px; }
+        .toggle { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
+        .toggle input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider { position: absolute; inset: 0; border-radius: 99px; background: rgba(255,255,255,0.1); cursor: pointer; transition: 0.2s; border: 1px solid rgba(255,255,255,0.1); }
+        .toggle-slider::before { content:''; position: absolute; width: 18px; height: 18px; left: 2px; top: 2px; border-radius: 50%; background: rgba(255,255,255,0.4); transition: 0.2s; }
+        .toggle input:checked + .toggle-slider { background: linear-gradient(135deg,#a78bfa,#818cf8); border-color: transparent; }
+        .toggle input:checked + .toggle-slider::before { transform: translateX(20px); background: #fff; }
+        .legal-block { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 16px; font-size: 12px; color: rgba(255,255,255,0.35); line-height: 1.7; max-height: 180px; overflow-y: auto; }
+        .legal-block::-webkit-scrollbar { width: 4px; }
+        .legal-block::-webkit-scrollbar-track { background: transparent; }
+        .legal-block::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 99px; }
+        .modal { background: #0e0e1a; border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; width: 100%; max-width: 520px; overflow: hidden; max-height: 90vh; display: flex; flex-direction: column; }
+        .modal-body { padding: 24px 28px; display: flex; flex-direction: column; gap: 16px; overflow-y: auto; }
       `}</style>
 
       <nav>
@@ -519,47 +560,139 @@ export default function Dashboard() {
               <div className="modal-title">Settings</div>
               <button className="modal-close" onClick={() => setSettingsOpen(false)}>✕</button>
             </div>
+            <div className="settings-tabs">
+              {(["account","appearance","legal"] as const).map(tab => (
+                <button key={tab} className={"settings-tab" + (settingsTab === tab ? " active" : "")} onClick={() => setSettingsTab(tab)}>
+                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                </button>
+              ))}
+            </div>
             <div className="modal-body">
-              <div className="settings-row">
-                <div>
-                  <div className="settings-label">Name</div>
-                  <div className="settings-sub">Managed via your Clerk account</div>
+
+              {settingsTab === "account" && <>
+                <div className="settings-section-title">Profile</div>
+                <div className="settings-row">
+                  <div>
+                    <div className="settings-label">Name</div>
+                    <div className="settings-sub">Managed via your account</div>
+                  </div>
+                  <div className="settings-value">{user?.firstName} {user?.lastName}</div>
                 </div>
-                <div className="settings-value">{user?.firstName} {user?.lastName}</div>
-              </div>
-              <div className="settings-row">
-                <div>
-                  <div className="settings-label">Email</div>
-                  <div className="settings-sub">Used for audit result emails</div>
+                <div className="settings-row">
+                  <div>
+                    <div className="settings-label">Email</div>
+                    <div className="settings-sub">Audit results are sent here</div>
+                  </div>
+                  <div className="settings-value" style={{fontSize:"11px",maxWidth:"160px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{user?.emailAddresses?.[0]?.emailAddress}</div>
                 </div>
-                <div className="settings-value" style={{fontSize:"11px"}}>{user?.emailAddresses?.[0]?.emailAddress}</div>
-              </div>
-              <div className="settings-divider" />
-              <div className="settings-row">
-                <div>
-                  <div className="settings-label">Plan</div>
-                  <div className="settings-sub">{isPro ? "Unlimited audits" : "3 free audits total"}</div>
+                <div className="settings-row">
+                  <div>
+                    <div className="settings-label">Member Since</div>
+                    <div className="settings-sub">Account creation date</div>
+                  </div>
+                  <div className="settings-value">{user?.createdAt ? new Date(user.createdAt).toLocaleDateString("en-US",{month:"short",year:"numeric"}) : "—"}</div>
                 </div>
-                {isPro
-                  ? <button className="settings-btn settings-btn-ghost" onClick={() => { setSettingsOpen(false); handlePortal(); }}>Manage →</button>
-                  : <button className="settings-btn" style={{background:"linear-gradient(135deg,#a78bfa,#818cf8)",color:"#fff"}} onClick={() => { setSettingsOpen(false); handleUpgrade(); }}>Upgrade →</button>
-                }
-              </div>
-              <div className="settings-row">
-                <div>
-                  <div className="settings-label">Audits Run</div>
-                  <div className="settings-sub">All time</div>
+                <div className="settings-divider" />
+                <div className="settings-section-title">Subscription</div>
+                <div className="settings-row">
+                  <div>
+                    <div className="settings-label">Current Plan</div>
+                    <div className="settings-sub">{isPro ? "Unlimited audits · $36/mo" : "3 free audits total"}</div>
+                  </div>
+                  {isPro
+                    ? <button className="settings-btn settings-btn-ghost" onClick={() => { setSettingsOpen(false); handlePortal(); }}>Manage →</button>
+                    : <button className="settings-btn" style={{background:"linear-gradient(135deg,#a78bfa,#818cf8)",color:"#fff",border:"none"}} onClick={() => { setSettingsOpen(false); handleUpgrade(); }}>Upgrade →</button>
+                  }
                 </div>
-                <div className="settings-value">{audits.length} audit{audits.length !== 1 ? "s" : ""}</div>
-              </div>
-              <div className="settings-divider" />
-              <div className="settings-row">
-                <div>
-                  <div className="settings-label">Sign Out</div>
-                  <div className="settings-sub">You'll be returned to the homepage</div>
+                <div className="settings-row">
+                  <div>
+                    <div className="settings-label">Audits Run</div>
+                    <div className="settings-sub">{isPro ? "Unlimited" : `${audits.length} of 3 free used`}</div>
+                  </div>
+                  <div className="settings-value">{audits.length} total</div>
                 </div>
-                <button className="settings-btn settings-btn-danger" onClick={() => signOut(() => router.push("/"))}>Sign Out</button>
-              </div>
+                {audits.length > 0 && (
+                  <div className="settings-row">
+                    <div>
+                      <div className="settings-label">Best Score</div>
+                      <div className="settings-sub">Across all audits</div>
+                    </div>
+                    <div className="settings-value" style={{color: scoreColor(Math.max(...audits.map(a => a.readiness_score)))}}>{Math.max(...audits.map(a => a.readiness_score))} / 100</div>
+                  </div>
+                )}
+                <div className="settings-divider" />
+                <div className="settings-row">
+                  <div>
+                    <div className="settings-label">Sign Out</div>
+                    <div className="settings-sub">You'll be returned to the homepage</div>
+                  </div>
+                  <button className="settings-btn settings-btn-danger" onClick={() => signOut(() => router.push("/"))}>Sign Out</button>
+                </div>
+              </>}
+
+              {settingsTab === "appearance" && <>
+                <div className="settings-section-title">Theme</div>
+                <div className="settings-row">
+                  <div>
+                    <div className="settings-label">Dark Mode</div>
+                    <div className="settings-sub">{darkMode ? "Dark theme active" : "Light theme active"}</div>
+                  </div>
+                  <label className="toggle">
+                    <input type="checkbox" checked={darkMode} onChange={e => setDarkMode(e.target.checked)} />
+                    <span className="toggle-slider" />
+                  </label>
+                </div>
+                <div className="settings-divider" />
+                <div className="settings-section-title">Display</div>
+                <div className="settings-row">
+                  <div>
+                    <div className="settings-label">Compact Audit Cards</div>
+                    <div className="settings-sub">Coming soon</div>
+                  </div>
+                  <label className="toggle">
+                    <input type="checkbox" disabled />
+                    <span className="toggle-slider" style={{opacity:0.4,cursor:"not-allowed"}} />
+                  </label>
+                </div>
+                <div className="settings-row">
+                  <div>
+                    <div className="settings-label">Audit Email Notifications</div>
+                    <div className="settings-sub">Receive email after each audit</div>
+                  </div>
+                  <label className="toggle">
+                    <input type="checkbox" defaultChecked disabled />
+                    <span className="toggle-slider" style={{opacity:0.4,cursor:"not-allowed"}} />
+                  </label>
+                </div>
+              </>}
+
+              {settingsTab === "legal" && <>
+                <div className="settings-section-title">Terms of Service</div>
+                <div className="legal-block">
+                  <strong style={{color:"rgba(255,255,255,0.6)"}}>Last updated: May 2026</strong><br /><br />
+                  By using GhostOS ("the Service"), you agree to these Terms. GhostOS provides brand deal intelligence tools for TikTok creators. The Service is provided for informational purposes only.<br /><br />
+                  <strong style={{color:"rgba(255,255,255,0.5)"}}>Use of Service.</strong> You must be 18 or older to use GhostOS. You agree not to misuse the Service, attempt to reverse-engineer any part of the platform, or use automated tools to scrape or overload our systems.<br /><br />
+                  <strong style={{color:"rgba(255,255,255,0.5)"}}>Accuracy of Results.</strong> Audit scores, deal range estimates, and brand recommendations are generated by AI and are for informational purposes only. GhostOS makes no guarantee that following our recommendations will result in brand deals or specific revenue outcomes.<br /><br />
+                  <strong style={{color:"rgba(255,255,255,0.5)"}}>Subscriptions & Billing.</strong> Pro subscriptions are billed at $36/month. You may cancel at any time via the billing portal. Refunds are handled on a case-by-case basis — contact us at hello@ghostos.live.<br /><br />
+                  <strong style={{color:"rgba(255,255,255,0.5)"}}>Termination.</strong> We reserve the right to suspend or terminate accounts that violate these Terms at our discretion.<br /><br />
+                  <strong style={{color:"rgba(255,255,255,0.5)"}}>Liability.</strong> GhostOS is not liable for any indirect, incidental, or consequential damages arising from your use of the Service. Our total liability is limited to the amount you paid us in the 30 days prior to the claim.
+                </div>
+                <div className="settings-section-title" style={{marginTop:"8px"}}>Privacy Policy</div>
+                <div className="legal-block">
+                  <strong style={{color:"rgba(255,255,255,0.6)"}}>Last updated: May 2026</strong><br /><br />
+                  GhostOS collects only the data necessary to provide the Service. We do not sell your personal data to third parties.<br /><br />
+                  <strong style={{color:"rgba(255,255,255,0.5)"}}>Data We Collect.</strong> Name, email address (via Clerk authentication), TikTok handle (optional), and audit inputs you provide (followers, views, engagement rate, niche, audience geography).<br /><br />
+                  <strong style={{color:"rgba(255,255,255,0.5)"}}>How We Use It.</strong> To generate your audit results, send you audit confirmation emails via Resend, and store your audit history in Supabase so you can track progress over time.<br /><br />
+                  <strong style={{color:"rgba(255,255,255,0.5)"}}>Third Parties.</strong> We use Clerk (authentication), Supabase (database), Stripe (payments), Resend (email), and OpenAI (AI analysis). Each has their own privacy policy. We do not share your data with brands or advertisers.<br /><br />
+                  <strong style={{color:"rgba(255,255,255,0.5)"}}>Data Retention.</strong> Your audit history is stored until you delete your account. You may request deletion of your data at any time by emailing hello@ghostos.live.<br /><br />
+                  <strong style={{color:"rgba(255,255,255,0.5)"}}>Cookies.</strong> We use only essential cookies required for authentication. No advertising or tracking cookies are used.
+                </div>
+                <div style={{display:"flex",gap:"10px",flexWrap:"wrap"}}>
+                  <a href="/privacy" target="_blank" className="settings-btn settings-btn-ghost" style={{textDecoration:"none",fontSize:"12px"}}>Full Privacy Policy →</a>
+                  <a href="/terms" target="_blank" className="settings-btn settings-btn-ghost" style={{textDecoration:"none",fontSize:"12px"}}>Full Terms →</a>
+                </div>
+              </>}
+
             </div>
           </div>
         </div>
