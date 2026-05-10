@@ -31,6 +31,8 @@ const dmMono = DM_Mono({
   display: 'swap',
 })
 import { PostHogProvider } from './providers/posthog'
+import { ThemeProvider } from './providers/theme'
+import './theme.css'
 import type { Metadata } from 'next'
 import { Analytics } from '@vercel/analytics/next'
 
@@ -79,7 +81,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <html lang="en" className={`${playfair.variable} ${dmSans.variable} ${dmSerif.variable} ${dmMono.variable}`}>
           <head>
 </head>
-          <body>{children}<Analytics /></body>
+          <body><ThemeProvider>{children}</ThemeProvider><Analytics /></body>
         </html>
       </PostHogProvider>
     </ClerkProvider>
