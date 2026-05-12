@@ -375,10 +375,10 @@ export default function Dashboard() {
           <div style={{background:"rgba(255,255,255,0.02)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:"16px",padding:"16px 20px",marginBottom:"16px"}}>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"8px"}}>
               <span style={{fontSize:"12px",color:"rgba(255,255,255,0.4)"}}>Free audits used</span>
-              <span style={{fontSize:"12px",fontWeight:500,color:"rgba(255,255,255,0.6)"}}>{audits.length} / 3</span>
+              <span style={{fontSize:"12px",fontWeight:500,color:"rgba(255,255,255,0.6)"}}>{audits.length} / 1</span>
             </div>
             <div className="progress-bar-wrap">
-              <div className="progress-bar-fill" style={{width:`${Math.min(100,(audits.length/3)*100)}%`, background: audits.length >= 3 ? "#f87171" : "linear-gradient(90deg,#a78bfa,#818cf8)"}} />
+              <div className="progress-bar-fill" style={{width:`${Math.min(100,(audits.length/1)*100)}%`, background: audits.length >= 1 ? "#f87171" : "linear-gradient(90deg,#a78bfa,#818cf8)"}} />
             </div>
             {freeAuditsLeft === 0 && (
               <div style={{marginTop:"10px",fontSize:"12px",color:"#fca5a5"}}>You've used your 1 free audit. <button onClick={handleUpgrade} style={{color:"#a78bfa",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit",fontSize:"12px",padding:0}}>Upgrade to Pro →</button></div>
