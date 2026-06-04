@@ -58,19 +58,43 @@ export default function AuditPage() {
       const html2canvas = (await import("html2canvas")).default;
       const card = shareCardRef.current;
       if (!card) return;
-      const canvas = await html2canvas(card, { 
-        scale: 2, 
+      const canvas = await html2canvas(card, {
+        scale: 2,
         backgroundColor: "#04040a",
         useCORS: true,
         logging: false,
       });
-      const link = document.createElement("a");
-      link.download = "ghostos-score.png";
-      link.href = canvas.toDataURL("image/png");
-      link.click();
+
+      canvas.toBlob(async (blob) => {
+        if (!blob) return;
+        const file = new File([blob], "ghostos-score.png", { type: "image/png" });
+        const shareText = `I just got my brand deal readiness score: ${result.readiness_score}/100 🎯\n\nMy estimated first deal range: $${result.estimated_first_deal_range_usd.low.toLocaleString()} – $${result.estimated_first_deal_range_usd.high.toLocaleString()}\n\nFind out yours → ghostos.live`;
+
+        // Try native share sheet first (mobile)
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            title: "My GhostOS Brand Deal Score",
+            text: shareText,
+            files: [file],
+          });
+        } else if (navigator.share) {
+          // Share without file (some browsers)
+          await navigator.share({
+            title: "My GhostOS Brand Deal Score",
+            text: shareText,
+            url: "https://ghostos.live",
+          });
+        } else {
+          // Desktop fallback — download the image
+          const link = document.createElement("a");
+          link.download = "ghostos-score.png";
+          link.href = canvas.toDataURL("image/png");
+          link.click();
+        }
+        setSharing(false);
+      }, "image/png");
     } catch (e) {
       console.error("Share failed:", e);
-    } finally {
       setSharing(false);
     }
   }
@@ -384,9 +408,11 @@ export default function AuditPage() {
                 </div>
                 <div className="share-card-tagline">ghostos.live · AI-Powered Brand Deal Intelligence</div>
               </div>
-              <button className="share-btn" onClick={handleShare} disabled={sharing}>
-                {sharing ? "Generating..." : "⬇ Download Score Card"}
-              </button>
+              <div style={{display:"flex",gap:"10px",flexWrap:"wrap",marginTop:"16px"}}>
+                <button className="share-btn" onClick={handleShare} disabled={sharing}>
+                  {sharing ? "Generating..." : "📤 Share Score Card"}
+                </button>
+              </div>
 
               <div className="section-block">
                 <div className="section-eyebrow">Estimated First Deal</div>
