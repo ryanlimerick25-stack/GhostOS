@@ -10,13 +10,13 @@ export default function TermsPage() {
         .nav-dot { width: 7px; height: 7px; border-radius: 50%; background: #a78bfa; box-shadow: 0 0 10px #a78bfa; flex-shrink: 0; }
         .nav-back { font-size: 13px; color: rgba(255,255,255,0.35); text-decoration: none; transition: color 0.2s; border: 1px solid rgba(255,255,255,0.08); padding: 6px 14px; border-radius: 99px; }
         .nav-back:hover { color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.15); }
-        .wrapper { display: flex; max-width: 1100px; margin: 0 auto; padding: 100px 24px 80px; gap: 60px; align-items: flex-start; }
-        .sidebar { width: 200px; flex-shrink: 0; position: sticky; top: 88px; align-self: flex-start; }
+        .wrapper { display: flex; max-width: 1100px; margin: 0 auto; padding: 100px 24px 80px; gap: 60px; align-items: flex-start; position: relative; }
+        .sidebar { width: 200px; flex-shrink: 0; position: sticky; top: 88px; align-self: flex-start; z-index: 1; }
         .sidebar-label { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.2); font-weight: 500; margin-bottom: 16px; }
         .sidebar-nav { display: flex; flex-direction: column; gap: 2px; }
         .sidebar-link { font-size: 13px; color: rgba(255,255,255,0.35); text-decoration: none; padding: 7px 12px; border-radius: 8px; transition: all 0.15s; border-left: 2px solid transparent; }
         .sidebar-link:hover { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.03); border-left-color: rgba(167,139,250,0.4); }
-        .content { flex: 1; min-width: 0; }
+        .content { flex: 1; min-width: 0; position: relative; z-index: 2; }
         .doc-header { margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.06); }
         .doc-badge { display: inline-flex; align-items: center; background: rgba(167,139,250,0.08); border: 1px solid rgba(167,139,250,0.15); border-radius: 99px; padding: 4px 12px; font-size: 11px; color: rgba(167,139,250,0.8); font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 20px; }
         h1 { font-family: 'Playfair Display', serif; font-size: clamp(36px,4vw,52px); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; color: #fff; margin-bottom: 16px; }
@@ -103,7 +103,7 @@ export default function TermsPage() {
             <div className="clause"><div className="clause-num">3.1</div><div className="clause-text">You are responsible for maintaining the confidentiality of your account credentials and all activity under your account.</div></div>
             <div className="clause"><div className="clause-num">3.2</div><div className="clause-text">You must provide accurate information when creating your account and running audits.</div></div>
             <div className="clause"><div className="clause-num">3.3</div><div className="clause-text">You may not share your account or create multiple accounts to circumvent usage limits.</div></div>
-            <div className="clause"><div className="clause-num">3.4</div><div className="clause-text">Notify us immediately of unauthorized account use at <a href="mailto:ps4sprite25@gmail.com">ps4sprite25@gmail.com</a>.</div></div>
+            <div className="clause"><div className="clause-num">3.4</div><div className="clause-text">Notify us immediately of unauthorized account use at <a href="mailto:hello@ghostos.live">hello@ghostos.live</a>.</div></div>
           </div>
           <div className="divider" />
           <div className="section" id="acceptable">
@@ -130,7 +130,7 @@ export default function TermsPage() {
             <div className="section-num">Section 6</div>
             <h2>Refund Policy</h2>
             <div className="clause"><div className="clause-num">6.1</div><div className="clause-text">We do not offer refunds for partial billing periods or unused subscription time.</div></div>
-            <div className="clause"><div className="clause-num">6.2</div><div className="clause-text">If you believe you were charged in error, contact us within 14 days at <a href="mailto:ps4sprite25@gmail.com">ps4sprite25@gmail.com</a>.</div></div>
+            <div className="clause"><div className="clause-num">6.2</div><div className="clause-text">If you believe you were charged in error, contact us within 14 days at <a href="mailto:hello@ghostos.live">hello@ghostos.live</a>.</div></div>
             <div className="clause"><div className="clause-num">6.3</div><div className="clause-text">We reserve the right to issue refunds at our discretion in exceptional circumstances.</div></div>
           </div>
           <div className="divider" />
@@ -178,7 +178,7 @@ export default function TermsPage() {
             <div className="section-num">Section 12</div>
             <h2>Governing Law & Disputes</h2>
             <div className="clause"><div className="clause-num">12.1</div><div className="clause-text">These Terms are governed by the laws of the United States.</div></div>
-            <div className="clause"><div className="clause-num">12.2</div><div className="clause-text">Before filing any formal legal claim, you agree to first contact us at <a href="mailto:ps4sprite25@gmail.com">ps4sprite25@gmail.com</a> to attempt informal resolution. We will respond within 30 days.</div></div>
+            <div className="clause"><div className="clause-num">12.2</div><div className="clause-text">Before filing any formal legal claim, you agree to first contact us at <a href="mailto:hello@ghostos.live">hello@ghostos.live</a> to attempt informal resolution. We will respond within 30 days.</div></div>
             <div className="clause"><div className="clause-num">12.3</div><div className="clause-text">Disputes not resolved informally shall be resolved through binding arbitration under applicable rules.</div></div>
           </div>
           <div className="divider" />
@@ -193,7 +193,7 @@ export default function TermsPage() {
             <div className="section-num">Section 14</div>
             <h2>Contact</h2>
             <p>Questions about these Terms?</p>
-            <p><strong style={{color:"rgba(255,255,255,0.7)"}}>Email:</strong> <a href="mailto:ps4sprite25@gmail.com">ps4sprite25@gmail.com</a></p>
+            <p><strong style={{color:"rgba(255,255,255,0.7)"}}>Email:</strong> <a href="mailto:hello@ghostos.live">hello@ghostos.live</a></p>
             <p><strong style={{color:"rgba(255,255,255,0.7)"}}>Response time:</strong> We respond to legal inquiries within 5 business days.</p>
           </div>
         </div>

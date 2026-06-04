@@ -10,13 +10,13 @@ export default function PrivacyPage() {
         .nav-dot { width: 7px; height: 7px; border-radius: 50%; background: #a78bfa; box-shadow: 0 0 10px #a78bfa; flex-shrink: 0; }
         .nav-back { font-size: 13px; color: rgba(255,255,255,0.35); text-decoration: none; transition: color 0.2s; border: 1px solid rgba(255,255,255,0.08); padding: 6px 14px; border-radius: 99px; }
         .nav-back:hover { color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.15); }
-        .wrapper { display: flex; max-width: 1100px; margin: 0 auto; padding: 100px 24px 80px; gap: 60px; align-items: flex-start; }
-        .sidebar { width: 200px; flex-shrink: 0; position: sticky; top: 88px; align-self: flex-start; }
+        .wrapper { display: flex; max-width: 1100px; margin: 0 auto; padding: 100px 24px 80px; gap: 60px; align-items: flex-start; position: relative; }
+        .sidebar { width: 200px; flex-shrink: 0; position: sticky; top: 88px; align-self: flex-start; z-index: 1; }
         .sidebar-label { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.2); font-weight: 500; margin-bottom: 16px; }
         .sidebar-nav { display: flex; flex-direction: column; gap: 2px; }
         .sidebar-link { font-size: 13px; color: rgba(255,255,255,0.35); text-decoration: none; padding: 7px 12px; border-radius: 8px; transition: all 0.15s; border-left: 2px solid transparent; }
         .sidebar-link:hover { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.03); border-left-color: rgba(167,139,250,0.4); }
-        .content { flex: 1; min-width: 0; }
+        .content { flex: 1; min-width: 0; position: relative; z-index: 2; }
         .doc-header { margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.06); }
         .doc-badge { display: inline-flex; align-items: center; background: rgba(167,139,250,0.08); border: 1px solid rgba(167,139,250,0.15); border-radius: 99px; padding: 4px 12px; font-size: 11px; color: rgba(167,139,250,0.8); font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 20px; }
         h1 { font-family: 'Playfair Display', serif; font-size: clamp(36px,4vw,52px); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; color: #fff; margin-bottom: 16px; }
@@ -77,7 +77,7 @@ export default function PrivacyPage() {
             </div>
           </div>
           <div className="intro-box">
-            <p>This Privacy Policy describes how GhostOS ("we," "us," or "our") collects, uses, and protects information about you when you use ghostos.live. We believe in transparency — this document tells you exactly what we collect and why. Questions? Email <a href="mailto:ps4sprite25@gmail.com">ps4sprite25@gmail.com</a>.</p>
+            <p>This Privacy Policy describes how GhostOS ("we," "us," or "our") collects, uses, and protects information about you when you use ghostos.live. We believe in transparency — this document tells you exactly what we collect and why. Questions? Email <a href="mailto:hello@ghostos.live">hello@ghostos.live</a>.</p>
           </div>
           <div className="section" id="overview">
             <div className="section-num">Section 1</div>
@@ -149,7 +149,7 @@ export default function PrivacyPage() {
             <div className="clause"><div className="clause-num">7.3</div><div className="clause-text"><strong>Deletion.</strong> You may request deletion of your account and data at any time. We process deletion requests within 30 days.</div></div>
             <div className="clause"><div className="clause-num">7.4</div><div className="clause-text"><strong>Portability.</strong> You may request an export of your audit data in a machine-readable format.</div></div>
             <div className="clause"><div className="clause-num">7.5</div><div className="clause-text"><strong>Opt-out.</strong> You may opt out of non-transactional emails at any time by clicking unsubscribe or contacting us.</div></div>
-            <div className="clause"><div className="clause-num">7.6</div><div className="clause-text">To exercise any of these rights, contact <a href="mailto:ps4sprite25@gmail.com">ps4sprite25@gmail.com</a>. We respond within 30 days.</div></div>
+            <div className="clause"><div className="clause-num">7.6</div><div className="clause-text">To exercise any of these rights, contact <a href="mailto:hello@ghostos.live">hello@ghostos.live</a>. We respond within 30 days.</div></div>
           </div>
           <div className="divider" />
           <div className="section" id="retention">
@@ -186,7 +186,7 @@ export default function PrivacyPage() {
             <div className="section-num">Section 12</div>
             <h2>Contact & Data Requests</h2>
             <p>For privacy questions, data access requests, or account deletion:</p>
-            <p><strong style={{color:"rgba(255,255,255,0.7)"}}>Email:</strong> <a href="mailto:ps4sprite25@gmail.com">ps4sprite25@gmail.com</a></p>
+            <p><strong style={{color:"rgba(255,255,255,0.7)"}}>Email:</strong> <a href="mailto:hello@ghostos.live">hello@ghostos.live</a></p>
             <p><strong style={{color:"rgba(255,255,255,0.7)"}}>Response time:</strong> We respond to all privacy requests within 30 days.</p>
           </div>
         </div>

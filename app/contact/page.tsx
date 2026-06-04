@@ -42,25 +42,25 @@ export default function ContactPage() {
             <div className="card-label">General</div>
             <div className="card-title">Say hello</div>
             <div className="card-desc">Questions about GhostOS, feedback, or anything else.</div>
-            <a className="card-link" href="mailto:ps4sprite25@gmail.com">ps4sprite25@gmail.com →</a>
+            <a className="card-link" href="mailto:hello@ghostos.live">hello@ghostos.live →</a>
           </div>
           <div className="card">
             <div className="card-label">Billing & Account</div>
             <div className="card-title">Subscription help</div>
             <div className="card-desc">Issues with your Pro subscription, billing, or account access.</div>
-            <a className="card-link" href="mailto:ps4sprite25@gmail.com">ps4sprite25@gmail.com →</a>
+            <a className="card-link" href="mailto:hello@ghostos.live">hello@ghostos.live →</a>
           </div>
           <div className="card">
             <div className="card-label">Privacy & Data</div>
             <div className="card-title">Data requests</div>
             <div className="card-desc">Request access to, correction of, or deletion of your data.</div>
-            <a className="card-link" href="mailto:ps4sprite25@gmail.com">ps4sprite25@gmail.com →</a>
+            <a className="card-link" href="mailto:hello@ghostos.live">hello@ghostos.live →</a>
           </div>
           <div className="card">
             <div className="card-label">Partnerships</div>
             <div className="card-title">Work with us</div>
             <div className="card-desc">Agency partnerships, creator collabs, or press inquiries.</div>
-            <a className="card-link" href="mailto:ps4sprite25@gmail.com">ps4sprite25@gmail.com →</a>
+            <a className="card-link" href="mailto:hello@ghostos.live">hello@ghostos.live →</a>
           </div>
         </div>
         <div className="response-note">
