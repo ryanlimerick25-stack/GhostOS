@@ -392,7 +392,7 @@ export default function Dashboard() {
             <div>
               <div style={{fontSize:"11px",fontWeight:500,letterSpacing:"0.12em",textTransform:"uppercase",color:"#a78bfa",marginBottom:"6px"}}>Upgrade to Pro</div>
               <div style={{fontSize:"16px",fontWeight:500,color:"rgba(255,255,255,0.9)",marginBottom:"4px"}}>Unlimited audits + full history</div>
-              <div style={{fontSize:"13px",color:"rgba(255,255,255,0.35)"}}>Free plan = 3 audits. Pro = unlimited for $36/month.</div>
+              <div style={{fontSize:"13px",color:"rgba(255,255,255,0.35)"}}>Free plan = 1 audit. Pro = unlimited for $20/month.</div>
             </div>
             <button onClick={handleUpgrade} disabled={upgrading} style={{padding:"12px 28px",borderRadius:"12px",background:"linear-gradient(135deg,#a78bfa,#818cf8)",color:"#fff",fontSize:"14px",fontWeight:600,border:"none",cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",opacity:upgrading?0.6:1}}>
               {upgrading ? "Loading..." : "Upgrade to Pro →"}
