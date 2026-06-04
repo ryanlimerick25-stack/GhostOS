@@ -11,7 +11,7 @@ export default function TermsPage() {
         .nav-back { font-size: 13px; color: rgba(255,255,255,0.35); text-decoration: none; transition: color 0.2s; border: 1px solid rgba(255,255,255,0.08); padding: 6px 14px; border-radius: 99px; }
         .nav-back:hover { color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.15); }
         .wrapper { display: flex; max-width: 1100px; margin: 0 auto; padding: 100px 24px 80px; gap: 60px; align-items: flex-start; position: relative; }
-        .sidebar { width: 200px; flex-shrink: 0; position: sticky; top: 88px; align-self: flex-start; z-index: 1; }
+        .sidebar { width: 200px; flex-shrink: 0; position: sticky; top: 88px; align-self: flex-start; z-index: 1; overflow: hidden; }
         .sidebar-label { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.2); font-weight: 500; margin-bottom: 16px; }
         .sidebar-nav { display: flex; flex-direction: column; gap: 2px; }
         .sidebar-link { font-size: 13px; color: rgba(255,255,255,0.35); text-decoration: none; padding: 7px 12px; border-radius: 8px; transition: all 0.15s; border-left: 2px solid transparent; }
@@ -41,7 +41,7 @@ export default function TermsPage() {
         .contact-box p:last-child { margin-bottom: 0; }
         a { color: #a78bfa; text-decoration: none; }
         a:hover { text-decoration: underline; }
-        @media(max-width:768px){ .wrapper { flex-direction: column; padding-top: 90px; } .sidebar { display: none; } }
+        @media(max-width:900px){ .wrapper { flex-direction: column; padding-top: 90px; } .sidebar { display: none; } }
       `}</style>
       <nav>
         <a className="nav-logo" href="/"><div className="nav-dot" />GhostOS</a>
