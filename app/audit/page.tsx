@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useUser } from "@clerk/nextjs";
 
 type AuditResult = {
@@ -48,6 +48,32 @@ export default function AuditPage() {
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<AuditResult | null>(null);
   const [fromCache, setFromCache] = useState(false);
+  const [sharing, setSharing] = useState(false);
+  const shareCardRef = useRef<HTMLDivElement>(null);
+
+  async function handleShare() {
+    if (!result) return;
+    setSharing(true);
+    try {
+      const html2canvas = (await import("html2canvas")).default;
+      const card = shareCardRef.current;
+      if (!card) return;
+      const canvas = await html2canvas(card, { 
+        scale: 2, 
+        backgroundColor: "#04040a",
+        useCORS: true,
+        logging: false,
+      });
+      const link = document.createElement("a");
+      link.download = "ghostos-score.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    } catch (e) {
+      console.error("Share failed:", e);
+    } finally {
+      setSharing(false);
+    }
+  }
   const [fetching, setFetching] = useState(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
 
@@ -172,6 +198,20 @@ export default function AuditPage() {
         .run-btn:hover:not(:disabled) { background: #ddd0ff; transform: translateY(-1px); box-shadow: 0 8px 30px rgba(201, 184, 255, 0.2); }
         .run-btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .loading-dots::after { content: ''; animation: dots 1.2s steps(4, end) infinite; }
+        .share-card { background: #04040a; border: 1px solid rgba(167,139,250,0.2); border-radius: 20px; padding: 32px; margin-bottom: 24px; position: relative; overflow: hidden; }
+        .share-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #a78bfa, #818cf8); }
+        .share-card-logo { display: flex; align-items: center; gap: 8px; margin-bottom: 24px; }
+        .share-card-dot { width: 8px; height: 8px; border-radius: 50%; background: #a78bfa; box-shadow: 0 0 8px #a78bfa; }
+        .share-card-brand { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: rgba(255,255,255,0.9); }
+        .share-card-score-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .share-card-score-num { font-family: 'Playfair Display', serif; font-size: 72px; font-weight: 700; line-height: 1; }
+        .share-card-score-label { font-size: 13px; color: rgba(255,255,255,0.4); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; }
+        .share-card-right { text-align: right; }
+        .share-card-range-label { font-size: 11px; color: rgba(255,255,255,0.3); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; }
+        .share-card-range-val { font-size: 20px; font-weight: 600; color: rgba(255,255,255,0.9); }
+        .share-card-tagline { font-size: 12px; color: rgba(255,255,255,0.25); margin-top: 16px; }
+        .share-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 22px; border-radius: 10px; background: rgba(167,139,250,0.1); border: 1px solid rgba(167,139,250,0.25); color: #a78bfa; font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit; transition: all 0.2s; margin-top: 16px; }
+        .share-btn:hover { background: rgba(167,139,250,0.18); border-color: rgba(167,139,250,0.4); }
         .audit-overlay { position: fixed; inset: 0; background: rgba(4,4,10,0.92); backdrop-filter: blur(12px); z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 32px; }
         .audit-overlay-spinner { width: 64px; height: 64px; border: 3px solid rgba(167,139,250,0.15); border-top: 3px solid #a78bfa; border-radius: 50%; animation: spin 0.9s linear infinite; }
         .audit-overlay-title { font-family: 'Playfair Display', serif; font-size: clamp(22px,3vw,32px); font-weight: 600; color: rgba(255,255,255,0.9); letter-spacing: -0.01em; text-align: center; }
@@ -325,6 +365,29 @@ export default function AuditPage() {
                   {score}<span className="score-denom">/100</span>
                 </div>
               </div>
+
+              {/* Share Score Card */}
+              <div ref={shareCardRef} className="share-card">
+                <div className="share-card-logo">
+                  <div className="share-card-dot" />
+                  <div className="share-card-brand">GhostOS</div>
+                </div>
+                <div className="share-card-score-row">
+                  <div>
+                    <div className="share-card-score-num" style={{color: scoreColor}}>{score}</div>
+                    <div className="share-card-score-label">Brand Deal Readiness</div>
+                  </div>
+                  <div className="share-card-right">
+                    <div className="share-card-range-label">Est. First Deal</div>
+                    <div className="share-card-range-val">${result.estimated_first_deal_range_usd.low.toLocaleString()} – ${result.estimated_first_deal_range_usd.high.toLocaleString()}</div>
+                  </div>
+                </div>
+                <div className="share-card-tagline">ghostos.live · AI-Powered Brand Deal Intelligence</div>
+              </div>
+              <button className="share-btn" onClick={handleShare} disabled={sharing}>
+                {sharing ? "Generating..." : "⬇ Download Score Card"}
+              </button>
+
               <div className="section-block">
                 <div className="section-eyebrow">Estimated First Deal</div>
                 <div className="deal-range">
