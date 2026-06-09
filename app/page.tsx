@@ -217,6 +217,7 @@ export default function LandingPage() {
         <div className="nav-links">
           <button className="nav-link" onClick={() => document.getElementById('features')?.scrollIntoView({behavior:'smooth'})}>Features</button>
 <a className="nav-link" href="/pricing">Pricing</a>
+          <a className="nav-link" href="/blog">Blog</a>
           <a className="nav-link" href="/deal-analyzer">Deal Analyzer</a>
           {isSignedIn ? (
             <>
