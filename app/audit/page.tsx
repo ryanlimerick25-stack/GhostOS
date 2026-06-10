@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import posthog from "posthog-js";
 import { useUser } from "@clerk/nextjs";
 
 type AuditResult = {
@@ -53,6 +54,7 @@ export default function AuditPage() {
 
   async function handleShare() {
     if (!result) return;
+    posthog.capture("share_card_clicked");
     setSharing(true);
     try {
       const html2canvas = (await import("html2canvas")).default;
@@ -158,6 +160,7 @@ export default function AuditPage() {
     }
 
     setLoading(true);
+    posthog.capture("audit_submitted", { niche, audienceGeo, followers: Number(followers), avgViews: Number(avgViews), engagementRate: Number(engagementRate) });
     setError(null);
     setResult(null);
     setFromCache(false);

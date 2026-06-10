@@ -1,5 +1,6 @@
 "use client";
 import { useUser, useClerk } from "@clerk/nextjs";
+import posthog from "posthog-js";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 
@@ -56,6 +57,7 @@ export default function Dashboard() {
   }, [profileOpen]);
 
   async function handleUpgrade() {
+    posthog.capture("upgrade_clicked");
     setUpgrading(true);
     const res = await fetch("/api/stripe/checkout", { method: "POST" });
     const data = await res.json();
