@@ -161,6 +161,7 @@ export default function AuditPage() {
 
     setLoading(true);
     posthog.capture("audit_submitted", { niche, audienceGeo, followers: Number(followers), avgViews: Number(avgViews), engagementRate: Number(engagementRate) });
+    posthog.capture("audit_submitted", { niche, audienceGeo, followers: Number(followers), avgViews: Number(avgViews), engagementRate: Number(engagementRate) });
     setError(null);
     setResult(null);
     setFromCache(false);
