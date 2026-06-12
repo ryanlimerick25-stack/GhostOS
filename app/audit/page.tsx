@@ -317,7 +317,7 @@ export default function AuditPage() {
           <div className="header">
             <div className="eyebrow">GhostOS</div>
             <h1 className="title">Brand Deal<br /><em>Readiness Audit</em></h1>
-            <p className="subtitle">For TikTok creators (20k–200k) trying to land their first deal.</p>
+            <p className="subtitle">For TikTok creators with 20k–200k followers trying to land their first deal.</p>
           </div>
 
           <div style={{background:"rgba(167,139,250,0.06)",border:"1px solid rgba(167,139,250,0.15)",borderRadius:"12px",padding:"14px 18px",marginBottom:"16px",display:"flex",alignItems:"flex-start",gap:"12px"}}>

@@ -320,26 +320,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <hr className="divider" />
 
-      <section className="section" id="testimonials">
-        <FadeIn>
-          <span className="section-label">Creator Stories</span>
-          <h2 className="section-title">Creators who stopped<br /><em>leaving money on the table.</em></h2>
-        </FadeIn>
-        <div className="testi-grid">
-          {testimonials.map((t, i) => (
-            <FadeIn delay={i * 100} key={t.handle}>
-              <div className="testi-card" onClick={() => setActiveTestimonial(t)} style={{cursor:"pointer"}}>
-                <div className="t-score">Score: {t.score}/100</div>
-                <p className="t-quote">"{t.quote}"</p>
-                
-                <div className="t-niche">{t.niche} creator</div>
-              </div>
-            </FadeIn>
-          ))}
-        </div>
-      </section>
 
       <hr className="divider" />
 

@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Blog — TikTok Brand Deal Guides & Rate Data | GhostOS",
+  title: "Blog — TikTok Brand Deal Guides & Rate Data",
   description: "Real data on TikTok brand deal rates, sponsorship pricing, and how to land your first brand deal. Guides built for creators with 20k–200k followers.",
 };
 
