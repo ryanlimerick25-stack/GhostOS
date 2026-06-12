@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import posthog from "posthog-js";
 import { useUser } from "@clerk/nextjs";
 
@@ -37,6 +38,7 @@ const loadingMessages = [
 
 export default function AuditPage() {
   const { user, isLoaded } = useUser();
+  const router = useRouter();
   const [followers, setFollowers] = useState("");
   const [avgViews, setAvgViews] = useState("");
   const [engagementRate, setEngagementRate] = useState("");
@@ -122,6 +124,12 @@ export default function AuditPage() {
     const used = parseInt(localStorage.getItem("free_audits_used") || "0");
     setFreeAuditsUsed(used);
   }, []);
+
+  useEffect(() => {
+    if (isLoaded && !user) {
+      router.push("/sign-up?redirect_url=/audit");
+    }
+  }, [isLoaded, user]);
 
   useEffect(() => {
     if (!loading) {

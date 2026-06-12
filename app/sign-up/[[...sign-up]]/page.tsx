@@ -13,6 +13,7 @@ export default function SignUpPage() {
         <p style={{fontSize:"15px",color:"rgba(255,255,255,0.35)",margin:0}}>Start finding out what brands should pay you</p>
       </div>
       <SignUp
+        forceRedirectUrl={typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("redirect_url") || "/audit" : "/audit"}
         appearance={{
           variables: {
             colorPrimary: "#a78bfa",
