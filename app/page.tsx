@@ -85,6 +85,9 @@ export default function LandingPage() {
 
   return (
     <>
+      <link rel="prefetch" href="/sign-in" />
+      <link rel="prefetch" href="/sign-up" />
+      <link rel="prefetch" href="/audit" />
       <style>{`
         :root {
           --bg: #04040a; --glass: rgba(255,255,255,0.055); --glass-b: rgba(255,255,255,0.10);
