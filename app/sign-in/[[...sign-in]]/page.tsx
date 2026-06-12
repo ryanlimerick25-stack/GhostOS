@@ -27,7 +27,6 @@ export default function SignInPage() {
           elements: {
             rootBox: { width: "100%", maxWidth: "420px" },
             card: { background: "#0d0d18", border: "none", borderRadius: "20px", boxShadow: "none", padding: "32px" },
-            cardBox: { border: "none", boxShadow: "none" },
             headerTitle: { display: "none" },
             headerSubtitle: { display: "none" },
             socialButtonsBlockButton: { background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.8)", borderRadius: "10px" },
