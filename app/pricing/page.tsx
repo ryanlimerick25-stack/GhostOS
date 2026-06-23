@@ -124,7 +124,7 @@ export default function PricingPage() {
           <div className="card card-pro">
             <span className="badge-popular">Most Popular</span>
             <span className="plan-label plan-label-pro">Pro</span>
-            <div className="price">$20</div>
+            <div className="price">$5</div>
             <div className="price-period">per month</div>
             <div className="divider" />
             <ul className="feature-list">
