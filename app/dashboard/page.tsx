@@ -639,7 +639,7 @@ export default function Dashboard() {
                 <div className="settings-row">
                   <div>
                     <div className="settings-label">Audits Run</div>
-                    <div className="settings-sub">{isPro ? "Unlimited" : `${audits.length} of 3 free used`}</div>
+                    <div className="settings-sub">{isPro ? "Unlimited" : `${audits.length} of 1 free used`}</div>
                   </div>
                   <div className="settings-value">{audits.length} total</div>
                 </div>

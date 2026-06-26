@@ -155,20 +155,19 @@ export default function AuditPage() {
       const res = await fetch("/api/audits");
       const json = await res.json();
       const serverCount = json?.count ?? 0;
-      if (serverCount >= 3) {
+      if (serverCount >= 1) {
         setError("You've used your 1 free audit. Upgrade to GhostOS Pro for unlimited audits.");
         return;
       }
     } else {
       const used = parseInt(localStorage.getItem("free_audits_used") || "0");
-      if (used >= 3) {
+      if (used >= 1) {
         setError("You've used your 1 free audit. Sign up or upgrade to GhostOS Pro for unlimited audits.");
         return;
       }
     }
 
     setLoading(true);
-    posthog.capture("audit_submitted", { niche, audienceGeo, followers: Number(followers), avgViews: Number(avgViews), engagementRate: Number(engagementRate) });
     posthog.capture("audit_submitted", { niche, audienceGeo, followers: Number(followers), avgViews: Number(avgViews), engagementRate: Number(engagementRate) });
     setError(null);
     setResult(null);

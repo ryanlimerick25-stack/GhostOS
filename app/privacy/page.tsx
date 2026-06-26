@@ -42,7 +42,7 @@ export default function PrivacyPage() {
         .contact-box p:last-child { margin-bottom: 0; }
         a { color: #a78bfa; text-decoration: none; }
         a:hover { text-decoration: underline; }
-        @media(max-width:1100px){ .wrapper { flex-direction: column; padding-top: 90px; } .sidebar { display: none; } }
+        @media(max-width:1200px){ .wrapper { flex-direction: column; padding-top: 90px; } .sidebar { display: none; } }
       `}</style>
       <nav>
         <a className="nav-logo" href="/"><div className="nav-dot" />GhostOS</a>
