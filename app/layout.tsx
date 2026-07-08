@@ -38,7 +38,7 @@ import { Analytics } from '@vercel/analytics/next'
 
 export const metadata: Metadata = {
   title: {
-    default: 'GhostOS — Get Paid What Youre Actually Worth',
+    default: 'GhostOS — Get Paid What You’re Actually Worth',
     template: '%s | GhostOS',
   },
   description: 'AI-powered brand deal intelligence for TikTok creators. Get your readiness score, real rate card, and outreach templates in 30 seconds.',
@@ -50,12 +50,12 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://ghostos.live',
     siteName: 'GhostOS',
-    title: 'GhostOS — Get Paid What Youre Actually Worth',
+    title: 'GhostOS — Get Paid What You’re Actually Worth',
     description: 'AI-powered brand deal intelligence for TikTok creators. Get your readiness score, real rate card, and outreach templates in 30 seconds.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'GhostOS — Get Paid What Youre Actually Worth',
+    title: 'GhostOS — Get Paid What You’re Actually Worth',
     description: 'AI-powered brand deal intelligence for TikTok creators.',
     creator: '@ghostos',
   },

@@ -37,19 +37,25 @@ export async function POST(req: Request) {
 
   if (event.type === "customer.subscription.deleted") {
     const sub = event.data.object as Stripe.Subscription;
-    // Update Supabase
-    const { data } = await supabase
-      .from("users")
-      .update({ is_pro: false })
-      .eq("stripe_customer_id", sub.customer as string)
-      .select("user_id")
-      .single();
-    // Update Clerk publicMetadata
-    if (data?.user_id) {
-      const client = await clerkClient();
-      await client.users.updateUserMetadata(data.user_id, {
-        publicMetadata: { is_pro: false },
-      });
+    try {
+      // Update Supabase
+      const { data } = await supabase
+        .from("users")
+        .update({ is_pro: false })
+        .eq("stripe_customer_id", sub.customer as string)
+        .select("user_id")
+        .maybeSingle();
+      // Update Clerk publicMetadata
+      if (data?.user_id) {
+        const client = await clerkClient();
+        await client.users.updateUserMetadata(data.user_id, {
+          publicMetadata: { is_pro: false },
+        });
+      } else {
+        console.error("SUB_DELETED_NO_USER for customer:", sub.customer);
+      }
+    } catch (e) {
+      console.error("SUB_DELETED_ERROR:", e);
     }
   }
 
