@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
 import posthog from "posthog-js";
 import { useUser } from "@clerk/nextjs";
 
@@ -38,7 +37,6 @@ const loadingMessages = [
 
 export default function AuditPage() {
   const { user, isLoaded } = useUser();
-  const router = useRouter();
   const [followers, setFollowers] = useState("");
   const [avgViews, setAvgViews] = useState("");
   const [engagementRate, setEngagementRate] = useState("");
@@ -50,6 +48,7 @@ export default function AuditPage() {
   const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<AuditResult | null>(null);
+  const [preview, setPreview] = useState(false);
   const [fromCache, setFromCache] = useState(false);
   const [sharing, setSharing] = useState(false);
   const shareCardRef = useRef<HTMLDivElement>(null);
@@ -125,11 +124,8 @@ export default function AuditPage() {
     setFreeAuditsUsed(used);
   }, []);
 
-  useEffect(() => {
-    if (isLoaded && !user) {
-      router.push("/sign-up?redirect_url=/audit");
-    }
-  }, [isLoaded, user]);
+  // Anonymous visitors can run a preview audit (score + deal range).
+  // The full report is gated behind sign-up; the API enforces a per-IP cap.
 
   useEffect(() => {
     if (!loading) {
@@ -159,18 +155,14 @@ export default function AuditPage() {
         setError("You've used your 1 free audit. Upgrade to GhostOS Pro for unlimited audits.");
         return;
       }
-    } else {
-      const used = parseInt(localStorage.getItem("free_audits_used") || "0");
-      if (used >= 1) {
-        setError("You've used your 1 free audit. Sign up or upgrade to GhostOS Pro for unlimited audits.");
-        return;
-      }
     }
+    // Anonymous: no client-side gate. The server returns a preview and caps by IP.
 
     setLoading(true);
     posthog.capture("audit_submitted", { niche, audienceGeo, followers: Number(followers), avgViews: Number(avgViews), engagementRate: Number(engagementRate) });
     setError(null);
     setResult(null);
+    setPreview(false);
     setFromCache(false);
 
     try {
@@ -190,6 +182,7 @@ export default function AuditPage() {
       const json = await res.json();
       if (!res.ok) throw new Error(json?.error || "Request failed");
       setResult(json.data);
+      setPreview(!!json.preview);
       setFromCache(json.cached === true);
 
       if (!isLoggedIn) {
@@ -433,6 +426,22 @@ export default function AuditPage() {
                   <div className="deal-card"><div className="deal-card-label">Best case</div><div className="deal-card-value">${result.estimated_first_deal_range_usd.high}</div></div>
                 </div>
               </div>
+              {preview && (
+                <div className="section-block">
+                  <div className="section-eyebrow">Unlock Your Full Report</div>
+                  <div className="positioning-box">
+                    Your full report includes your complete rate card, 6–8 named brands that would actually work with you, why they&apos;d pay, the top gaps to fix in 14 days, a day/week/month action plan, media-kit positioning, and 3 cold-outreach templates.
+                  </div>
+                  <a
+                    href="/sign-up?redirect_url=/audit"
+                    style={{display:"inline-block",marginTop:14,padding:"14px 28px",borderRadius:12,background:"#8b5cf6",color:"#fff",textDecoration:"none",fontWeight:600,fontSize:15}}
+                  >
+                    Create a free account to unlock →
+                  </a>
+                </div>
+              )}
+
+              {!preview && (<>
               <div className="section-block">
                 <div className="section-eyebrow">Brands That Would Work With You</div>
                 <div className="tags">{result.best_fit_brands.map((b, i) => <a className="tag" key={i} href={typeof b === "string" ? `https://www.google.com/search?q=${encodeURIComponent(b)}` : b.url} target="_blank" rel="noopener noreferrer" style={{textDecoration:"none",cursor:"pointer"}}>{typeof b === "string" ? b : b.name} ↗</a>)}</div>
@@ -477,6 +486,7 @@ export default function AuditPage() {
                   </div>
                 </div>
               )}
+              </>)}
             </div>
           )}
           <div className="footer-badge">GhostOS · Powered by AI</div>

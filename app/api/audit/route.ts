@@ -2,6 +2,7 @@ import OpenAI from "openai";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
+import { createHash } from "crypto";
 
 export const runtime = "nodejs";
 
@@ -11,6 +12,30 @@ const supabase = createClient(
 );
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+
+// Anonymous visitors may run a limited number of preview audits per IP per day.
+// This exists because /api/audit calls OpenAI on every miss — without a cap the
+// endpoint can be farmed by anyone.
+const ANON_DAILY_LIMIT = 3;
+
+function anonKeyFor(req: Request) {
+  const ip = (req.headers.get("x-forwarded-for") || "").split(",")[0].trim() || "unknown";
+  const salt = process.env.SUPABASE_SERVICE_KEY || "ghostos";
+  return "anon_" + createHash("sha256").update(ip + salt).digest("hex").slice(0, 32);
+}
+
+type PreviewShape = {
+  readiness_score: number;
+  estimated_first_deal_range_usd: { low: number; target: number; high: number };
+};
+
+// Anonymous users only ever see the score + deal range. Everything else is gated.
+function previewOf(r: PreviewShape) {
+  return {
+    readiness_score: r.readiness_score,
+    estimated_first_deal_range_usd: r.estimated_first_deal_range_usd,
+  };
+}
 
 type AuditInput = {
   followers: number;
@@ -28,6 +53,8 @@ export async function POST(req: Request) {
     const key = process.env.OPENAI_API_KEY;
     if (!key) return Response.json({ error: "OPENAI_API_KEY missing" }, { status: 500 });
 
+    const anonId = userId ? null : anonKeyFor(req);
+
     const input = (await req.json()) as AuditInput;
 
     // Server-side free audit limit enforcement
@@ -43,6 +70,18 @@ export async function POST(req: Request) {
 
       if (!isPro && (count ?? 0) >= 1) {
         return Response.json({ error: "You've used your 1 free audit. Upgrade to GhostOS Pro for unlimited audits." }, { status: 403 });
+      }
+    } else {
+      // Anonymous preview cap, enforced server-side per IP per rolling 24h.
+      const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+      const { count } = await supabase
+        .from("audits")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", anonId)
+        .gte("created_at", since);
+
+      if ((count ?? 0) >= ANON_DAILY_LIMIT) {
+        return Response.json({ error: "You've used your free previews for today. Create a free account to see your full report." }, { status: 429 });
       }
     }
     if (!input || !Number.isFinite(input.followers) || !Number.isFinite(input.avgViews) || !Number.isFinite(input.engagementRate) || !input.niche || !input.audienceGeo) {
@@ -82,8 +121,26 @@ export async function POST(req: Request) {
           result: cachedAudit.result,
         });
         if (cacheInsertError) console.error("CACHE_INSERT_ERROR:", cacheInsertError);
+        return Response.json({ data: cachedAudit.result, cached: true });
       }
-      return Response.json({ data: cachedAudit.result, cached: true });
+
+      // Anonymous: record the hit (for the per-IP cap) and return the preview only.
+      const { error: anonCacheErr } = await supabase.from("audits").insert({
+        user_id: anonId,
+        followers: input.followers,
+        avg_views: input.avgViews,
+        engagement_rate: input.engagementRate,
+        niche: input.niche,
+        audience_geo: input.audienceGeo,
+        tiktok_handle: input.tiktokHandle || null,
+        readiness_score: cachedAudit.result.readiness_score,
+        deal_low: cachedAudit.result.estimated_first_deal_range_usd.low,
+        deal_target: cachedAudit.result.estimated_first_deal_range_usd.target,
+        deal_high: cachedAudit.result.estimated_first_deal_range_usd.high,
+        result: null,
+      });
+      if (anonCacheErr) console.error("ANON_CACHE_INSERT_ERROR:", anonCacheErr);
+      return Response.json({ data: previewOf(cachedAudit.result), preview: true, cached: true });
     }
 
     const prompt = `
@@ -317,6 +374,27 @@ Rules:
         // Don't fail the audit if email fails
         console.error("POST_AUDIT_EMAIL_ERROR:", emailErr);
       }
+    }
+
+    if (!userId) {
+      // Store the anonymous run: it enforces the per-IP cap and seeds the cache
+      // so a repeat of the same inputs never costs another OpenAI call.
+      const { error: anonInsertErr } = await supabase.from("audits").insert({
+        user_id: anonId,
+        followers: input.followers,
+        avg_views: input.avgViews,
+        engagement_rate: input.engagementRate,
+        niche: input.niche,
+        audience_geo: input.audienceGeo,
+        tiktok_handle: input.tiktokHandle || null,
+        readiness_score: data.readiness_score,
+        deal_low: data.estimated_first_deal_range_usd.low,
+        deal_target: data.estimated_first_deal_range_usd.target,
+        deal_high: data.estimated_first_deal_range_usd.high,
+        result: data,
+      });
+      if (anonInsertErr) console.error("ANON_INSERT_ERROR:", anonInsertErr);
+      return Response.json({ data: previewOf(data), preview: true });
     }
 
     return Response.json({ data });
