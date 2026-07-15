@@ -33,9 +33,13 @@ export async function GET(req: Request) {
       const totalViews = videos.reduce((sum: number, v: any) => sum + (v.play_count ?? 0), 0);
       const totalLikes = videos.reduce((sum: number, v: any) => sum + (v.like_count ?? v.digg_count ?? 0), 0);
       const totalComments = videos.reduce((sum: number, v: any) => sum + (v.comment_count ?? 0), 0);
+      const totalShares = videos.reduce((sum: number, v: any) => sum + (v.share_count ?? 0), 0);
       avgViews = Math.round(totalViews / videos.length);
-      engagementRate = followers > 0 && avgViews > 0
-        ? parseFloat((((totalLikes + totalComments) / videos.length / followers) * 100).toFixed(2))
+      // Engagement rate = (likes + comments + shares) / views — the standard TikTok metric.
+      // The old formula divided by followers, which inflated the number to 30-60% for
+      // creators whose reach exceeds their follower count (exactly our target creators).
+      engagementRate = totalViews > 0
+        ? parseFloat((((totalLikes + totalComments + totalShares) / totalViews) * 100).toFixed(2))
         : 0;
     }
 
