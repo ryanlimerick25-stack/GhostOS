@@ -35,6 +35,7 @@ import { ThemeProvider } from './providers/theme'
 import './theme.css'
 import type { Metadata } from 'next'
 import { Analytics } from '@vercel/analytics/next'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 
 export const metadata: Metadata = {
   title: {
@@ -81,7 +82,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <html lang="en" className={`${playfair.variable} ${dmSans.variable} ${dmSerif.variable} ${dmMono.variable}`}>
           <head>
 </head>
-          <body><ThemeProvider>{children}</ThemeProvider><Analytics /></body>
+          <body><ThemeProvider>{children}</ThemeProvider><Analytics /><SpeedInsights /></body>
         </html>
       </PostHogProvider>
     </ClerkProvider>
