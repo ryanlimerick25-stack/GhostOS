@@ -119,8 +119,8 @@ export default function TermsPage() {
           <div className="section" id="subscriptions">
             <div className="section-num">Section 5</div>
             <h2>Subscriptions & Billing</h2>
-            <div className="clause"><div className="clause-num">5.1</div><div className="clause-text"><strong>Free plan.</strong> Up to 3 audits at no cost. Access to core audit features.</div></div>
-            <div className="clause"><div className="clause-num">5.2</div><div className="clause-text"><strong>GhostOS Pro.</strong> $36.00 USD per month. Unlimited audits, full audit history, and all platform features.</div></div>
+            <div className="clause"><div className="clause-num">5.1</div><div className="clause-text"><strong>Free plan.</strong> A free instant preview with no account required, plus 1 full audit when you create a free account. Access to core audit features.</div></div>
+            <div className="clause"><div className="clause-num">5.2</div><div className="clause-text"><strong>GhostOS Pro.</strong> $5.00 USD per month. Unlimited audits, full audit history, and all platform features.</div></div>
             <div className="clause"><div className="clause-num">5.3</div><div className="clause-text"><strong>Automatic renewal.</strong> Subscriptions renew monthly until cancelled. By subscribing, you authorize recurring charges to your payment method.</div></div>
             <div className="clause"><div className="clause-num">5.4</div><div className="clause-text"><strong>Cancellation.</strong> Cancel anytime from your dashboard. Cancellations take effect at end of the current billing period. Pro access continues until that date.</div></div>
             <div className="clause"><div className="clause-num">5.5</div><div className="clause-text"><strong>Price changes.</strong> We will provide 30 days notice before changing subscription prices.</div></div>

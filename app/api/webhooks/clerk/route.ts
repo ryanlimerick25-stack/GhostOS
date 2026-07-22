@@ -80,7 +80,7 @@ export async function POST(req: Request) {
     </div>
   </div>
   <a href="https://ghostos.live/audit" class="btn">Run Your Free Audit →</a>
-  <p style="font-size:13px;color:rgba(255,255,255,0.3)">You get 3 free audits. No credit card required.</p>
+  <p style="font-size:13px;color:rgba(255,255,255,0.3)">You get 1 free audit. No credit card required.</p>
   <div class="divider"></div>
   <div class="footer">
     You're receiving this because you signed up at ghostos.live.<br>
