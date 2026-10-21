@@ -26,12 +26,32 @@ export default function PricingPage() {
   const [loading, setLoading] = useState(false);
   const isPro = user?.publicMetadata?.is_pro === true;
 
+  const [upgradeError, setUpgradeError] = useState("");
+
   async function handleUpgrade() {
+    setUpgradeError("");
+    // Signed-out visitors can't start checkout; send them to sign up and back here.
+    if (isLoaded && !user) {
+      window.location.href = "/sign-up?redirect_url=/pricing";
+      return;
+    }
     setLoading(true);
-    const res = await fetch("/api/stripe/checkout", { method: "POST" });
-    const data = await res.json();
-    if (data.url) window.location.href = data.url;
-    else setLoading(false);
+    try {
+      const res = await fetch("/api/stripe/checkout", { method: "POST" });
+      if (res.status === 401) {
+        window.location.href = "/sign-up?redirect_url=/pricing";
+        return;
+      }
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+        return;
+      }
+      setUpgradeError("Checkout couldn't start. Please try again, or email hello@ghostos.live.");
+    } catch {
+      setUpgradeError("Checkout couldn't start. Please try again, or email hello@ghostos.live.");
+    }
+    setLoading(false);
   }
 
   return (
@@ -138,9 +158,14 @@ export default function PricingPage() {
             {isPro ? (
               <div className="already-pro">✓ You're already on Pro</div>
             ) : (
-              <button className="btn-upgrade" onClick={handleUpgrade} disabled={loading}>
-                {loading ? "Loading..." : "Upgrade to Pro →"}
-              </button>
+              <>
+                <button className="btn-upgrade" onClick={handleUpgrade} disabled={loading}>
+                  {loading ? "Loading..." : "Upgrade to Pro →"}
+                </button>
+                {upgradeError && (
+                  <div role="alert" style={{marginTop:"10px",fontSize:"13px",color:"#fca5a5",textAlign:"center"}}>{upgradeError}</div>
+                )}
+              </>
             )}
           </div>
         </div>

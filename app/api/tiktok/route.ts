@@ -1,50 +1,67 @@
 export const runtime = "nodejs";
 
+const SC = "https://api.scrapecreators.com";
+
+// Find the first numeric value for any of these keys anywhere in a JSON object
+function findNum(obj: any, keys: string[]): number | undefined {
+  if (!obj || typeof obj !== "object") return;
+  for (const k of keys) if (typeof obj[k] === "number") return obj[k];
+  for (const v of Object.values(obj)) {
+    const n = findNum(v, keys);
+    if (n !== undefined) return n;
+  }
+}
+
+// Find the first array of video-like objects (items that carry a play count)
+function findVideos(obj: any): any[] {
+  if (!obj || typeof obj !== "object") return [];
+  if (Array.isArray(obj) && obj.some((v) => findNum(v, ["play_count", "playCount"]) !== undefined)) return obj;
+  for (const v of Object.values(obj)) {
+    const found = findVideos(v);
+    if (found.length) return found;
+  }
+  return [];
+}
+
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
-  const username = searchParams.get("username")?.replace("@", "");
+  const username = searchParams.get("username")?.replace("@", "").trim();
   if (!username) return Response.json({ error: "Username required" }, { status: 400 });
 
-  const headers = {
-    "Authorization": `Bearer ${process.env.TIKTOK_API_KEY}`,
-  };
+  if (!process.env.SCRAPECREATORS_API_KEY) {
+    console.error("SCRAPECREATORS_API_KEY is not set");
+    return Response.json({ error: "Failed to fetch TikTok data" }, { status: 500 });
+  }
+  const headers = { "x-api-key": process.env.SCRAPECREATORS_API_KEY };
 
   try {
-    // Get profile info
-    const profileRes = await fetch(`https://tiktokapi.store/api/v1/user/info?unique_id=${username}`, { headers });
-    const profileData = await profileRes.json();
-    if (profileData.code !== 0 || !profileData.data?.user) {
+    const profileRes = await fetch(`${SC}/v1/tiktok/profile?handle=${encodeURIComponent(username)}`, { headers });
+    const profile = await profileRes.json().catch(() => null);
+    const followers = findNum(profile, ["followerCount", "follower_count"]);
+    if (!profileRes.ok || followers === undefined) {
+      console.error("ScrapeCreators profile failed", profileRes.status, JSON.stringify(profile)?.slice(0, 300));
       return Response.json({ error: "Account not found or is private." }, { status: 404 });
     }
+    const nickname = profile?.user?.nickname ?? profile?.nickname ?? username;
 
-    const user = profileData.data.user;
-    const stats = profileData.data.stats;
-    const followers = stats?.followerCount ?? 0;
-
-    // Get recent posts
-    const postsRes = await fetch(`https://tiktokapi.store/api/v1/user/posts?unique_id=${username}&count=20`, { headers });
-    const postsData = await postsRes.json();
-    const videos = postsData?.data?.videos ?? [];
+    const videosRes = await fetch(`${SC}/v3/tiktok/profile/videos?handle=${encodeURIComponent(username)}&region=US`, { headers });
+    const videos = findVideos(await videosRes.json().catch(() => null)).slice(0, 20);
 
     let avgViews = 0;
     let engagementRate = 0;
-
-    if (Array.isArray(videos) && videos.length > 0) {
-      const totalViews = videos.reduce((sum: number, v: any) => sum + (v.play_count ?? 0), 0);
-      const totalLikes = videos.reduce((sum: number, v: any) => sum + (v.like_count ?? v.digg_count ?? 0), 0);
-      const totalComments = videos.reduce((sum: number, v: any) => sum + (v.comment_count ?? 0), 0);
-      const totalShares = videos.reduce((sum: number, v: any) => sum + (v.share_count ?? 0), 0);
+    if (videos.length > 0) {
+      const sum = (keys: string[]) => videos.reduce((s, v) => s + (findNum(v, keys) ?? 0), 0);
+      const totalViews = sum(["play_count", "playCount"]);
+      const totalInteractions =
+        sum(["digg_count", "diggCount", "like_count"]) + sum(["comment_count", "commentCount"]) + sum(["share_count", "shareCount"]);
       avgViews = Math.round(totalViews / videos.length);
-      // Engagement rate = (likes + comments + shares) / views — the standard TikTok metric.
-      // The old formula divided by followers, which inflated the number to 30-60% for
-      // creators whose reach exceeds their follower count (exactly our target creators).
-      engagementRate = totalViews > 0
-        ? parseFloat((((totalLikes + totalComments + totalShares) / totalViews) * 100).toFixed(2))
-        : 0;
+      // Engagement rate = (likes + comments + shares) / views, the standard TikTok metric.
+      engagementRate = totalViews > 0 ? parseFloat(((totalInteractions / totalViews) * 100).toFixed(2)) : 0;
     }
 
-    return Response.json({ followers, avgViews, engagementRate, nickname: user.nickname });
-  } catch {
+    return Response.json({ followers, avgViews, engagementRate, nickname });
+  } catch (e) {
+    console.error("TikTok fetch error", e);
     return Response.json({ error: "Failed to fetch TikTok data" }, { status: 500 });
   }
 }
