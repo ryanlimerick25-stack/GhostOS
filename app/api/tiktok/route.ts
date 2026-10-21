@@ -50,10 +50,15 @@ export async function GET(req: Request) {
     let avgViews = 0;
     let engagementRate = 0;
     if (videos.length > 0) {
-      const sum = (keys: string[]) => videos.reduce((s, v) => s + (findNum(v, keys) ?? 0), 0);
+      // Read counts from the video's own stats object first, so we never pick up
+      // a same-named number from a nested author/music object.
+      const statsOf = (v: any) => v?.statistics ?? v?.stats ?? v?.stats_v2 ?? v;
+      const sum = (keys: string[]) => videos.reduce((s, v) => s + (findNum(statsOf(v), keys) ?? 0), 0);
+      const sample = statsOf(videos[0]);
+      console.error("TIKTOK_STATS_SAMPLE", JSON.stringify({ topKeys: Object.keys(videos[0] ?? {}).slice(0, 40), stats: sample === videos[0] ? null : sample }).slice(0, 900));
       const totalViews = sum(["play_count", "playCount"]);
       const totalInteractions =
-        sum(["digg_count", "diggCount", "like_count"]) + sum(["comment_count", "commentCount"]) + sum(["share_count", "shareCount"]);
+        sum(["digg_count", "diggCount", "like_count", "likeCount"]) + sum(["comment_count", "commentCount"]) + sum(["share_count", "shareCount"]);
       avgViews = Math.round(totalViews / videos.length);
       // Engagement rate = (likes + comments + shares) / views, the standard TikTok metric.
       engagementRate = totalViews > 0 ? parseFloat(((totalInteractions / totalViews) * 100).toFixed(2)) : 0;
