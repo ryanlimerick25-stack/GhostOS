@@ -54,8 +54,6 @@ export async function GET(req: Request) {
       // a same-named number from a nested author/music object.
       const statsOf = (v: any) => v?.statistics ?? v?.stats ?? v?.stats_v2 ?? v;
       const sum = (keys: string[]) => videos.reduce((s, v) => s + (findNum(statsOf(v), keys) ?? 0), 0);
-      const sample = statsOf(videos[0]);
-      console.error("TIKTOK_STATS_SAMPLE", JSON.stringify({ topKeys: Object.keys(videos[0] ?? {}).slice(0, 40), stats: sample === videos[0] ? null : sample }).slice(0, 900));
       const totalViews = sum(["play_count", "playCount"]);
       const totalInteractions =
         sum(["digg_count", "diggCount", "like_count", "likeCount"]) + sum(["comment_count", "commentCount"]) + sum(["share_count", "shareCount"]);
